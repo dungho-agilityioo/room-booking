@@ -34,5 +34,3 @@ RUN bundle install
 ADD . $HOME_PATH
 
 EXPOSE 3000
-
-CMD ["rails","s","-b","0"]
