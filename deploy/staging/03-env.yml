@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: rooms-booking-staging
+  name: env
+  labels:
+    name: env
+    project: rooms-booking
+    environment: staging
+data:
+  api: |
+    RAILS_ENV=staging
+    RACK_ENV=staging
+    RAILS_SERVE_STATIC_FILES=true
+
+    POSTGRES_HOST=db
+    POSTGRES_PASSWORD=QWJjZGUxMjM0NS0=
+    POSTGRES_USER=room_booking8932
+    POSTGRES_DB=room_booking_staging
+    SECRET_KEY_BASE=7a475ef05d7f1100ae91c5e7ad6ab4706ce5d303e6bbb8da153d2accb7cb53fa5faeff3161b29232b3c08d6417bd05686094d04e22950a4767bc9236991570ad

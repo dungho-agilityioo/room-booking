@@ -1,0 +1,103 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  namespace: rooms-booking-staging
+  name: postgres
+  labels:
+    name: postgres
+    project: rooms-booking
+    environment: staging
+  annotations:
+    pod.beta.kubernetes.io/init-containers: '[
+      {
+        "name": "remove-lost-found",
+        "image": "busybox",
+        "command": ["rm", "-fr", "/var/lib/postgresql/data/pgdata/lost+found"],
+        "volumeMounts": [
+          {
+            "name": "data",
+            "mountPath": "/var/lib/postgresql/data/pgdata"
+          }
+        ]
+      }
+    ]'
+  #   pod.beta.kubernetes.io/init-containers: '[
+  #     {
+  #       "name": "postgres-data",
+  #       "image": "busybox",
+  #       "commands": ["cp", "-r", "/tmp/postgres/data", "/var/lib/postgresql/data"]
+  #       "volumeMounts": [
+  #         {
+  #           "name": "postgres-data",
+  #           "mountPath": "/tmp/postgres/data"
+  #         }
+  #       ]
+  #     }
+  #   ]'
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: postgres
+      labels:
+        name: postgres
+        project: rooms-booking
+        tier: database
+        environment: staging
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:alpine
+        env:
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+        volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: postgres-data
+        livenessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -c
+            - pg_isready -U postgres
+          initialDelaySeconds: 30
+          timeoutSeconds: 3
+        readinessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -c
+            - pg_isready -U postgres
+          initialDelaySeconds: 30
+          timeoutSeconds: 3
+        resources:
+          limits:
+            memory: 128M
+          requests:
+            memory: 128M
+      volumes:
+      - name: postgres-data
+        gcePersistentDisk:
+          fsType: ext4
+          pdName: postgres-disk
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: rooms-booking-staging
+  name: postgres
+  labels:
+    name: postgres
+    project: rooms-booking
+    tier: database
+    environment: staging
+spec:
+  selector:
+    name: postgres
+    project: rooms-booking
+    tier: database
+    environment: staging
+  clusterIP: None
+  ports:
+    - port: 5432

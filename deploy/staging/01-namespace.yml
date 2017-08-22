@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  namespace: rooms-booking-staging
+  name: rooms-booking-staging
+  labels:
+    project: rooms-booking
+    environment: staging
