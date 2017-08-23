@@ -28,12 +28,15 @@ gem 'puma', '~> 3.0'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
-  gem 'factory_girl_rails', '~> 4.7'
   gem 'simplecov', '~> 0.12.0'
+  gem 'rspec-rails', '~> 3.6'
+end
+
+group :test do
+  gem 'factory_girl_rails', '~> 4.7'
   gem 'faker'
   gem 'database_cleaner'
-  gem 'response_code_matchers'
-  gem 'rspec-rails', '~> 3.6'
+  gem 'shoulda-matchers', '~> 3.1'
 end
 
 group :development do
@@ -41,7 +44,6 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
-  # gem 'shoulda-matchers', git: 'https://github.com/thoughtbot/shoulda-matchers.git', branch: 'rails-5'
   gem 'bullet'
   gem 'swagger-blocks'
   gem 'annotate', require: false
@@ -53,3 +55,4 @@ gem 'dotenv-rails'
 gem 'validates_timeliness', '~> 4.0'
 gem 'sidekiq', '~> 4.2.2'
 gem 'sidekiq-cron', '~> 0.4.0'
+gem 'response_code_matchers'
