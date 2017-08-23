@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  namespace: rb-staging
+  name: sidekiq
+  labels:
+    name: sidekiq
+    project: rooms-booking
+    environment: staging
+spec:
+  replicas: 1
+  template:
+    metadata:
+      namespace: rb-staging
+      name: sidekiq
+      labels:
+        name: sidekiq
+        project: rooms-booking
+        tier: backend
+        environment: staging
+    spec:
+      imagePullSecrets:
+        - name: docker-registry-secret
+      containers:
+      - name: sidekiq
+        image: asia.gcr.io/rooms-booking-177603/roomsbooking-api:1.0.0
+        imagePullPolicy: Always
+        command: ["bundle", "exec", "sidekiq"]
+        volumeMounts:
+        - mountPath: "/home/app/.env"
+          name: env
+          subPath: api
+        resources:
+          limits:
+            memory: 256M
+      volumes:
+        - name: env
+          configMap:
+            name: env

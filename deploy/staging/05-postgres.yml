@@ -1,7 +1,20 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  namespace: rb-staging
+  name: postgres-data-claim
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+
+---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  namespace: rooms-booking-staging
+  namespace: rb-staging
   name: postgres
   labels:
     name: postgres
@@ -21,19 +34,6 @@ metadata:
         ]
       }
     ]'
-  #   pod.beta.kubernetes.io/init-containers: '[
-  #     {
-  #       "name": "postgres-data",
-  #       "image": "busybox",
-  #       "commands": ["cp", "-r", "/tmp/postgres/data", "/var/lib/postgresql/data"]
-  #       "volumeMounts": [
-  #         {
-  #           "name": "postgres-data",
-  #           "mountPath": "/tmp/postgres/data"
-  #         }
-  #       ]
-  #     }
-  #   ]'
 spec:
   replicas: 1
   template:
@@ -77,15 +77,14 @@ spec:
             memory: 128M
       volumes:
       - name: postgres-data
-        gcePersistentDisk:
-          fsType: ext4
-          pdName: postgres-disk
+        persistentVolumeClaim:
+          claimName: postgres-data-claim
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: rooms-booking-staging
+  namespace: rb-staging
   name: postgres
   labels:
     name: postgres

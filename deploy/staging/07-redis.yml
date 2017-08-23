@@ -1,0 +1,71 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  namespace: rb-staging
+  name: redis-data-claim
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1G
+  # selector:
+  #   matchLabels:
+  #     name: redis-data
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  namespace: rb-staging
+  name: redis
+  labels:
+    name: redis
+    project: rooms-booking
+    environment: staging
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: redis
+      labels:
+        name: redis
+        project: rooms-booking
+        tier: cache
+        environment: staging
+    spec:
+      containers:
+      - name: redis
+        image: redis:alpine
+        volumeMounts:
+          - mountPath: /data
+            name: redis-data
+        args: ["--appendonly yes"]
+        resources:
+          limits:
+            memory: 256M
+      volumes:
+      - name: redis-data
+        persistentVolumeClaim:
+          claimName: redis-data-claim
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: rb-staging
+  name: redis
+  labels:
+    name: redis
+    project: rooms-booking
+    tier: cache
+    environment: staging
+spec:
+  selector:
+    name: redis
+    project: rooms-booking
+    tier: cache
+    environment: staging
+  clusterIP: None
+  ports:
+    - port: 6379
