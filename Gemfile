@@ -51,4 +51,5 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'dotenv-rails'
 gem 'validates_timeliness', '~> 4.0'
-
+gem 'sidekiq', '~> 4.2.2'
+gem 'sidekiq-cron', '~> 0.4.0'

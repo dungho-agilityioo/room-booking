@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  namespace: rooms-booking-staging
+  namespace: rb-staging
   name: env
   labels:
     name: env
@@ -12,6 +12,7 @@ data:
     RAILS_ENV=staging
     RACK_ENV=staging
     RAILS_SERVE_STATIC_FILES=true
+    REDIS_URL=redis://redis:6379/0
 
     POSTGRES_HOST=db
     POSTGRES_PASSWORD=QWJjZGUxMjM0NS0=
