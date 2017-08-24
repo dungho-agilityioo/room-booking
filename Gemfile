@@ -37,6 +37,7 @@ group :test do
   gem 'faker'
   gem 'database_cleaner'
   gem 'shoulda-matchers', '~> 3.1'
+  gem 'response_code_matchers'
 end
 
 group :development do
@@ -55,4 +56,5 @@ gem 'dotenv-rails'
 gem 'validates_timeliness', '~> 4.0'
 gem 'sidekiq', '~> 4.2.2'
 gem 'sidekiq-cron', '~> 0.4.0'
-gem 'response_code_matchers'
+
+# gem 'active_model_serializers', '~> 0.10.0'
