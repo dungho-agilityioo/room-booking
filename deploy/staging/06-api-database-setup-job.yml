@@ -1,6 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
+  namespace: rb-staging
   name: api-database-setup
 spec:
   template:
