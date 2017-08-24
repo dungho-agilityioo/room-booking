@@ -1,17 +1,16 @@
 # == Schema Information
 #
-# Table name: rooms
+# Table name: projects
 #
 #  id         :integer          not null, primary key
 #  name       :string
+#  status     :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
 
-require 'rails_helper'
-
-RSpec.describe Room, type: :model do
-  describe "validations", :validations do
-		it { is_expected.to validate_presence_of(:name) }
+FactoryGirl.define do
+  factory :project do
+    name { Faker::Lorem.word }
   end
 end

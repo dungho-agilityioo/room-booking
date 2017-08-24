@@ -38,6 +38,7 @@ group :test do
   gem 'database_cleaner'
   gem 'shoulda-matchers', '~> 3.1'
   gem 'response_code_matchers'
+  gem 'shoulda-callback-matchers'
 end
 
 group :development do

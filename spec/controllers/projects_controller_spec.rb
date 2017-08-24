@@ -1,61 +1,62 @@
 require 'rails_helper'
 
-RSpec.describe RoomsController, type: :controller do
-  let!(:rooms) { create_list(:room, 10) }
-  let(:room_id) { rooms.first.id }
+RSpec.describe ProjectsController, type: :controller do
+  let!(:projects) { create_list(:project, 10) }
+  let(:project_id) { projects.first.id }
 
-  describe 'GET /rooms' do
+  describe 'GET /projects' do
     before { get :index }
 
     it { should respond_with(200) }
 
-    it 'returns rooms' do
+    it 'returns projects' do
       expect(json).not_to be_empty
       expect(json.size).to eq(10)
     end
   end
 
-  describe 'GET /rooms/:id' do
-    before { get :show, params: { id: room_id } }
+  describe 'GET /projects/:id' do
+    before { get :show, params: { id: project_id } }
 
     context 'when the record exists' do
       it { should respond_with(200) }
 
       it 'return the record' do
-        expect(json).not_to be_empty
-        expect(json['id']).to eq(room_id)
+        expect(json['id']).to eq(project_id)
       end
     end
 
-    context 'when the record does not exists' do
-      let(:room_id) { 1000 }
+    context 'when the record do not exists' do
+      let(:project_id) { 1000 }
 
       it { should respond_with(404) }
 
       it 'return a not found message' do
-        expect(response.body).to match(/Couldn't find Room/)
+        expect(response.body).to match(/Couldn't find Project/)
       end
     end
+
   end
 
-  describe 'POST /rooms' do
-    let(:valid_attributes) { FactoryGirl.attributes_for(:room) }
+  describe 'POST /projects' do
+    let(:valid_attributes) { FactoryGirl.attributes_for(:project) }
 
     context 'when the request is valid' do
-      before { post :create, params: { room: valid_attributes } }
+      before { post :create, params: { project: valid_attributes } }
 
       it { should respond_with(201) }
 
-      it 'creates a room' do
+      it 'create a project' do
         expect(json['name']).to eq(valid_attributes[:name])
       end
-      # it do
-      #   should permit(:name).for(:create, params: valid_attributes)
-      # end
+
+      it 'with status is active' do
+        expect(json['status']).to eq('active')
+      end
     end
 
     context 'when the request is invalid' do
-      before { post :create, params: { room: { name: '' } } }
+      before { post :create, params: { project: { name: '' } } }
 
       it { should respond_with(422) }
 
@@ -63,14 +64,13 @@ RSpec.describe RoomsController, type: :controller do
         expect(response.body).to match(/Name can't be blank/)
       end
     end
-
   end
 
-  describe 'PUT /rooms/:id' do
-    let(:valid_attributes) { FactoryGirl.attributes_for(:room) }
+  describe 'PUT /projects/:id' do
+    let(:valid_attributes) { FactoryGirl.attributes_for(:project) }
 
     context 'when the record exists' do
-      before { put :update, params: { id: room_id, room: valid_attributes } }
+      before { put :update, params: { id: project_id, project: valid_attributes } }
 
       it { should respond_with(200) }
 
@@ -79,8 +79,8 @@ RSpec.describe RoomsController, type: :controller do
       end
     end
 
-    context 'when the request is invalid' do
-      before { put :update, params: {id: room_id, room: { name: '' } } }
+    context 'when the record do not exists' do
+      before { put :update, params: {id: project_id, project: { name: '' } } }
 
       it { should respond_with(422) }
 
@@ -91,9 +91,8 @@ RSpec.describe RoomsController, type: :controller do
   end
 
   describe 'DELETE /rooms/:id' do
-    before { delete :destroy, params: { id: room_id } }
+    before { delete :destroy, params: { id: project_id } }
 
     it { should respond_with(204) }
   end
-
 end
