@@ -12,6 +12,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
   provider :gitlab, ENV['GITLAB_KEY'], ENV['GITLAB_SECRET'],
         client_options: {
            site: ENV['SITE_URL'],
+           provider_ignores_state: true
         }
   # provider :github, ENV['GITHUB_KEY'], ENV['GITHUB_SECRET'], scope: "user:email,user:follow"
   # Manual setup for offline access with a refresh token.
