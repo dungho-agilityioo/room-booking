@@ -69,4 +69,3 @@ gem "active_model_serializers"
 # service object
 gem 'simple_command'
 gem 'omniauth-google-oauth2', '~> 0.4.1'
-gem 'rest_client'
