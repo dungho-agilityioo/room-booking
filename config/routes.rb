@@ -1,22 +1,29 @@
 # == Route Map
 #
-#   Prefix Verb   URI Pattern             Controller#Action
-#    rooms GET    /rooms(.:format)        rooms#index
-#          POST   /rooms(.:format)        rooms#create
-#     room GET    /rooms/:id(.:format)    rooms#show
-#          PATCH  /rooms/:id(.:format)    rooms#update
-#          PUT    /rooms/:id(.:format)    rooms#update
-#          DELETE /rooms/:id(.:format)    rooms#destroy
-# projects GET    /projects(.:format)     projects#index
-#          POST   /projects(.:format)     projects#create
-#  project GET    /projects/:id(.:format) projects#show
-#          PATCH  /projects/:id(.:format) projects#update
-#          PUT    /projects/:id(.:format) projects#update
-#          DELETE /projects/:id(.:format) projects#destroy
+# WARNING: The rest_client gem is deprecated and will be removed from RubyGems. Please use rest-client gem instead.
+#                                Prefix Verb     URI Pattern                                            Controller#Action
+# api_v1_user_gitlab_omniauth_authorize GET|POST /api/v1/users/auth/gitlab(.:format)                    api/v1/users/omniauth_callbacks#passthru {:format=>:json}
+#  api_v1_user_gitlab_omniauth_callback GET|POST /api/v1/users/auth/gitlab/callback(.:format)           api/v1/users/omniauth_callbacks#gitlab {:format=>:json}
+#                                api_v1 GET      /api/v1/api/v1/users/auth/:provider/callback(.:format) api/v1/users/omniauth_callbacks#gitlab {:format=>:json}
+#               new_api_v1_user_session GET      /api/v1/users(.:format)                                api/v1/users/omniauth_callbacks#test
 #
 
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-  resources :rooms
-  resources :projects
+  devise_for :users, skip: [:registrations, :sessions, :passwords, :comfirmations]
+
+  api_version(module: "Api::V1", path: { value: "api/v1" }, defaults: { format: :json }, default: true) do
+    devise_for :users, path_names: {sign_in: "login", sign_out: "logout"}, controllers: {
+      omniauth_callbacks: "api/v1/users/omniauth_callbacks",
+      sessions: "api/v1/users/omniauth_callbacks"
+    }
+
+    devise_scope :user do
+      get "/api/v1/users/auth/gitlab/callback", to: "users/omniauth_callbacks#gitlab"
+    end
+  end
+
+  # devise_scope :user do
+  #   get "/api/v1/users", to: "api/v1/users/omniauth_callbacks#gitlab", as: 'new_user_session'
+  #   # delete "/api/v1/users/sign_out", to: "users/omniauth_callbacks#destroy"
+  # end
 end

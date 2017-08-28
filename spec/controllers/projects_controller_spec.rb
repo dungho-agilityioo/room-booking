@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe ProjectsController, type: :controller do
+RSpec.describe Api::V1::ProjectsController, type: :controller do
   let!(:projects) { create_list(:project, 10) }
   let(:project_id) { projects.first.id }
 
