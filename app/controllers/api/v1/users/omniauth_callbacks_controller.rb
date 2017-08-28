@@ -1,21 +1,30 @@
 class Api::V1::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
-  skip_before_action :authenticate_user_from_token!
+  # skip_before_action :authenticate_user_from_token!
+
+  before_action :oauth_login, only: [:gitlab]
+  # skip_before_action :authenticate_user_from_token!
 
   def gitlab
-      # You need to implement the method below in your model (e.g. app/models/user.rb)
-      @user = User.from_omniauth(request.env['omniauth.auth'])
-      sign_in @user
-      json_response(nil, :no_content)
-      # if @user.persisted?
-      #   flash[:notice] = I18n.t 'devise.omniauth_callbacks.success', kind: 'Google'
-      #   sign_in_and_redirect @user, event: :authentication
-      # else
-      #   session['devise.google_data'] = request.env['omniauth.auth'].except(:extra) # Removing extra as it can overflow some session stores
-      #   redirect_to new_user_registration_url, alert: @user.errors.full_messages.join("\n")
-      # end
+    @resource = auth_resource
+
+    raise Devise::InvalidLogin unless @resource.present?
+
+    sign_in @resource, store: false
+
+    render json: @resource
   end
 
-  # def failure
-  #   redirect_to root_path
-  # end
+  protected
+
+  def oauth_login
+    oauth_login = request.env['omniauth.auth']
+    User.from_omniauth(oauth_login)
+  end
+
+  def auth_resource
+
+    user = oauth_login
+
+    User.find_for_database_authentication(email: user[:email])
+  end
 end
