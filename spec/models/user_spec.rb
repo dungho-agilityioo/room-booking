@@ -28,5 +28,42 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+    describe "validations", :validations do
+    it { is_expected.to validate_presence_of(:name) }
+    it { is_expected.to validate_presence_of(:provider) }
+    it { is_expected.to validate_presence_of(:uid) }
+    it { is_expected.to validate_presence_of(:email) }
+  end
+
+  describe ".Sign In" do
+    let(:auth) {
+      {
+        provider: "gitlab",
+        uid: Faker::Number.number(10),
+        info: {
+          email: Faker::Internet.email,
+          name: Faker::Name.name,
+          first_name: Faker::Name.first_name,
+          last_name: Faker::Name.last_name
+        },
+        credentials: {
+          token: Faker::Config.random.seed,
+          refresh_token: Faker::Config.random.seed,
+          expires_at: DateTime.now
+        }
+      }
+    }
+
+    context 'create a user' do
+      let(:user)  { User.from_omniauth(auth) }
+
+      it 'should be provider is valid' do
+        expect(user.provider).to eq("gitlab")
+      end
+
+      it 'should be email is valid' do
+        expect(user.login).to eq(user.email)
+      end
+    end
+  end
 end
