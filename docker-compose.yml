@@ -2,6 +2,7 @@ version: '2'
 services:
   postgres:
     image: postgres:9.6.4-alpine
+    container_name: db
     env_file:
       - .env
     ports:
@@ -10,12 +11,13 @@ services:
       - ./db-data:/var/lib/postgresql/data
   api:
     build: .
+    container_name: api
     env_file:
       - .env
     command: bundle exec puma -C config/puma.rb
     volumes:
       - .:/home/app
-      - ./bundle:/bundle
+      # - ./bundle:/bundle
     ports:
       - 3000:3000
     links:

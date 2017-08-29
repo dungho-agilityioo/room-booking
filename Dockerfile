@@ -5,6 +5,7 @@ RUN apk update \
 	&& apk upgrade \
 	&& apk add tzdata \
 		sqlite-dev \
+    git \
 		postgresql-dev \
 		zlib-dev \
 		libxml2-dev \
