@@ -1,8 +1,5 @@
 class Api::V1::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
-  # skip_before_action :authenticate_user_from_token!
-
   before_action :oauth_login, only: [:gitlab]
-  # skip_before_action :authenticate_user_from_token!
 
   def gitlab
     @resource = auth_resource
