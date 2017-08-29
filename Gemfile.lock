@@ -106,7 +106,6 @@ GEM
     multi_json (1.12.1)
     multi_xml (0.6.0)
     multipart-post (2.0.0)
-    netrc (0.7.9)
     nio4r (2.1.0)
     nokogiri (1.8.0)
       mini_portile2 (~> 2.2.0)
@@ -268,7 +267,6 @@ DEPENDENCIES
   pundit (~> 1.1)
   rails (~> 5.0.1)
   response_code_matchers
-  rest_client
   rspec-rails (~> 3.6)
   shoulda-callback-matchers
   shoulda-matchers (~> 3.1)
