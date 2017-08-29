@@ -22,5 +22,9 @@ Rails.application.routes.draw do
     devise_scope :user do
       get "/api/v1/users/auth/gitlab/callback", to: "users/omniauth_callbacks#gitlab"
     end
+
+    resources :projects
+    resources :rooms
+
   end
 end
