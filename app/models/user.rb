@@ -23,6 +23,7 @@
 #  locked_at              :datetime
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  role                   :integer
 #
 
 class User < ApplicationRecord
@@ -35,7 +36,7 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :trackable,
           :recoverable, :rememberable, :validatable,
-          :omniauthable, omniauth_providers: [:gitlab],
+          :omniauthable, omniauth_providers: [:google_oauth2],
           authentication_keys: [:login]
 
   validates :name, :provider, :uid, presence: true
