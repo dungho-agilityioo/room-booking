@@ -29,6 +29,7 @@ class User < ApplicationRecord
 
   attr_accessor :login
   attr_accessor :skip_password_validation
+  enum role: [:staff, :admin]
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -40,6 +41,12 @@ class User < ApplicationRecord
   validates :name, :provider, :uid, presence: true
   validates :email, presence: true, uniqueness: { case_sensitive: false }
 
+  after_initialize :set_default_role, :if => :new_record?
+
+  def set_default_role
+    self.role ||= :staff
+  end
+
   def login=(login)
     @login = login
   end
@@ -50,17 +57,7 @@ class User < ApplicationRecord
 
 
   def self.from_omniauth(auth)
-    user = User.find_or_initialize_by(
-        provider: auth[:provider],
-        uid: auth[:uid],
-        email: auth[:info][:email] ) do |u|
-      u[:name] = auth[:info][:name]
-      u[:first_name] = auth[:info][:first_name]
-      u[:last_name] = auth[:info][:last_name]
-    end
-    user.skip_password_validation = true
-    user.save
-    user
+    UserService.create_user(auth)
   end
 
   protected
