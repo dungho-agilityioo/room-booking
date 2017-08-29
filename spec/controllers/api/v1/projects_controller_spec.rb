@@ -4,6 +4,11 @@ RSpec.describe Api::V1::ProjectsController, type: :controller do
   let!(:projects) { create_list(:project, 10) }
   let(:project_id) { projects.first.id }
 
+  def setup
+    @request.env["devise.mapping"] = Devise.mappings[:admin]
+    # sign_in FactoryGirl.create(:admin)
+  end
+
   describe 'GET /projects' do
     before { get :index }
 

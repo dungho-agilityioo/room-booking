@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::RoomsController, type: :controller do
+  def setup
+    @request.env["devise.mapping"] = Devise.mappings[:admin]
+    # sign_in FactoryGirl.create(:admin)
+  end
   let!(:rooms) { create_list(:room, 10) }
   let(:room_id) { rooms.first.id }
 
