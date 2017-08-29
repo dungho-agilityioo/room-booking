@@ -252,7 +252,10 @@ Devise.setup do |config|
   # ==> OmniAuth
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
-  config.omniauth :gitlab, ENV['GITLAB_KEY'], ENV['GITLAB_SECRET']
+  config.omniauth :gitlab, ENV['GITLAB_KEY'], ENV['GITLAB_SECRET'],
+    client_options: {
+      site: ENV['SITE_URL']
+    }
   # config.omniauth :google_oauth2, ENV['GOOGLE_CLIENT_ID'], ENV['GOOGLE_CLIENT_SECRET'], { name: 'google', access_type: 'offline' }
   # config.omniauth :gitlab, ENV['GITHUB_KEY'], ENV['GITHUB_SECRET'], scope: 'user:email'
 

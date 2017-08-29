@@ -13,8 +13,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
   #       provider_ignores_state: true,
   #       client_options: {
   #          site: ENV['SITE_URL'],
-  #          provider_ignores_state: true,
-  #          scope: 'read_user,api',
+  #          provider_ignores_state: true
   #       }
   provider :google_oauth2, ENV['GOOGLE_CLIENT_ID'], ENV['GOOGLE_CLIENT_SECRET']
     {
@@ -23,6 +22,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
       image_aspect_ratio: "square",
       image_size: 50,
       access_type: 'offline',
-      provider_ignores_state: true
+      provider_ignores_state: true,
+      site: ENV['SITE_URL']
     }
 end
