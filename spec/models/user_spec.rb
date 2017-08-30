@@ -23,6 +23,7 @@
 #  locked_at              :datetime
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  role                   :integer
 #
 
 require 'rails_helper'
@@ -33,6 +34,7 @@ RSpec.describe User, type: :model do
     it { is_expected.to validate_presence_of(:provider) }
     it { is_expected.to validate_presence_of(:uid) }
     it { is_expected.to validate_presence_of(:email) }
+    it { is_expected.to callback(:set_default_role).after(:initialize).if(:new_record?) }
 
   end
 
@@ -64,6 +66,10 @@ RSpec.describe User, type: :model do
 
       it 'should be email is valid' do
         expect(user.login).to eq(user.email)
+      end
+
+      it 'should be role is staff' do
+        expect( user.staff? ).to be true
       end
     end
   end

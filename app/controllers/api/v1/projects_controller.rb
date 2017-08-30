@@ -4,17 +4,20 @@ class Api::V1::ProjectsController < ApplicationController
   # GET /projects
   def index
     @projects = Project.all
+    authorize Project
     json_response(@projects)
   end
 
   # GET /projects/:id
   def show
+    authorize @project
     json_response(@project)
   end
 
   # POST /projects
   def create
     @project = Project.new(project_params)
+    authorize @project
     if @project.save
       json_response(@project, :created)
     else
@@ -24,6 +27,7 @@ class Api::V1::ProjectsController < ApplicationController
 
   # PUT /projects
   def update
+    authorize @project
     if @project.update(project_params)
       json_response(@project, :ok)
     else
@@ -33,6 +37,7 @@ class Api::V1::ProjectsController < ApplicationController
 
   # DELETE /projects/:id
   def destroy
+    authorize @project
     @project.destroy
     json_response( nil, :no_content)
   end

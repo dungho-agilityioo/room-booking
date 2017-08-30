@@ -1,13 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::ProjectsController, type: :controller do
+
   let!(:projects) { create_list(:project, 10) }
   let(:project_id) { projects.first.id }
+  let(:user) { create(:user, role: :admin) }
+  # authorize request
+  let(:headers) { valid_headers }
 
-  def setup
-    @request.env["devise.mapping"] = Devise.mappings[:admin]
-    # sign_in FactoryGirl.create(:admin)
-  end
+
+  before(:each) { request.headers["Authorization"] = headers["Authorization"] }
 
   describe 'GET /projects' do
     before { get :index }
@@ -27,7 +29,7 @@ RSpec.describe Api::V1::ProjectsController, type: :controller do
       it { should respond_with(200) }
 
       it 'return the record' do
-        expect(json['id']).to eq(project_id)
+        expect(json['id'].to_i).to eq(project_id)
       end
     end
 
@@ -52,11 +54,11 @@ RSpec.describe Api::V1::ProjectsController, type: :controller do
       it { should respond_with(201) }
 
       it 'create a project' do
-        expect(json['name']).to eq(valid_attributes[:name])
+        expect(json['attributes']['name']).to eq(valid_attributes[:name])
       end
 
       it 'with status is active' do
-        expect(json['status']).to eq('active')
+        expect(json['attributes']['status']).to eq('active')
       end
     end
 
@@ -80,7 +82,7 @@ RSpec.describe Api::V1::ProjectsController, type: :controller do
       it { should respond_with(200) }
 
       it 'updates the record' do
-        expect(json['name']).to eq(valid_attributes[:name])
+        expect(json['attributes']['name']).to eq(valid_attributes[:name])
       end
     end
 

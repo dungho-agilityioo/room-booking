@@ -4,17 +4,20 @@ class Api::V1::RoomsController < ApplicationController
   # GET /rooms
   def index
     @rooms = Room.all
+    authorize Room
     json_response(@rooms)
   end
 
   # GET /rooms/:id
   def show
+    authorize @room
     json_response(@room)
   end
 
   # POST /rooms
   def create
     @room = Room.new(room_params)
+    authorize @room
     if @room.save
       json_response(@room, :created)
     else
@@ -24,6 +27,7 @@ class Api::V1::RoomsController < ApplicationController
 
   # PUT /rooms
   def update
+    authorize @room
     if @room.update(room_params)
       json_response(@room, :ok)
     else
@@ -33,6 +37,7 @@ class Api::V1::RoomsController < ApplicationController
 
   # DELETE /rooms/:id
   def destroy
+    authorize @room
     @room.destroy
     json_response( nil, :no_content)
   end

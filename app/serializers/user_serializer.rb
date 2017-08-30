@@ -23,10 +23,13 @@
 #  locked_at              :datetime
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  role                   :integer
 #
+
 require 'json_web_token'
+
 class UserSerializer < ActiveModel::Serializer
-  attributes :id, :email, :name, :first_name, :last_name, :auth_token
+  attributes :id, :email, :name, :first_name, :last_name, :auth_token, :created_at, :updated_at
 
   def auth_token
     iat = object.current_sign_in_at.to_i

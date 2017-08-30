@@ -1,12 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::RoomsController, type: :controller do
-  def setup
-    @request.env["devise.mapping"] = Devise.mappings[:admin]
-    # sign_in FactoryGirl.create(:admin)
-  end
+
+  let(:user) { create(:user, role: :admin) }
   let!(:rooms) { create_list(:room, 10) }
   let(:room_id) { rooms.first.id }
+  # authorize request
+  let(:headers) { valid_headers }
+
+  before(:each) { request.headers["Authorization"] = headers["Authorization"] }
 
   describe 'GET /rooms' do
     before { get :index }
@@ -27,7 +29,7 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
 
       it 'return the record' do
         expect(json).not_to be_empty
-        expect(json['id']).to eq(room_id)
+        expect(json['id'].to_i).to eq(room_id)
       end
     end
 
@@ -51,7 +53,7 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
       it { should respond_with(201) }
 
       it 'creates a room' do
-        expect(json['name']).to eq(valid_attributes[:name])
+        expect(json['attributes']['name']).to eq(valid_attributes[:name])
       end
       # it do
       #   should permit(:name).for(:create, params: valid_attributes)
@@ -79,7 +81,7 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
       it { should respond_with(200) }
 
       it 'updates the record' do
-        expect(json['name']).to eq(valid_attributes[:name])
+        expect(json['attributes']['name']).to eq(valid_attributes[:name])
       end
     end
 
