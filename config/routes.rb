@@ -33,7 +33,7 @@
 #                                              PATCH           /api/v1/rooms/:id(.:format)                         api/v1/rooms#update {:format=>:json}
 #                                              PUT             /api/v1/rooms/:id(.:format)                         api/v1/rooms#update {:format=>:json}
 #                                              DELETE          /api/v1/rooms/:id(.:format)                         api/v1/rooms#destroy {:format=>:json}
-# 
+#
 
 Rails.application.routes.draw do
   devise_for :users, skip: [:registrations, :sessions, :passwords, :comfirmations]
@@ -51,6 +51,7 @@ Rails.application.routes.draw do
 
     resources :projects
     resources :rooms
+    resources :bookings
   end
 
 end

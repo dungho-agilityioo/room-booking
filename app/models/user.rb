@@ -43,6 +43,7 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: { case_sensitive: false }
 
   after_initialize :set_default_role, :if => :new_record?
+  has_many :bookings
 
   def set_default_role
     self.role ||= :staff
