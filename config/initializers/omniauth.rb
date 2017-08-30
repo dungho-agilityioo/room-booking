@@ -22,7 +22,6 @@ Rails.application.config.middleware.use OmniAuth::Builder do
       image_aspect_ratio: "square",
       image_size: 50,
       access_type: 'offline',
-      provider_ignores_state: true,
-      site: ENV['SITE_URL']
+      provider_ignores_state: true
     }
 end

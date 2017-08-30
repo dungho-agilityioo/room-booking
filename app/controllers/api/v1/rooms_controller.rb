@@ -1,5 +1,4 @@
 class Api::V1::RoomsController < ApplicationController
-  before_action :authenticate_api_v1_user!
 	before_action :find_room, only: [:show, :update, :destroy]
 
   # GET /rooms

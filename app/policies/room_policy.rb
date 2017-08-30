@@ -1,19 +1,19 @@
 class RoomPolicy < ApplicationPolicy
 
   def index?
-    @user.admin? || @user.staff?
+    @current_user.admin? || @current_user.staff?
   end
 
   def create?
-    @user.admin?
+    @current_user.admin?
   end
 
   def update?
-    @user.admin?
+    @current_user.admin?
   end
 
   def destroy?
-    @user.admin?
+    @current_user.admin?
   end
 
 end
