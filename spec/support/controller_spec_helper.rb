@@ -22,11 +22,4 @@ module ControllerSpecHelper
     }
   end
 
-  # return invalid headers
-  def invalid_headers
-    {
-      "Authorization" => nil,
-      "Content-Type" => "application/json"
-    }
-  end
 end
