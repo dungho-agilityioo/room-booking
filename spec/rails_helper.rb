@@ -92,6 +92,6 @@ RSpec.configure do |config|
   config.include ControllerSpecHelper
   config.include Devise::Test::IntegrationHelpers, type: :feature
   config.include Warden::Test::Helpers, type: :request
-  config.include Devise::Test::ControllerHelpers, :type => :controller
+  # config.include Devise::Test::ControllerHelpers, :type => :controller
 
 end

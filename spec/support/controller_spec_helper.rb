@@ -1,7 +1,7 @@
 module ControllerSpecHelper
   # Parse JSON response to ruby hash
   def json
-    JSON.parse(response.body)
+    JSON.parse(response.body)['data']
   end
 
   # generate tokens from user id
