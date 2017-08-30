@@ -17,15 +17,12 @@ class Message
     end
 
     def unauthorized
-      'Unauthorized request'
+      'Not Authorized'
     end
 
     def expired_token
-      'Sorry, your token has expired. Please login to continue.'
+      'Signature has expired'
     end
 
-    def not_authorized
-      'You are not authorized to do that.'
-    end
   end
 end
