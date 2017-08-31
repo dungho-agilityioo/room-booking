@@ -6,6 +6,8 @@
 #  name       :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  schedule   :text
+#  capacity   :integer
 #
 
 class RoomSerializer < ActiveModel::Serializer
