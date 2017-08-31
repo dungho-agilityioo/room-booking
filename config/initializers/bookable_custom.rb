@@ -1,7 +1,7 @@
 
 ActsAsBookable::Booking.class_eval do
   validates :title, :description, presence: true
-  # validate :limit_time
+  validate :limit_time
 
   private
 
