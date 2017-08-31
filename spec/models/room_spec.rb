@@ -15,5 +15,6 @@ require 'rails_helper'
 RSpec.describe Room, type: :model do
   describe "validations", :validations do
 		it { is_expected.to validate_presence_of(:name) }
+    it { is_expected.to callback(:set_default_schedule).after(:initialize).if(:new_record?) }
   end
 end
