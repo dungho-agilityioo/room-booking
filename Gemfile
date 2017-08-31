@@ -23,11 +23,49 @@ gem 'bcrypt', '~> 3.1.7'
 # gem 'capistrano-rails', group: :development
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
-# gem 'rack-cors'
+gem 'rack-cors'
+
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+gem 'dotenv-rails'
+gem 'validates_timeliness', '~> 4.0'
+gem 'sidekiq', '~> 4.2.2'
+gem 'sidekiq-cron', '~> 0.4.0'
+gem 'devise'
+
+# A pure ruby implementation of the RFC 7519 OAuth JSON Web Token (JWT) standard.
+gem 'jwt'
+
+gem 'omniauth-gitlab'
+gem 'omniauth-google-oauth2', '~> 0.4.1'
+
+# versioning Rails based RESTful APIs
+gem 'versionist'
+
+# Object oriented authorization for Rails applications
+gem 'pundit', '~> 1.1'
+
+# encapsulates the JSON serialization of objects
+gem "active_model_serializers"
+
+# service object
+gem 'simple_command'
+
+# will_paginate provides a simple API for performing paginated queries with Active Record
+gem 'will_paginate', '~> 3.1', '>= 3.1.6'
+
+# counter_culture provides turbo-charged counter caches
+gem 'counter_culture', '~> 1.7'
+
+# A reservation plugin for Rails applications that allows resources to be bookable.
+gem 'acts_as_bookable'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
+
+  # Code coverage for Ruby
   gem 'simplecov', '~> 0.12.0'
   gem 'rspec-rails', '~> 3.6'
 end
@@ -36,8 +74,13 @@ group :test do
   gem 'factory_girl_rails', '~> 4.7'
   gem 'faker'
   gem 'database_cleaner'
-  gem 'shoulda-matchers', '~> 3.1'
-  gem 'response_code_matchers'
+
+  # gem 'shoulda-matchers', '~> 3.1'
+  gem 'shoulda-matchers', git: 'https://github.com/thoughtbot/shoulda-matchers.git', branch: 'rails-5'
+
+  # Provide rspec matchers to match http response code
+  gem 'response_code_matchers', '~> 0.1.0'
+
   gem 'shoulda-callback-matchers'
   gem 'pundit-matchers', '~> 1.3.1', require: false
 end
@@ -47,26 +90,11 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+  # N+1 query detect
   gem 'bullet'
+  # API documentation
   gem 'swagger-blocks'
   gem 'annotate', require: false
 end
 
-# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-gem 'dotenv-rails'
-gem 'validates_timeliness', '~> 4.0'
-gem 'sidekiq', '~> 4.2.2'
-gem 'sidekiq-cron', '~> 0.4.0'
-gem 'devise'
-gem 'jwt'
-gem 'omniauth-gitlab'
-gem 'versionist'
-# Object oriented authorization for Rails applications
-gem 'pundit', '~> 1.1'
-# encapsulates the JSON serialization of objects
-gem "active_model_serializers"
 
-# service object
-gem 'simple_command'
-gem 'omniauth-google-oauth2', '~> 0.4.1'
