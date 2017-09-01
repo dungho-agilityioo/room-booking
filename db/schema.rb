@@ -34,19 +34,6 @@ ActiveRecord::Schema.define(version: 20170831021822) do
     t.index ["project_id"], name: "index_acts_as_bookable_bookings_project", using: :btree
   end
 
-  create_table "bookings", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "project_id"
-    t.integer  "booking_type"
-    t.text     "reason"
-    t.date     "start_date"
-    t.time     "start_hour"
-    t.date     "end_date"
-    t.time     "end_hour"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-  end
-
   create_table "projects", force: :cascade do |t|
     t.string   "name"
     t.integer  "status",     default: 0
