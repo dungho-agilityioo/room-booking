@@ -11,11 +11,11 @@ class Api::V1::RoomBookingsController < ApplicationController
 
     # GET /bookings/:id
   def show
-    authorize @booking
+    authorize @booking || ActsAsBookable::Booking
     if @booking.present?
       json_response(@booking)
     else
-      json_response({message: Message.not_found('Book')}, :not_found)
+      json_response({message: Message.not_found('Room Booking')}, :not_found)
     end
   end
 
@@ -27,14 +27,19 @@ class Api::V1::RoomBookingsController < ApplicationController
     find_room
     booking = current_user.book! @room, convert_param.merge(amount: 1)
 
-    json_response(booking)
+    json_response(booking, :created)
   end
 
   # DELETE /bookings/:id
   def destroy
-    authorize @booking
-    @booking.destroy
-    json_response( nil, :no_content)
+    authorize @booking || ActsAsBookable::Booking
+
+    if @booking.present?
+      @booking.destroy
+      json_response( nil, :no_content)
+    else
+      json_response({message: Message.not_found('Room Booking')}, :not_found)
+    end
   end
 
   private
