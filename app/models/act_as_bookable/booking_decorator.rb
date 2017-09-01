@@ -1,7 +1,7 @@
-
 ActsAsBookable::Booking.class_eval do
-  validates :title, :description, presence: true
   validate :limit_time
+  validates_datetime :time_end, :after => :time_start
+  validates_datetime :time_start, :on => :create, :on_or_after => lambda { Time.zone.now }
 
   private
 
