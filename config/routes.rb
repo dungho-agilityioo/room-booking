@@ -33,10 +33,10 @@
 #                                              PATCH           /api/v1/rooms/:id(.:format)                         api/v1/rooms#update {:format=>:json}
 #                                              PUT             /api/v1/rooms/:id(.:format)                         api/v1/rooms#update {:format=>:json}
 #                                              DELETE          /api/v1/rooms/:id(.:format)                         api/v1/rooms#destroy {:format=>:json}
-#                              api_v1_bookings GET             /api/v1/bookings(.:format)                          api/v1/bookings#index {:format=>:json}
-#                                              POST            /api/v1/bookings(.:format)                          api/v1/bookings#create {:format=>:json}
-#                               api_v1_booking GET             /api/v1/bookings/:id(.:format)                      api/v1/bookings#show {:format=>:json}
-#                                              DELETE          /api/v1/bookings/:id(.:format)                      api/v1/bookings#destroy {:format=>:json}
+#                         api_v1_room_bookings GET             /api/v1/room_bookings(.:format)                     api/v1/room_bookings#index {:format=>:json}
+#                                              POST            /api/v1/room_bookings(.:format)                     api/v1/room_bookings#create {:format=>:json}
+#                          api_v1_room_booking GET             /api/v1/room_bookings/:id(.:format)                 api/v1/room_bookings#show {:format=>:json}
+#                                              DELETE          /api/v1/room_bookings/:id(.:format)                 api/v1/room_bookings#destroy {:format=>:json}
 # 
 
 Rails.application.routes.draw do
@@ -55,7 +55,7 @@ Rails.application.routes.draw do
 
     resources :projects
     resources :rooms
-    resources :bookings, except: [:update]
+    resources :room_bookings, except: [:update]
   end
 
 end

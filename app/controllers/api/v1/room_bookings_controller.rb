@@ -1,4 +1,4 @@
-class Api::V1::BookingsController < ApplicationController
+class Api::V1::RoomBookingsController < ApplicationController
 
   # before_action :find_room, only: [:create]
   before_action :find_booking, only: [:show, :destroy]
