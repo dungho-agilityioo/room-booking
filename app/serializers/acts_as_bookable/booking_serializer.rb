@@ -10,6 +10,9 @@
 #  capacity   :integer
 #
 
-class RoomSerializer < ActiveModel::Serializer
-  attributes :id, :name, :created_at
+class ActsAsBookable::BookingSerializer < ActiveModel::Serializer
+  attributes :id, :title, :description, :time_start, :time_end, :created_at
+
+  belongs_to :bookable, polymorphic: true
+  belongs_to :booker,   polymorphic: true
 end
