@@ -4,6 +4,10 @@ class ActsAsBookable::BookingPolicy < ApplicationPolicy
     login?
   end
 
+  def show?
+    login?
+  end
+
   def create?
     login?
   end

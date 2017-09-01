@@ -63,7 +63,7 @@ RSpec.describe Api::V1::ProjectsController, type: :controller do
     end
 
     context 'when the request is invalid' do
-      before { post :create, params: { project: { name: '' } } }
+      before { post :create, params: { name: '' } }
 
       it { should respond_with(422) }
 
