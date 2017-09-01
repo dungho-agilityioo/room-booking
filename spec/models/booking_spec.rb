@@ -18,12 +18,12 @@ RSpec.describe ActsAsBookable::Booking, type: :model do
         @booking.time_end = Date.today.prev_week
       end
 
-      it 'start date is valid' do
+      it 'start date in the past' do
         @booking.valid?
         expect(@booking.errors.full_messages.at(1)).to match(/Time start must be on or after/)
       end
 
-      it 'end date is valid' do
+      it 'end date is less than start date' do
         @booking.valid?
         expect(@booking.errors.full_messages.at(0)).to match(/Time end must be after/)
       end
