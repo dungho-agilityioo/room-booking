@@ -46,7 +46,7 @@ class Api::V1::RoomsController < ApplicationController
 
   def room_params
     # whitelist params
-    params.require(:room).permit(:name)
+    params.permit(:name)
   end
 
   def find_room
