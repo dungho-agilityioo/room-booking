@@ -33,7 +33,12 @@
 #                                              PATCH           /api/v1/rooms/:id(.:format)                         api/v1/rooms#update {:format=>:json}
 #                                              PUT             /api/v1/rooms/:id(.:format)                         api/v1/rooms#update {:format=>:json}
 #                                              DELETE          /api/v1/rooms/:id(.:format)                         api/v1/rooms#destroy {:format=>:json}
-#                                 api_v1_books POST            /api/v1/books(.:format)                             api/v1/books#create {:format=>:json}
+#                                 api_v1_books GET             /api/v1/books(.:format)                             api/v1/books#index {:format=>:json}
+#                                              POST            /api/v1/books(.:format)                             api/v1/books#create {:format=>:json}
+#                                  api_v1_book GET             /api/v1/books/:id(.:format)                         api/v1/books#show {:format=>:json}
+#                                              PATCH           /api/v1/books/:id(.:format)                         api/v1/books#update {:format=>:json}
+#                                              PUT             /api/v1/books/:id(.:format)                         api/v1/books#update {:format=>:json}
+#                                              DELETE          /api/v1/books/:id(.:format)                         api/v1/books#destroy {:format=>:json}
 # 
 
 Rails.application.routes.draw do
@@ -52,7 +57,8 @@ Rails.application.routes.draw do
 
     resources :projects
     resources :rooms
-    post "/books", to: "/api/v1/books#create"
+    resources :books
+    # post "/books", to: "/api/v1/books#create"
   end
 
 end
