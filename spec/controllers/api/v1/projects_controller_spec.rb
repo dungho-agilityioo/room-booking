@@ -49,7 +49,7 @@ RSpec.describe Api::V1::ProjectsController, type: :controller do
     let(:valid_attributes) { FactoryGirl.attributes_for(:project) }
 
     context 'when the request is valid' do
-      before { post :create, params: { project: valid_attributes } }
+      before { post :create, params: valid_attributes }
 
       it { should respond_with(201) }
 
@@ -77,7 +77,7 @@ RSpec.describe Api::V1::ProjectsController, type: :controller do
     let(:valid_attributes) { FactoryGirl.attributes_for(:project) }
 
     context 'when the record exists' do
-      before { put :update, params: { id: project_id, project: valid_attributes } }
+      before { put :update, params: valid_attributes.merge( id: project_id) }
 
       it { should respond_with(200) }
 
@@ -87,7 +87,7 @@ RSpec.describe Api::V1::ProjectsController, type: :controller do
     end
 
     context 'when the record do not exists' do
-      before { put :update, params: {id: project_id, project: { name: '' } } }
+      before { put :update, params: {id: project_id, name: '' } }
 
       it { should respond_with(422) }
 
