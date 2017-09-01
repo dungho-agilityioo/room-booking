@@ -29,7 +29,7 @@ RSpec.describe ActsAsBookable::Booking, type: :model do
       end
     end
 
-    context '#date not available on range' do
+    context '#the start date is out of range' do
       before(:each) do
         @booking = ActsAsBookable::Booking.new(amount: 2)
         @booking.booker = user
@@ -40,7 +40,23 @@ RSpec.describe ActsAsBookable::Booking, type: :model do
 
       it 'get a message not available error' do
         expect { @booking.valid? }
-            .to raise_error(ActsAsBookable::AvailabilityError, /the Room is not available from/)
+            .to raise_error(ActsAsBookable::AvailabilityError, /the Room is not available from #{@booking.time_start.to_s} to #{@booking.time_end.to_s}/)
+      end
+    end
+
+    context '#the end date is out of range' do
+      before(:each) do
+        @booking = ActsAsBookable::Booking.new(amount: 2)
+        @booking.booker = user
+        @booking.bookable = room
+        @booking.time_start = Date.today.next_week + 16.hours
+        @booking.time_end = Date.today.next_week + 19.hours
+      end
+
+      it 'get a message not available error' do
+        byebug
+        expect { @booking.valid? }
+            .to raise_error(ActsAsBookable::AvailabilityError, /the Room is not available from #{@booking.time_start.to_s} to #{@booking.time_end.to_s}/)
       end
     end
 
