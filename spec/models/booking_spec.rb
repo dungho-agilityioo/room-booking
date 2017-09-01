@@ -3,7 +3,46 @@ require 'rails_helper'
 
 RSpec.describe ActsAsBookable::Booking, type: :model do
   describe "validations", :validations do
-    # it { is_expected.to validate_presence_of(:title) }
-    # it { is_expected.to validate_presence_of(:description) }
+    let(:user) { create(:user) }
+    let(:room) { create(:room) }
+
+    it { is_expected.to callback(:reset_time_end).before(:create) }
+
+    context '#date is invalid' do
+
+      before(:each) do
+        @booking = ActsAsBookable::Booking.new(amount: 2)
+        @booking.booker = user
+        @booking.bookable = room
+        @booking.time_start = Date.today.prev_week + 9.hours
+        @booking.time_end = Date.today.prev_week
+      end
+
+      it 'start date is valid' do
+        @booking.valid?
+        expect(@booking.errors.full_messages.at(1)).to match(/Time start must be on or after/)
+      end
+
+      it 'end date is valid' do
+        @booking.valid?
+        expect(@booking.errors.full_messages.at(0)).to match(/Time end must be after/)
+      end
+    end
+
+    context '#date not available on range' do
+      before(:each) do
+        @booking = ActsAsBookable::Booking.new(amount: 2)
+        @booking.booker = user
+        @booking.bookable = room
+        @booking.time_start = Date.today.next_week + 1.hours
+        @booking.time_end = Date.today.next_week + 2.hours
+      end
+
+      it 'get a message not available error' do
+        expect { @booking.valid? }
+            .to raise_error(ActsAsBookable::AvailabilityError, /the Room is not available from/)
+      end
+    end
+
   end
 end

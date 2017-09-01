@@ -3,27 +3,13 @@ ActsAsBookable::Booking.class_eval do
   validate :limit_time
   validates_datetime :time_end, :after => :time_start
   validates_datetime :time_start, :on => :create, :on_or_after => lambda { Time.now + 7.hours }
-
-  ##
-  # Retrieves overlapped bookings, given a bookable and some booking options
-  #
-  scope :overlapped, ->(bookable,opts) {
-    query = where(bookable_id: bookable.id)
-
-    # Time options
-    if(opts[:time].present?)
-      query = ActsAsBookable::DBUtils.time_comparison(query,'time','=',opts[:time])
-    end
-    if(opts[:time_start].present?)
-      query = ActsAsBookable::DBUtils.time_comparison(query,'time_end', '>', opts[:time_start])
-    end
-    if(opts[:time_end].present?)
-      query = ActsAsBookable::DBUtils.time_comparison(query,'time_start', '<', opts[:time_end])
-    end
-    query
-  }
+  before_create :reset_time_end
 
   private
+
+  def reset_time_end
+    self.time_end = self.time_end - 1.second
+  end
 
   def limit_time
     time_start_limit = DateTime.new(self.time_start.year, self.time_start.month, self.time_start.day, 7, 30)
