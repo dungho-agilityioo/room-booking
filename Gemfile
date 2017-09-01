@@ -61,6 +61,8 @@ gem 'counter_culture', '~> 1.7'
 # A reservation plugin for Rails applications that allows resources to be bookable.
 gem 'acts_as_bookable'
 
+gem 'rails_param'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
