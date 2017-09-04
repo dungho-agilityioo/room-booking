@@ -1,7 +1,7 @@
 class RoomBookingService
   prepend SimpleCommand
 
-  def initialize(room_booking, gen_number)
+  def initialize(room_booking, gen_number = 0)
     @room_booking = room_booking
     @gen_number = gen_number
     @user = room_booking.booker
@@ -10,7 +10,11 @@ class RoomBookingService
 
   # Service entry point
   def call
-    gen_next_schedule
+    if @gen_number != 0
+      gen_next_schedule
+    else
+      remove_future_schedule
+    end
   end
 
   private
@@ -52,5 +56,12 @@ class RoomBookingService
   def time_end(occurrence)
     booking_time_end = @room_booking.time_end.to_datetime
     DateTime.new(occurrence.year, occurrence.month, occurrence.day, booking_time_end.hour, booking_time_end.minute)
+  end
+
+  def remove_future_schedule
+    ActsAsBookable::Booking
+      .where(generate_for_id: @room_booking.id)
+      .where('time_start > ?', Time.zone.now)
+      .delete_all
   end
 end
