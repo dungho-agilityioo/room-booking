@@ -37,6 +37,7 @@
 #                                              POST            /api/v1/room_bookings(.:format)                     api/v1/room_bookings#create {:format=>:json}
 #                          api_v1_room_booking GET             /api/v1/room_bookings/:id(.:format)                 api/v1/room_bookings#show {:format=>:json}
 #                                              DELETE          /api/v1/room_bookings/:id(.:format)                 api/v1/room_bookings#destroy {:format=>:json}
+#                  api_v1_room_bookings_search POST            /api/v1/room_bookings/search(.:format)              api/v1/room_bookings#search {:format=>:json}
 # 
 
 Rails.application.routes.draw do
@@ -56,6 +57,7 @@ Rails.application.routes.draw do
     resources :projects
     resources :rooms
     resources :room_bookings, except: [:update]
+    post "room_bookings/search", to: "/api/v1/room_bookings#search"
   end
 
 end

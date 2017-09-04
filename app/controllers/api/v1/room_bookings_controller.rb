@@ -2,13 +2,13 @@ class Api::V1::RoomBookingsController < ApplicationController
 
   before_action :find_booking, only: [:show, :destroy]
 
-  # GET /bookings
+  # GET /room_bookings
   def index
     authorize ActsAsBookable::Booking
     json_response(current_user.bookings)
   end
 
-    # GET /bookings/:id
+    # GET /room_bookings/:id
   def show
     authorize @booking || ActsAsBookable::Booking
     if @booking.present?
@@ -18,7 +18,7 @@ class Api::V1::RoomBookingsController < ApplicationController
     end
   end
 
-  # POST /bookings
+  # POST /room_bookings
   def create
     request_param
 
@@ -29,7 +29,9 @@ class Api::V1::RoomBookingsController < ApplicationController
     json_response(booking, :created)
   end
 
-  # DELETE /bookings/:id
+  # PUT /room_bookings/:id
+
+  # DELETE /room_bookings/:id
   def destroy
     authorize @booking || ActsAsBookable::Booking
 
@@ -39,6 +41,20 @@ class Api::V1::RoomBookingsController < ApplicationController
     else
       json_response({message: Message.not_found('Room Booking')}, :not_found)
     end
+  end
+
+  def search
+    authorize ActsAsBookable::Booking
+    param! :room_id, Integer, required: true
+    param! :time_start, DateTime, required: true
+    param! :time_end, DateTime, required: true
+    find_room
+    rs = @room.check_availability({
+                time_start: params[:time_start],
+                time_end: params[:time_end],
+                amount: 1
+              })
+    json_response(rs)
   end
 
   private

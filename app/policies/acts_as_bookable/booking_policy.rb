@@ -12,6 +12,10 @@ class ActsAsBookable::BookingPolicy < ApplicationPolicy
     login?
   end
 
+  def search?
+    login?
+  end
+
   # def update?
   #   @current_user.admin?
   # end
