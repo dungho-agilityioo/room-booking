@@ -1,6 +1,5 @@
 class Api::V1::RoomBookingsController < ApplicationController
 
-  # before_action :find_room, only: [:create]
   before_action :find_booking, only: [:show, :destroy]
 
   # GET /bookings
@@ -46,7 +45,7 @@ class Api::V1::RoomBookingsController < ApplicationController
 
   def book_params
     # whitelist params
-    params.permit(:title, :description, :time_start, :time_end, :room_id)
+    params.permit(:title, :description, :time_start, :time_end, :room_id, :daily)
   end
 
   def convert_param
@@ -68,5 +67,6 @@ class Api::V1::RoomBookingsController < ApplicationController
     param! :time_start, DateTime, required: true
     param! :time_end, DateTime, required: true
     param! :project_id, Integer
+    param! :daily, :boolean
   end
 end

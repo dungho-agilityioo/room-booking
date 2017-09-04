@@ -5,7 +5,13 @@ ActsAsBookable::Booking.class_eval do
   validates_datetime :time_start, :on => :create, :on_or_after => lambda { Time.now + 7.hours }
   before_create :reset_time_end
 
+  after_create :gen_next_schedule, if: :daily?
+
   private
+
+  def gen_next_schedule
+    RoomBookingService.new(self, 7).call
+  end
 
   def reset_time_end
     self.time_end = self.time_end - 1.second
