@@ -7,6 +7,7 @@ RSpec.describe ActsAsBookable::Booking, type: :model do
     let(:room) { create(:room) }
 
     it { is_expected.to callback(:reset_time_end).before(:create) }
+    it { is_expected.to callback(:gen_next_schedule).after(:create).if(:daily?) }
 
     context '#date is invalid' do
 
@@ -54,7 +55,6 @@ RSpec.describe ActsAsBookable::Booking, type: :model do
       end
 
       it 'get a message not available error' do
-        byebug
         expect { @booking.valid? }
             .to raise_error(ActsAsBookable::AvailabilityError, /the Room is not available from #{@booking.time_start.to_s} to #{@booking.time_end.to_s}/)
       end
