@@ -19,7 +19,7 @@ class UserService
     def create_admin
       User.find_or_create_by!(email: ENV['ADMIN_EMAIL']) do |u|
         u.provider = 'gitlab'
-        u.uid = Faker::Number.number(10)
+        u.uid = Time.now.to_i
         u.name = ENV['ADMIN_NAME']
         u.skip_password_validation = true
         u.admin!
