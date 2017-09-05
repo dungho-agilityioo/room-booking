@@ -16,9 +16,9 @@ class ActsAsBookable::BookingPolicy < ApplicationPolicy
     login?
   end
 
-  # def update?
-  #   @current_user.admin?
-  # end
+  def get_booked?
+    login?
+  end
 
   def destroy?
     login?
