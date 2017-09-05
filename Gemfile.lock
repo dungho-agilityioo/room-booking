@@ -306,6 +306,7 @@ DEPENDENCIES
   rack-cors
   rails (~> 5.0.1)
   rails_param
+  redis (~> 3.0)
   response_code_matchers (~> 0.1.0)
   rspec-rails (~> 3.6)
   shoulda-callback-matchers
