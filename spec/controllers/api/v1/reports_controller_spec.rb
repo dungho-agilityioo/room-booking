@@ -138,4 +138,59 @@ RSpec.describe Api::V1::ReportsController, type: :controller do
       end
     end
   end
+
+  describe '#by_project' do
+
+    context '#page 1' do
+      before  { post :by_project, params: { project_id: @project.id } }
+
+      it { should respond_with(200) }
+
+      it 'return room bookings' do
+        expect(json.count).to eq(10)
+      end
+
+      it 'return correct number of page' do
+        expect(JSON.parse(response.body)["metadata"]["page"].to_i).to eq(1)
+      end
+
+      it 'return correct number of per_page' do
+        expect(JSON.parse(response.body)["metadata"]["per_page"].to_i).to eq(10)
+      end
+
+      it 'return correct number of total' do
+        expect(JSON.parse(response.body)["metadata"]["total"].to_i).to eq(12)
+      end
+
+      it 'return correct number of total page' do
+        expect(JSON.parse(response.body)["metadata"]["total_page"].to_i).to eq(2)
+      end
+    end
+
+    context '#page 2' do
+      before  { post :by_project, params: { project_id: @project.id, page: 2 } }
+
+      it { should respond_with(200) }
+
+      it 'return room bookings' do
+        expect(json.count).to eq(2)
+      end
+
+      it 'return correct number of page' do
+        expect(JSON.parse(response.body)["metadata"]["page"].to_i).to eq(2)
+      end
+
+      it 'return correct number of per_page' do
+        expect(JSON.parse(response.body)["metadata"]["per_page"].to_i).to eq(10)
+      end
+
+      it 'return correct number of total' do
+        expect(JSON.parse(response.body)["metadata"]["total"].to_i).to eq(12)
+      end
+
+      it 'return correct number of total page' do
+        expect(JSON.parse(response.body)["metadata"]["total_page"].to_i).to eq(2)
+      end
+    end
+  end
 end
