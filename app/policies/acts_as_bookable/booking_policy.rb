@@ -16,7 +16,7 @@ class ActsAsBookable::BookingPolicy < ApplicationPolicy
     login?
   end
 
-  def get_booked?
+  def room_booked?
     login?
   end
 

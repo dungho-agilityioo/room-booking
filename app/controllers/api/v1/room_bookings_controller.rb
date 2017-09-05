@@ -65,7 +65,7 @@ class Api::V1::RoomBookingsController < ApplicationController
     end
   end
 
-  def get_booked
+  def room_booked
     authorize ActsAsBookable::Booking
     param! :page, Integer
     param! :time_start, DateTime
