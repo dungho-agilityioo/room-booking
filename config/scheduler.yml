@@ -1,4 +1,4 @@
 generate_future_schedule:
-  cron: "*/2 * * * *"
+  cron: "0 0 * * *"
   class: "GenerateFutureSchedule"
   queue: generate_future_schedule_job
