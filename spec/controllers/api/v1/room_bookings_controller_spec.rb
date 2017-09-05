@@ -185,4 +185,87 @@ RSpec.describe Api::V1::RoomBookingsController, type: :controller do
       end
     end
   end
+
+  describe 'POST /room_bookings/booked' do
+    before(:all) do
+      user = create(:user)
+      room = create(:room)
+      available_date = [
+        {
+          time_start: Date.today.next_week + 8.hours,
+          time_end: Date.today.next_week + 9.hours,
+        },
+        {
+          time_start: Date.today.next_week + 9.hours,
+          time_end: Date.today.next_week + 10.hours,
+        },
+        {
+          time_start: Date.today.next_week + 10.hours,
+          time_end: Date.today.next_week + 11.hours,
+        },
+        {
+          time_start: Date.today.next_week + 1.day + 14.hours,
+          time_end: Date.today.next_week + 1.day + 15.hours,
+        }
+      ]
+
+      available_date.each do |date|
+        user.book! room, time_start: date[:time_start], time_end: date[:time_end], amount: 1
+      end
+    end
+
+    context 'when assign time start' do
+      before { post :room_booked, params: { time_start: Date.today.next_week + 9.hours + 30.minute } }
+
+      it { should respond_with(200) }
+
+      it 'return room booked' do
+        expect(json.count).to eq(2)
+      end
+
+      it 'return correct number of page' do
+        expect(JSON.parse(response.body)["metadata"]["page"].to_i).to eq(1)
+      end
+
+      it 'return correct number of per_page' do
+        expect(JSON.parse(response.body)["metadata"]["per_page"].to_i).to eq(10)
+      end
+
+      it 'return correct number of total' do
+        expect(JSON.parse(response.body)["metadata"]["total"].to_i).to eq(2)
+      end
+
+      it 'return correct number of total page' do
+        expect(JSON.parse(response.body)["metadata"]["total_page"].to_i).to eq(1)
+      end
+
+    end
+
+    context 'when do not assign time start' do
+      before { post :room_booked, params: {} }
+
+      it { should respond_with(200) }
+
+      it 'return room booked' do
+        expect(json.count).to eq(5)
+      end
+
+      it 'return correct number of page' do
+        expect(JSON.parse(response.body)["metadata"]["page"].to_i).to eq(1)
+      end
+
+      it 'return correct number of per_page' do
+        expect(JSON.parse(response.body)["metadata"]["per_page"].to_i).to eq(10)
+      end
+
+      it 'return correct number of total' do
+        expect(JSON.parse(response.body)["metadata"]["total"].to_i).to eq(5)
+      end
+
+      it 'return correct number of total page' do
+        expect(JSON.parse(response.body)["metadata"]["total_page"].to_i).to eq(1)
+      end
+
+    end
+  end
 end
