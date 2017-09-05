@@ -29,8 +29,6 @@ class Api::V1::RoomBookingsController < ApplicationController
     json_response(booking, :created)
   end
 
-  # PUT /room_bookings/:id
-
   # DELETE /room_bookings/:id
   def destroy
     authorize @booking || ActsAsBookable::Booking
@@ -43,6 +41,7 @@ class Api::V1::RoomBookingsController < ApplicationController
     end
   end
 
+  # POST /room_bookings/search
   def search
     authorize ActsAsBookable::Booking
     param! :room_id, Integer, required: true
@@ -64,6 +63,19 @@ class Api::V1::RoomBookingsController < ApplicationController
         :not_found
       )
     end
+  end
+
+  def get_booked
+    param! :page, Integer
+    param! :time_start, DateTime
+    param! :time_end, DateTime
+
+    page = params[:page].present? && params[:page] || 1
+
+    total = ReportService.get_booked(params[:time_start], params[:time_end]).count
+    room_bookings = ReportService.get_booked(params[:time_start], params[:time_end]).page(page)
+
+    report_response(room_bookings, page, total)
   end
 
   private
