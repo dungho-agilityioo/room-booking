@@ -14,9 +14,8 @@ module Api
         total = ReportService.by_range_date(params).count
 
         room_bookings = ReportService.by_range_date(params).page(page)
-        limit_value = room_bookings.limit_value
 
-        report_response(room_bookings, page, limit_value, total)
+        report_response(room_bookings, page, total)
       end
 
       def by_project
@@ -29,9 +28,8 @@ module Api
         total = ReportService.by_project(params[:project_id]).count
 
         room_bookings = ReportService.by_project(params[:project_id]).page(page)
-        limit_value = room_bookings.limit_value
 
-        report_response(room_bookings, page, limit_value, total)
+        report_response(room_bookings, page, total)
       end
 
     end

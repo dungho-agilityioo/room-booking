@@ -3,7 +3,9 @@ module Response
     render json: object, status: status
   end
 
-  def report_response(objects, page, limit_value, total)
+  def report_response(objects, page, total)
+    limit_value = objects.limit_value
+
     render json: {
         data:
           ActiveModel::Serializer::CollectionSerializer.new(
