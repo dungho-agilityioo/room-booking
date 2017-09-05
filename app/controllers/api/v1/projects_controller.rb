@@ -46,7 +46,7 @@ class Api::V1::ProjectsController < ApplicationController
 
   def project_params
     # whitelist params
-    params.require(:project).permit(:name, :status)
+    params.permit(:name, :status)
   end
 
   def find_project

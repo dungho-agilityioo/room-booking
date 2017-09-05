@@ -10,11 +10,9 @@
 #  capacity   :integer
 #
 
-require 'rails_helper'
+class ActsAsBookable::BookingSerializer < ActiveModel::Serializer
+  attributes :id, :title, :description, :time_start, :time_end, :created_at
 
-RSpec.describe Room, type: :model do
-  describe "validations", :validations do
-		it { is_expected.to validate_presence_of(:name) }
-    it { is_expected.to callback(:set_default_schedule).after(:initialize).if(:new_record?) }
-  end
+  belongs_to :bookable, polymorphic: true
+  belongs_to :booker,   polymorphic: true
 end

@@ -1,7 +1,7 @@
 class ProjectPolicy < ApplicationPolicy
 
   def index?
-    @current_user.admin? || @current_user.staff?
+    login?
   end
 
   def create?

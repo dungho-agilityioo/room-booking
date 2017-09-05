@@ -10,10 +10,44 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170829080140) do
+ActiveRecord::Schema.define(version: 20170902153619) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "acts_as_bookable_bookings", force: :cascade do |t|
+    t.string   "bookable_type"
+    t.integer  "bookable_id"
+    t.string   "booker_type"
+    t.integer  "booker_id"
+    t.integer  "project_id"
+    t.string   "title"
+    t.integer  "amount"
+    t.text     "schedule"
+    t.datetime "time_start"
+    t.datetime "time_end"
+    t.datetime "time"
+    t.text     "description"
+    t.datetime "created_at"
+    t.boolean  "daily",           default: false
+    t.integer  "generate_for_id"
+    t.index ["bookable_type", "bookable_id"], name: "index_acts_as_bookable_bookings_bookable", using: :btree
+    t.index ["booker_type", "booker_id"], name: "index_acts_as_bookable_bookings_booker", using: :btree
+    t.index ["project_id"], name: "index_acts_as_bookable_bookings_project", using: :btree
+  end
+
+  create_table "bookings", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "project_id"
+    t.integer  "booking_type"
+    t.text     "reason"
+    t.date     "start_date"
+    t.time     "start_hour"
+    t.date     "end_date"
+    t.time     "end_hour"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
 
   create_table "projects", force: :cascade do |t|
     t.string   "name"
@@ -26,6 +60,8 @@ ActiveRecord::Schema.define(version: 20170829080140) do
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text     "schedule"
+    t.integer  "capacity"
   end
 
   create_table "users", force: :cascade do |t|

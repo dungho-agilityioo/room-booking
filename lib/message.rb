@@ -1,6 +1,10 @@
 class Message
   class << self
 
+    def not_found(record)
+      "Couldn't find #{record}"
+    end
+
     def invalid_token
       'Invalid token'
     end

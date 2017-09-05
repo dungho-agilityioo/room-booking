@@ -48,7 +48,7 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
     let(:valid_attributes) { FactoryGirl.attributes_for(:room) }
 
     context 'when the request is valid' do
-      before { post :create, params: { room: valid_attributes } }
+      before { post :create, params: valid_attributes }
 
       it { should respond_with(201) }
 
@@ -61,7 +61,7 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
     end
 
     context 'when the request is invalid' do
-      before { post :create, params: { room: { name: '' } } }
+      before { post :create, params: { name: '' } }
 
       it { should respond_with(422) }
 
@@ -76,7 +76,7 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
     let(:valid_attributes) { FactoryGirl.attributes_for(:room) }
 
     context 'when the record exists' do
-      before { put :update, params: { id: room_id, room: valid_attributes } }
+      before { put :update, params: valid_attributes.merge( id: room_id) }
 
       it { should respond_with(200) }
 
@@ -86,7 +86,7 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
     end
 
     context 'when the request is invalid' do
-      before { put :update, params: {id: room_id, room: { name: '' } } }
+      before { put :update, params: {id: room_id, name: '' } }
 
       it { should respond_with(422) }
 

@@ -18,30 +18,38 @@ module ExceptionHandler
     rescue_from ::Pundit::NotAuthorizedError, with: :pundit_not_authorized
     rescue_from ActiveRecord::RecordNotFound, with: :not_found
     rescue_from ActionController::ParameterMissing, with: :bad_request
+    rescue_from RailsParam::Param::InvalidParameterError, with: :bad_request
+    rescue_from ActsAsBookable::AvailabilityError, with: :bad_request
+    rescue_from JWT::DecodeError, with: :unprocessable_entity
 
     private
+
+    def exception_message(message, status = :unauthorized)
+      json_response({ message: message }, status)
+    end
+
     # JSON response with message; Status code 404 - not found
     def not_found(e)
-      json_response({ message: e.message }, :not_found)
+      exception_message(e.message, :not_found)
     end
 
     # JSON response with message; Status code 422 - unprocessable entity
     def unprocessable_entity(e)
-      json_response({ message: e.message }, :unprocessable_entity)
+      exception_message(e.message, :unprocessable_entity)
     end
 
     # JSON response with message; Status code 401 - Unauthorized
     def pundit_not_authorized(e)
-      json_response( { message: Message.unauthorized }, :unauthorized )
+      exception_message(Message.unauthorized)
     end
 
     # JSON response with message; Status code 401 - Unauthorized
     def unauthorized_request(e)
-      json_response({ message: e.message }, :unauthorized)
+      exception_message(e.message)
     end
 
     def bad_request(e)
-      json_response({ message: e.message }, :bad_request)
+      exception_message(e.message, :bad_request)
     end
   end
 end

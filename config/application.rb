@@ -32,5 +32,20 @@ module App
     config.middleware.use ActionDispatch::Session::CookieStore, config.session_options
     config.middleware.use ActionDispatch::Flash
 
+    config.active_record.time_zone_aware_types = [:datetime, :time]
+
+    config.to_prepare do
+      # Load application's model / class decorators
+      Dir.glob(File.join(File.dirname(__FILE__), "../app/**/*_decorator*.rb")) do |c|
+        Rails.configuration.cache_classes ? require(c) : load(c)
+      end
+
+    end
+
+    # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
+    # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
+    # config.time_zone = 'Asia/Saigon'
+    # config.active_record.default_timezone = :local
+
   end
 end
