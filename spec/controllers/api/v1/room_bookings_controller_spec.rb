@@ -143,4 +143,46 @@ RSpec.describe Api::V1::RoomBookingsController, type: :controller do
       end
     end
   end
+
+  describe 'POST /room_bookings/search' do
+    let!(:room2) { create(:room) }
+    before(:each) do
+      @booking = ActsAsBookable::Booking.new(amount: 1)
+      @booking.booker = user
+      @booking.bookable = room2
+      @booking.time_start = Date.today.next_week + 8.hours
+      @booking.time_end = Date.today.next_week + 9.hours
+      @booking.save
+    end
+
+    context 'the Room is available' do
+      before(:each) do
+        post :search, params: {
+              room_id: room2.id,
+              time_start: Date.today.next_week + 10.hours,
+              time_end: Date.today.next_week + 11.hours,
+            }
+      end
+
+      it { should respond_with(200) }
+      it 'return a found message' do
+        expect(response.body).to match(/the Room is available from/)
+      end
+    end
+
+    context 'the Room not available' do
+      before do
+        post :search, params: {
+              room_id: room2.id,
+              time_start: Date.today.next_week + 8.hours,
+              time_end: Date.today.next_week + 10.hours,
+            }
+      end
+
+      it { should respond_with(404) }
+      it 'return a not found message' do
+        expect(response.body).to match(/the Room is not available from/)
+      end
+    end
+  end
 end

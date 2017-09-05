@@ -54,7 +54,16 @@ class Api::V1::RoomBookingsController < ApplicationController
                 time_end: params[:time_end],
                 amount: 1
               })
-    json_response(rs)
+    if rs
+      json_response(
+        "the Room is available from #{params[:time_start].to_s} to #{params[:time_end].to_s}"
+      )
+    else
+      json_response(
+        "the Room is not available from #{params[:time_start].to_s} to #{params[:time_end].to_s}",
+        :not_found
+      )
+    end
   end
 
   private
