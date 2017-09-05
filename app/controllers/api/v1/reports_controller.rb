@@ -16,18 +16,24 @@ module Api
         room_bookings = ReportService.by_range_date(params).page(page)
         limit_value = room_bookings.limit_value
 
-        render json: {
-          data:
-            ActiveModel::Serializer::CollectionSerializer.new(
-              room_bookings, each_serializer: ActsAsBookable::BookingSerializer
-            ).as_json,
-          metadata: {
-            page: page,
-            per_page: limit_value,
-            total: total,
-            total_page: (total.to_f / limit_value).ceil
-          }}, status: 200
+        report_response(room_bookings, page, limit_value, total)
       end
+
+      def by_project
+        authorize self
+
+        param! :page, Integer
+        param! :project_id, Integer, required: true
+
+        page = params[:page].present? && params[:page] || 1
+        total = ReportService.by_project(params[:project_id]).count
+
+        room_bookings = ReportService.by_project(params[:project_id]).page(page)
+        limit_value = room_bookings.limit_value
+
+        report_response(room_bookings, page, limit_value, total)
+      end
+
     end
   end
 end

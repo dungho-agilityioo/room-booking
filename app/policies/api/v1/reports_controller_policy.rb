@@ -4,4 +4,8 @@ class Api::V1::ReportsControllerPolicy < ApplicationPolicy
     @current_user.admin?
   end
 
+  def by_project?
+    @current_user.admin?
+  end
+
 end

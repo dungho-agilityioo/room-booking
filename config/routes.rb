@@ -60,6 +60,7 @@ Rails.application.routes.draw do
     post "room_bookings/search", to: "/api/v1/room_bookings#search"
 
     post "reports/range_date", to: "/api/v1/reports#by_range_date"
+    post "reports/projects", to: "/api/v1/reports#by_project"
   end
 
 end
