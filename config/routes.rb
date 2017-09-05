@@ -38,7 +38,7 @@
 #                          api_v1_room_booking GET             /api/v1/room_bookings/:id(.:format)                 api/v1/room_bookings#show {:format=>:json}
 #                                              DELETE          /api/v1/room_bookings/:id(.:format)                 api/v1/room_bookings#destroy {:format=>:json}
 #                  api_v1_room_bookings_search POST            /api/v1/room_bookings/search(.:format)              api/v1/room_bookings#search {:format=>:json}
-# 
+#
 
 Rails.application.routes.draw do
   devise_for :users, skip: [:registrations, :sessions, :passwords, :comfirmations]
@@ -58,6 +58,9 @@ Rails.application.routes.draw do
     resources :rooms
     resources :room_bookings, except: [:update]
     post "room_bookings/search", to: "/api/v1/room_bookings#search"
+
+    post "reports/range_date", to: "/api/v1/reports#by_range_date"
+    post "reports/projects", to: "/api/v1/reports#by_project"
   end
 
 end

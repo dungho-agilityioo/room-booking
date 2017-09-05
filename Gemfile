@@ -52,8 +52,8 @@ gem "active_model_serializers"
 # service object
 gem 'simple_command'
 
-# will_paginate provides a simple API for performing paginated queries with Active Record
-gem 'will_paginate', '~> 3.1', '>= 3.1.6'
+# A Scope & Engine based, clean, powerful, customizable and sophisticated paginator for modern web app frameworks and ORMs
+gem 'kaminari'
 
 # counter_culture provides turbo-charged counter caches
 gem 'counter_culture', '~> 1.7'

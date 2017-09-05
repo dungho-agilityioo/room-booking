@@ -1,0 +1,9 @@
+<p><%= @user_name %> makes request to booked room with the info below:</p>
+<p> - Room: <%= @room_name %></p>
+<p> - Title: <%= @title %></p>
+<p> - Description: <%= @description %></p>
+<p> - Start date: <%= @start_date.strftime('%m-%d-%Y') %></p>
+<p> - End date: <%= @end_date.strftime('%m-%d-%Y') %></p>
+<% if @daily.present? && @daily %>
+<p> - Booking Type: Daily</p>
+<% end %>
