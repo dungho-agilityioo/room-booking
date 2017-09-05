@@ -14,7 +14,7 @@ spec:
       restartPolicy: Never
       containers:
       - name: api
-        image: asia.gcr.io/rooms-booking-177603/roomsbooking-api:1.0.0
+        image: asia.gcr.io/rooms-booking-177603/rooms-booking-api:1.0.2
         imagePullPolicy: Always
         command: ["/bin/sh", "-c"]
         args: ["bundle exec rake db:create && bundle exec rake db:migrate"]
