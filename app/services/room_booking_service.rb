@@ -35,7 +35,7 @@ class RoomBookingService
       next_occurrences = @room_booking
                             .bookable
                             .schedule
-                            .next_occurrences(next_number, nex_schedule.first.time_start.to_datetime)
+                            .next_occurrences(next_number, nex_schedule.first.time_start.to_time)
       next_occurrences.each do |occurrence|
         @user.book! @room,
             title: @room_booking.title,
