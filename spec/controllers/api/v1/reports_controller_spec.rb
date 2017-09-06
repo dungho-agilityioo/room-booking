@@ -63,7 +63,7 @@ RSpec.describe Api::V1::ReportsController, type: :controller do
     ]
 
     available_date.each do |date|
-      @user.book! @room, time_start: date[:time_start], time_end: date[:time_end], project_id: @project.id, amount: 1
+      @user.book! @room, time_start: date[:time_start], time_end: date[:time_end], project_id: @project.id, amount: 1, title: Faker::Lorem.sentence
     end
 
     @user.book! @room2, time_start: Date.today.next_week + 8.hours, time_end: Date.today.next_week + 10.hours, project_id: @project2.id, amount: 1
