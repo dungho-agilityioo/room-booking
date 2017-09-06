@@ -15,7 +15,7 @@ module Api
 
         room_bookings = ReportService.by_range_date(params).page(page)
 
-        report_response(room_bookings, page, total)
+        respone_collection_serializer(room_bookings, page, total)
       end
 
       def by_project
@@ -29,7 +29,7 @@ module Api
 
         room_bookings = ReportService.by_project(params[:project_id]).page(page)
 
-        report_response(room_bookings, page, total)
+        respone_collection_serializer(room_bookings, page, total)
       end
 
     end

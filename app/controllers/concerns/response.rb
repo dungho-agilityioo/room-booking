@@ -3,7 +3,13 @@ module Response
     render json: object, status: status
   end
 
-  def report_response(objects, page, total)
+  def respone_record_serializer(object, status = :ok)
+    render json: {
+        data: ActsAsBookable::BookingSerializer.new(object)
+      }, status: status
+  end
+
+  def respone_collection_serializer(objects, page, total)
     limit_value = objects.limit_value
 
     render json: {

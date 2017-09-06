@@ -62,16 +62,16 @@ RSpec.describe Api::V1::RoomBookingsController, type: :controller do
       it { should respond_with(201) }
 
       it 'should be reserve the room' do
-        expect(json["attributes"]["time-start"].to_datetime).to eq( Date.today.next_week + 1.day + 8.hours )
-        expect(json["attributes"]["time-end"].to_datetime).to eq( Date.today.next_week + 1.day + 10.hours - 1.second )
+        expect(json["time_start"].to_datetime).to eq( Date.today.next_week + 1.day + 8.hours )
+        expect(json["time_end"].to_datetime).to eq( Date.today.next_week + 1.day + 10.hours - 1.second )
       end
 
       it 'should be booker is user' do
-        expect(json['relationships']['booker']['data']['id'].to_i).to eq(user.id)
+        expect(json['booker']['user']['id'].to_i).to eq(user.id)
       end
 
       it 'should be bookable is room' do
-        expect(json['relationships']['bookable']['data']['id'].to_i).to eq(room.id)
+        expect(json['bookable']['room']['id'].to_i).to eq(room.id)
       end
     end
 

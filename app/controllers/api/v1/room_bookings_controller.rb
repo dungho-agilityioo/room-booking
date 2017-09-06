@@ -5,14 +5,21 @@ class Api::V1::RoomBookingsController < ApplicationController
   # GET /room_bookings
   def index
     authorize ActsAsBookable::Booking
-    json_response(current_user.bookings)
+    param! :page, Integer
+    page = params[:page].present? && params[:page] || 1
+
+    total = current_user.bookings.count
+
+    room_bookings = current_user.bookings.page(page)
+
+    respone_collection_serializer(room_bookings, page, total)
   end
 
     # GET /room_bookings/:id
   def show
     authorize @booking || ActsAsBookable::Booking
     if @booking.present?
-      json_response(@booking)
+      respone_record_serializer(@booking)
     else
       json_response({message: Message.not_found('Room Booking')}, :not_found)
     end
@@ -26,7 +33,7 @@ class Api::V1::RoomBookingsController < ApplicationController
     find_room
     booking = current_user.book! @room, convert_param.merge(amount: 1)
 
-    json_response(booking, :created)
+    respone_record_serializer(booking, :created)
   end
 
   # DELETE /room_bookings/:id
@@ -76,7 +83,7 @@ class Api::V1::RoomBookingsController < ApplicationController
     total = ReportService.get_booked(params[:time_start], params[:time_end]).count
     room_bookings = ReportService.get_booked(params[:time_start], params[:time_end]).page(page)
 
-    report_response(room_bookings, page, total)
+    respone_collection_serializer(room_bookings, page, total)
   end
 
   private
