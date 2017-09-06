@@ -20,7 +20,7 @@ class UserMailer < ApplicationMailer
     @start_date = object.time_start
     @end_date = object.time_end
 
-    mail to: "#{object.booker.try(:email)}", subject: "[Room Booking] Reminder for #{object.title}"
+    mail to: "#{object.booker.try(:email)}", subject: "[Room Booking] Reminder - #{object.title} will start in 10 minutes"
   end
 
 end

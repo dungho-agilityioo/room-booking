@@ -15,3 +15,4 @@
 :queues:
   - default
   - generate_future_schedule_job
+  - reminder_email_job
