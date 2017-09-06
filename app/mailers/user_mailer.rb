@@ -8,7 +8,19 @@ class UserMailer < ApplicationMailer
     @title = opts[:params][:title]
     @start_date = opts[:params][:time_start]
     @end_date = opts[:params][:time_end]
-    mail to: ENV['ADMIN_EMAIL'], from: "#{user.email}", subject: "[Room Booking] Submit Room Booking"
+    @daily = opts[:params][:daily]
+
+    mail to: ENV['ADMIN_EMAIL'], subject: "[Room Booking] Submit Room Booking"
+  end
+
+  def reminder(object)
+    @title = object.title
+    @room_name = object.bookable.try(:name)
+    @description = object.description
+    @start_date = object.time_start
+    @end_date = object.time_end
+
+    mail to: "#{object.booker.try(:email)}", subject: "[Room Booking] Reminder for #{object.title}"
   end
 
 end
