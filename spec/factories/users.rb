@@ -29,7 +29,7 @@
 FactoryGirl.define do
 	factory :user do
 		provider { "gitlab" }
-    uid { Faker::Number.number(10) }
+    uid { Time.now.to_i }
     email { Faker::Internet.email }
     name { Faker::Name.name }
     first_name { Faker::Name.first_name }
