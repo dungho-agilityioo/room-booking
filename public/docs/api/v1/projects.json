@@ -167,7 +167,7 @@
               }
             }
           ],
-          "summary": "Update a new Project",
+          "summary": "Update a Project",
           "responseMessages": [
             {
               "code": 200,
@@ -210,7 +210,7 @@
               "required": true
             }
           ],
-          "summary": "Delete a new Project",
+          "summary": "Delete a Project",
           "responseMessages": [
             {
               "code": 204,

@@ -49,7 +49,7 @@ class Api::V1::RoomsController < ApplicationController
 
   # PUT /rooms/:id
   swagger_api :update do
-    summary "Update a new Room"
+    summary "Update a Room"
     param :path, :id, :integer, :required, "Room Id"
     param :form, :name, :string, :required, "Room Name"
     response :ok, "Success", :Room
@@ -67,7 +67,7 @@ class Api::V1::RoomsController < ApplicationController
 
   # DELETE /rooms/:id
   swagger_api :destroy do
-    summary "Delete a new Room"
+    summary "Delete a Room"
     param :path, :id, :integer, :required, "Room Id"
     response :no_content, "Success", :Room
     response :unauthorized

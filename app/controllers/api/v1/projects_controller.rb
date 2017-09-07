@@ -48,7 +48,7 @@ class Api::V1::ProjectsController < ApplicationController
 
   # PUT /projects
   swagger_api :update do
-    summary "Update a new Project"
+    summary "Update a Project"
     param :path, :id, :integer, :required, "Project Id"
     param :form, :name, :string, :required, "Project Name"
     param_list :form, :status, :string, :required, "Status", [:active, :inactive]
@@ -67,7 +67,7 @@ class Api::V1::ProjectsController < ApplicationController
 
   # DELETE /projects/:id
   swagger_api :destroy do
-    summary "Delete a new Project"
+    summary "Delete a Project"
     param :path, :id, :integer, :required, "Project Id"
     response :no_content, "Success", :Project
     response :unauthorized

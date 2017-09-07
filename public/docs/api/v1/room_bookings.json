@@ -61,13 +61,6 @@
             },
             {
               "paramType": "form",
-              "name": "title",
-              "type": "string",
-              "description": "Title",
-              "required": true
-            },
-            {
-              "paramType": "form",
               "name": "time_start",
               "type": "DateTime",
               "description": "Time Start",
@@ -78,6 +71,13 @@
               "name": "time_end",
               "type": "DateTime",
               "description": "Time End",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "title",
+              "type": "string",
+              "description": "Title",
               "required": true
             },
             {

@@ -153,7 +153,7 @@
               "required": true
             }
           ],
-          "summary": "Update a new Room",
+          "summary": "Update a Room",
           "responseMessages": [
             {
               "code": 200,
@@ -196,7 +196,7 @@
               "required": true
             }
           ],
-          "summary": "Delete a new Room",
+          "summary": "Delete a Room",
           "responseMessages": [
             {
               "code": 204,
