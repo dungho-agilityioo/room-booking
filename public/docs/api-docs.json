@@ -10,6 +10,10 @@
     {
       "path": "/docs/api/v1/rooms.{format}",
       "description": "Room Management"
+    },
+    {
+      "path": "/docs/api/v1/room_bookings.{format}",
+      "description": "Room Bookings Management"
     }
   ],
   "authorizations": null,

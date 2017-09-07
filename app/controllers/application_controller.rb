@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
 
     private
     def setup_basic_api_documentation
-      [:index, :show, :create, :update, :destroy].each do |api_action|
+      [:index, :show, :create, :update, :destroy, :search, :room_booked].each do |api_action|
         swagger_api api_action do
           param :header, 'Authorization', :string, :required, 'Authentication token'
         end
