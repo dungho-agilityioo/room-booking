@@ -95,7 +95,7 @@ group :development do
   # N+1 query detect
   gem 'bullet'
   # API documentation
-  gem 'swagger-blocks'
+  gem 'swagger-docs'
   gem 'annotate', require: false
 end
 
