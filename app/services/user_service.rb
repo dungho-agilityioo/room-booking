@@ -4,16 +4,20 @@ class UserService
     def create_user(params)
       user = User.find_or_initialize_by(
           provider: params[:provider],
-          uid: params[:uid],
           email: params[:info][:email] ) do |u|
         u[:name] = params[:info][:name]
         u[:first_name] = params[:info][:first_name]
         u[:last_name] = params[:info][:last_name]
+        u[:uid] = params[:uid]
       end
       user.skip_password_validation = true
 
-      return user if user.save
-      errors.add_multiple_errors user.errors.messages
+      unless user.save
+        user.uid = params[:uid]
+        user.save
+      end
+
+      user
     end
 
     def create_admin

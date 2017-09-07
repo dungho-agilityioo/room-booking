@@ -1,0 +1,25 @@
+{
+  "apiVersion": "1.0",
+  "swaggerVersion": "1.2",
+  "basePath": "/",
+  "apis": [
+    {
+      "path": "/docs/api/v1/projects.{format}",
+      "description": "Project Management"
+    },
+    {
+      "path": "/docs/api/v1/rooms.{format}",
+      "description": "Room Management"
+    },
+    {
+      "path": "/docs/api/v1/room_bookings.{format}",
+      "description": "Room Bookings Management"
+    }
+  ],
+  "authorizations": null,
+  "info": {
+    "title": "Room Booking Api App",
+    "description": "Agility IO micro app: Rooms Booking.",
+    "contact": "dung.hoduy@asnet.com.vn"
+  }
+}

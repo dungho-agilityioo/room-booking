@@ -1,7 +1,14 @@
 class Api::V1::RoomsController < ApplicationController
 	before_action :find_room, only: [:show, :update, :destroy]
+  swagger_controller :room, "Room Management"
 
   # GET /rooms
+  swagger_api :index do
+    summary "Fetches all Rooms"
+    response :ok, "Success", :Room
+    response :unauthorized
+    response :not_found
+  end
   def index
     @rooms = Room.all
     authorize Room
@@ -9,12 +16,27 @@ class Api::V1::RoomsController < ApplicationController
   end
 
   # GET /rooms/:id
+  swagger_api :show do
+    summary "Fetches a single Room item"
+    param :path, :id, :integer, :required, "Room Id"
+    response :ok, "Success", :Room
+    response :unauthorized
+    response :not_found
+  end
   def show
     authorize @room
     json_response(@room)
   end
 
+
   # POST /rooms
+  swagger_api :create do
+    summary "Creates a new Room"
+    param :form, :name, :string, :required, "Room Name"
+    response :ok, "Success", :Room
+    response :unauthorized
+    response :not_found
+  end
   def create
     @room = Room.new(room_params)
     authorize @room
@@ -25,7 +47,15 @@ class Api::V1::RoomsController < ApplicationController
     end
   end
 
-  # PUT /rooms
+  # PUT /rooms/:id
+  swagger_api :update do
+    summary "Update a Room"
+    param :path, :id, :integer, :required, "Room Id"
+    param :form, :name, :string, :required, "Room Name"
+    response :ok, "Success", :Room
+    response :unauthorized
+    response :not_found
+  end
   def update
     authorize @room
     if @room.update(room_params)
@@ -36,6 +66,13 @@ class Api::V1::RoomsController < ApplicationController
   end
 
   # DELETE /rooms/:id
+  swagger_api :destroy do
+    summary "Delete a Room"
+    param :path, :id, :integer, :required, "Room Id"
+    response :no_content, "Success", :Room
+    response :unauthorized
+    response :not_found
+  end
   def destroy
     authorize @room
     @room.destroy

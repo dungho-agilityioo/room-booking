@@ -1,0 +1,316 @@
+{
+  "apiVersion": "1.0",
+  "swaggerVersion": "1.2",
+  "basePath": "/",
+  "resourcePath": "room_bookings",
+  "apis": [
+    {
+      "path": "/api/v1/room_bookings.json",
+      "operations": [
+        {
+          "parameters": [
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": true
+            }
+          ],
+          "summary": "Fetches all Room Bookings of Current User",
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": "Room",
+              "message": "Success"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            },
+            {
+              "code": 404,
+              "responseModel": null,
+              "message": "Not Found"
+            }
+          ],
+          "nickname": "Api::V1::RoomBookings#index",
+          "method": "get"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/room_bookings.json",
+      "operations": [
+        {
+          "parameters": [
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "room_id",
+              "type": "integer",
+              "description": "Room Id",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "time_start",
+              "type": "DateTime",
+              "description": "Time Start",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "time_end",
+              "type": "DateTime",
+              "description": "Time End",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "title",
+              "type": "string",
+              "description": "Title",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "project_id",
+              "type": "integer",
+              "description": "Project Id",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "daily",
+              "type": "boolean",
+              "description": "Daily",
+              "required": false
+            }
+          ],
+          "summary": "Creates a new Room Booking",
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": "RoomBooking",
+              "message": "Success"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            },
+            {
+              "code": 404,
+              "responseModel": null,
+              "message": "Not Found"
+            }
+          ],
+          "nickname": "Api::V1::RoomBookings#create",
+          "method": "post"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/room_bookings/{id}.json",
+      "operations": [
+        {
+          "parameters": [
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": true
+            },
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Room Booking Id",
+              "required": true
+            }
+          ],
+          "summary": "Fetches a single Room Booking item of Current User",
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": "Room",
+              "message": "Success"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            },
+            {
+              "code": 404,
+              "responseModel": null,
+              "message": "Not Found"
+            }
+          ],
+          "nickname": "Api::V1::RoomBookings#show",
+          "method": "get"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/room_bookings/{id}.json",
+      "operations": [
+        {
+          "parameters": [
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": true
+            },
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Room Booking Id",
+              "required": true
+            }
+          ],
+          "summary": "Delete a Room Booking of Current user",
+          "responseMessages": [
+            {
+              "code": 204,
+              "responseModel": "RoomBooking",
+              "message": "Success"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            },
+            {
+              "code": 404,
+              "responseModel": null,
+              "message": "Not Found"
+            }
+          ],
+          "nickname": "Api::V1::RoomBookings#destroy",
+          "method": "delete"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/room_bookings/search.json",
+      "operations": [
+        {
+          "parameters": [
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "room_id",
+              "type": "integer",
+              "description": "Room Id",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "time_start",
+              "type": "DateTime",
+              "description": "Time Start",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "time_end",
+              "type": "DateTime",
+              "description": "Time End",
+              "required": true
+            }
+          ],
+          "summary": "Check Room Available in the range time",
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": "RoomBooking",
+              "message": "Success"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            },
+            {
+              "code": 404,
+              "responseModel": null,
+              "message": "Not Found"
+            }
+          ],
+          "nickname": "Api::V1::RoomBookings#search",
+          "method": "post"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/room_bookings/booked.json",
+      "operations": [
+        {
+          "parameters": [
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "time_start",
+              "type": "DateTime",
+              "description": "Time Start",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "time_end",
+              "type": "DateTime",
+              "description": "Time End",
+              "required": true
+            }
+          ],
+          "summary": "Get list Room Booked in the range time",
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": "RoomBooking",
+              "message": "Success"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            },
+            {
+              "code": 404,
+              "responseModel": null,
+              "message": "Not Found"
+            }
+          ],
+          "nickname": "Api::V1::RoomBookings#room_booked",
+          "method": "post"
+        }
+      ]
+    }
+  ],
+  "authorizations": null
+}
