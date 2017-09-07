@@ -8,7 +8,7 @@ Swagger::Docs::Config.register_apis({
     # the URL base path to your API
     :base_path => '/',
     # if you want to delete all .json files at each generation
-    # :clean_directory => false,
+    :clean_directory => false,
     # Ability to setup base controller for each api version. Api::V1::SomeController for example.
     # :parent_controller => ApplicationController,
     # add custom attributes to api-docs
@@ -16,10 +16,7 @@ Swagger::Docs::Config.register_apis({
       :info => {
         "title" => "Room Booking Api App",
         "description" => "Agility IO micro app: Rooms Booking.",
-        # "termsOfServiceUrl" => "http://helloreverb.com/terms/",
         "contact" => "dung.hoduy@asnet.com.vn",
-        # "license" => "Apache 2.0",
-        # "licenseUrl" => "http://www.apache.org/licenses/LICENSE-2.0.html"
       }
     }
   }
