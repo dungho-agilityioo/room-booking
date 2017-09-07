@@ -4,6 +4,10 @@
   "basePath": "/",
   "apis": [
     {
+      "path": "/docs/api/v1/users/omniauth_callbacks.{format}",
+      "description": "Omniauth Callbacks"
+    },
+    {
       "path": "/docs/api/v1/projects.{format}",
       "description": "Project Management"
     },
