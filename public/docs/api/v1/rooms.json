@@ -1,11 +1,11 @@
 {
   "apiVersion": "1.0",
   "swaggerVersion": "1.2",
-  "basePath": "/api/v1",
+  "basePath": "/",
   "resourcePath": "rooms",
   "apis": [
     {
-      "path": "/rooms.json",
+      "path": "/api/v1/rooms.json",
       "operations": [
         {
           "parameters": [
@@ -41,7 +41,7 @@
       ]
     },
     {
-      "path": "/rooms.json",
+      "path": "/api/v1/rooms.json",
       "operations": [
         {
           "parameters": [
@@ -84,7 +84,7 @@
       ]
     },
     {
-      "path": "/rooms/{id}.json",
+      "path": "/api/v1/rooms/{id}.json",
       "operations": [
         {
           "parameters": [
@@ -127,7 +127,7 @@
       ]
     },
     {
-      "path": "/rooms/{id}.json",
+      "path": "/api/v1/rooms/{id}.json",
       "operations": [
         {
           "parameters": [
@@ -177,7 +177,7 @@
       ]
     },
     {
-      "path": "/rooms/{id}.json",
+      "path": "/api/v1/rooms/{id}.json",
       "operations": [
         {
           "parameters": [
