@@ -79,13 +79,14 @@
 #                  default_room_bookings_booked POST            /room_bookings/booked(.:format)                     api/v1/room_bookings#room_booked {:format=>:json}
 #                    default_reports_range_date POST            /reports/range_date(.:format)                       api/v1/reports#by_range_date {:format=>:json}
 #                      default_reports_projects POST            /reports/projects(.:format)                         api/v1/reports#by_project {:format=>:json}
-# 
+#
 
 Rails.application.routes.draw do
   devise_for :users, skip: [:registrations, :sessions, :passwords, :comfirmations]
 
   api_version(module: "Api::V1", path: { value: "api/v1" }, defaults: { format: :json }, default: true) do
-    devise_for :users, path_names: { sign_in: "login", sign_out: "logout" },
+    devise_for :users, skip: [:registrations, :passwords],
+      path_names: { sign_in: "login", sign_out: "logout" },
       controllers: {
         omniauth_callbacks: "api/v1/users/omniauth_callbacks",
         sessions: "api/v1/users/omniauth_callbacks"
