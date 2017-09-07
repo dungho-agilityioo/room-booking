@@ -1,6 +1,7 @@
 class Api::V1::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   before_action :oauth_login, only: [:gitlab]
-  skip_before_action :authenticate_request
+  skip_before_action :authenticate_request, only: [:gitlab]
+  swagger_controller :omniauth_callbacks, "User Management"
 
   def gitlab
     @resource = auth_resource
@@ -10,6 +11,16 @@ class Api::V1::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksCon
     sign_in @resource, store: false
 
     render json: @resource
+  end
+
+  swagger_api :destroy do |api|
+    summary "Logout"
+    response :ok, "Success", :OmniauthCallbacks
+    response :unauthorized
+  end
+  def destroy
+    Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name)
+    render status: :ok, json: { success: true }
   end
 
   protected

@@ -4,6 +4,10 @@
   "basePath": "/",
   "apis": [
     {
+      "path": "/docs/api/v1/users/omniauth_callbacks.{format}",
+      "description": "Omniauth Callbacks"
+    },
+    {
       "path": "/docs/api/v1/projects.{format}",
       "description": "Project Management"
     },
@@ -14,6 +18,10 @@
     {
       "path": "/docs/api/v1/room_bookings.{format}",
       "description": "Room Bookings Management"
+    },
+    {
+      "path": "/docs/api/v1/reports.{format}",
+      "description": "Room Management"
     }
   ],
   "authorizations": null,
