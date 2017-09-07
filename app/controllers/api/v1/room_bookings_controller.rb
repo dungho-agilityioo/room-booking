@@ -137,12 +137,6 @@ class Api::V1::RoomBookingsController < ApplicationController
 
   private
 
-  def self.add_common_params(api)
-    api.param :form, :room_id, :integer, :required, "Room Id"
-    api.param :form, :time_start, :DateTime, :required, "Time Start"
-    api.param :form, :time_end, :DateTime, :required, "Time End"
-  end
-
   def book_params
     # whitelist params
     params.permit(:title, :description, :time_start, :time_end, :room_id, :daily)
