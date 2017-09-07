@@ -1,0 +1,16 @@
+{
+  "apiVersion": "1.0",
+  "swaggerVersion": "1.2",
+  "basePath": "/api/v1",
+  "apis": [
+    {
+      "path": "/rooms.{format}",
+      "description": "Room Management"
+    }
+  ],
+  "authorizations": null,
+  "info": {
+    "title": "Room Booking Api App",
+    "description": "Agility IO micro app: Rooms Booking."
+  }
+}
