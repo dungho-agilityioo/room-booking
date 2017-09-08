@@ -45,6 +45,9 @@ class User < ApplicationRecord
   after_initialize :set_default_role, :if => :new_record?
   acts_as_booker
 
+  has_many :user_projects
+  has_many :projects, through: :user_projects
+
   def set_default_role
     self.role ||= :staff
   end
