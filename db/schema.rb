@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170902153619) do
+ActiveRecord::Schema.define(version: 20170907151245) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,19 +36,6 @@ ActiveRecord::Schema.define(version: 20170902153619) do
     t.index ["project_id"], name: "index_acts_as_bookable_bookings_project", using: :btree
   end
 
-  create_table "bookings", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "project_id"
-    t.integer  "booking_type"
-    t.text     "reason"
-    t.date     "start_date"
-    t.time     "start_hour"
-    t.date     "end_date"
-    t.time     "end_hour"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-  end
-
   create_table "projects", force: :cascade do |t|
     t.string   "name"
     t.integer  "status",     default: 0
@@ -62,6 +49,15 @@ ActiveRecord::Schema.define(version: 20170902153619) do
     t.datetime "updated_at", null: false
     t.text     "schedule"
     t.integer  "capacity"
+  end
+
+  create_table "user_projects", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "project_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_user_projects_on_project_id", using: :btree
+    t.index ["user_id"], name: "index_user_projects_on_user_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|
@@ -90,4 +86,6 @@ ActiveRecord::Schema.define(version: 20170902153619) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
+  add_foreign_key "user_projects", "projects"
+  add_foreign_key "user_projects", "users"
 end
