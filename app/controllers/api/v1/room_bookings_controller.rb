@@ -58,7 +58,7 @@ class Api::V1::RoomBookingsController < ApplicationController
     find_room
     booking = current_user.book! @room, convert_param.merge(amount: 1)
 
-    respone_record_serializer(booking, :created)
+    respone_record_serializer(booking, ActsAsBookable::BookingSerializer, :created)
   end
 
   # DELETE /room_bookings/:id

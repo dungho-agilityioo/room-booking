@@ -1,4 +1,5 @@
 class Api::V1::UserProjectsController < ApplicationController
+  before_action :find_project, only: [:update, :destroy]
 
   # GET /user_projects
   def index
@@ -17,20 +18,16 @@ class Api::V1::UserProjectsController < ApplicationController
     respone_record_serializer(@project, ProjectSerializer, :created)
   end
 
-  # PUT /user_projects
+  # PUT /user_projects/:project_id
   def update
-    param! :project_id, Integer, required: true
     param! :user_id, Array, required: true
-    find_project
     @project.user_ids = params[:user_id]
     respone_record_serializer(@project, ProjectSerializer)
   end
 
-  # DELETE /user_projects/:id
+  # DELETE /user_projects/:project_id
   def destroy
-    user_project = UserProject.find(params[:id])
-
-    user_project.destroy
+    @project.user_projects.destroy_all
     json_response(nil, :no_content)
   end
 
@@ -39,4 +36,5 @@ class Api::V1::UserProjectsController < ApplicationController
   def find_project
     @project = Project.find(params[:project_id])
   end
+
 end
