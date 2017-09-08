@@ -4,10 +4,6 @@
   "basePath": "/",
   "apis": [
     {
-      "path": "/docs/api/v1/users/omniauth_callbacks.{format}",
-      "description": "Omniauth Callbacks"
-    },
-    {
       "path": "/docs/api/v1/projects.{format}",
       "description": "Project Management"
     },
@@ -22,6 +18,14 @@
     {
       "path": "/docs/api/v1/reports.{format}",
       "description": "Room Management"
+    },
+    {
+      "path": "/docs/api/v1/users.{format}",
+      "description": "User Management"
+    },
+    {
+      "path": "/docs/api/v1/user_projects.{format}",
+      "description": "Administrator can assign project for user"
     }
   ],
   "authorizations": null,

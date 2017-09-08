@@ -33,9 +33,8 @@ class Api::V1::RoomsController < ApplicationController
   swagger_api :create do
     summary "Creates a new Room"
     param :form, :name, :string, :required, "Room Name"
-    response :ok, "Success", :Room
+    response :created, "Success", :Room
     response :unauthorized
-    response :not_found
   end
   def create
     @room = Room.new(room_params)

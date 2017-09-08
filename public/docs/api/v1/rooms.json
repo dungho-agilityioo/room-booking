@@ -63,7 +63,7 @@
           "summary": "Creates a new Room",
           "responseMessages": [
             {
-              "code": 200,
+              "code": 201,
               "responseModel": "Room",
               "message": "Success"
             },
@@ -71,11 +71,6 @@
               "code": 401,
               "responseModel": null,
               "message": "Unauthorized"
-            },
-            {
-              "code": 404,
-              "responseModel": null,
-              "message": "Not Found"
             }
           ],
           "nickname": "Api::V1::Rooms#create",

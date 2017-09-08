@@ -25,7 +25,7 @@ Rails.application.routes.draw do
     post "reports/projects", to: "/api/v1/reports#by_project"
     get 'users/projects', to: '/api/v1/users#projects'
 
-    resources :user_projects, except: [:update, :destroy] do
+    resources :user_projects, except: [:update, :destroy, :show] do
       put ':project_id', on: :collection, action: "update"
       delete ':project_id', on: :collection, action: "destroy"
     end

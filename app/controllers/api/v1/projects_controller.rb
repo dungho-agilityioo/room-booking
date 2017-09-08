@@ -32,9 +32,8 @@ class Api::V1::ProjectsController < ApplicationController
   swagger_api :create do
     summary "Creates a new Project"
     param :form, :name, :string, :required, "Project Name"
-    response :ok, "Success", :Project
+    response :created, "Success", :Project
     response :unauthorized
-    response :not_found
   end
   def create
     @project = Project.new(project_params)
