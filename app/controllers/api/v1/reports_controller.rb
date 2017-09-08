@@ -6,7 +6,7 @@ module Api
       # POST reports/range_date
       swagger_api :by_range_date do |api|
         summary "Fetches all Rooms Booking in the range time"
-        param :path, :page, :integer, :optional, "Page Number"
+        param :query, :page, :integer, :optional, "Page Number"
         Api::V1::ReportsController::add_common_params(api)
         response :ok, "Success", :Room
         response :unauthorized
@@ -30,7 +30,7 @@ module Api
       # POST reports/by_project
       swagger_api :by_project do |api|
         summary "Fetches all Rooms Booking by project id"
-        param :path, :page, :integer, :optional, "Page Number"
+        param :query, :page, :integer, :optional, "Page Number"
         param :form, :project_id, :integer, :required, "Project Id"
         response :ok, "Success", :Room
         response :unauthorized

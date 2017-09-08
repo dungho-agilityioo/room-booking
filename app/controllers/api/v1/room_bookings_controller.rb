@@ -6,7 +6,7 @@ class Api::V1::RoomBookingsController < ApplicationController
   # GET /room_bookings
   swagger_api :index do
     summary "Fetches all Room Bookings of Current User"
-    param :path, :page, :integer, :optional, "Page Number"
+    param :query, :page, :integer, :optional, "Page Number"
     response :ok, "Success", :Room
     response :unauthorized
     response :not_found
@@ -47,9 +47,8 @@ class Api::V1::RoomBookingsController < ApplicationController
     param :form, :title, :string, :required, "Title"
     param :form, :project_id, :integer, :optional, "Project Id"
     param :form, :daily, :boolean, :optional, "Daily"
-    response :ok, "Success", :RoomBooking
+    response :created, "Success", :RoomBooking
     response :unauthorized
-    response :not_found
   end
   def create
     request_param
@@ -114,7 +113,7 @@ class Api::V1::RoomBookingsController < ApplicationController
   # POST /room_bookings/booked
   swagger_api :room_booked do
     summary "Get list Room Booked in the range time"
-    param :path, :page, :integer, :optional, "Page Number"
+    param :query, :page, :integer, :optional, "Page Number"
     param :form, :time_start, :DateTime, :required, "Time Start"
     param :form, :time_end, :DateTime, :required, "Time End"
     response :ok, "Success", :RoomBooking
