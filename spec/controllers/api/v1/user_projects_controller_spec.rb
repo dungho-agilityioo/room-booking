@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::UserProjectsController, type: :controller do
   let!(:users) { create_list(:user, 4) }
-  let!(:user) { users.first }
+  let!(:user) { create(:user, role: :admin) }
   let!(:project) { create(:project) }
   let!(:project_id) { project.id }
   let!(:valid_attributes) { { project_id: project_id, user_id: users.map { |u| u.id } } }
