@@ -4,6 +4,7 @@ module Api
       swagger_controller :room, "Room Management"
 
       # POST reports/range_date
+      # :nocov:
       swagger_api :by_range_date do |api|
         summary "Fetches all Rooms Booking in the range time"
         param :query, :page, :integer, :optional, "Page Number"
@@ -11,6 +12,7 @@ module Api
         response :ok, "Success", :Room
         response :unauthorized
       end
+      # :nocov:
       def by_range_date
         authorize self
 
@@ -28,6 +30,7 @@ module Api
       end
 
       # POST reports/by_project
+      # :nocov:
       swagger_api :by_project do |api|
         summary "Fetches all Rooms Booking by project id"
         param :query, :page, :integer, :optional, "Page Number"
@@ -35,6 +38,7 @@ module Api
         response :ok, "Success", :Room
         response :unauthorized
       end
+      # :nocov:
       def by_project
         authorize self
 

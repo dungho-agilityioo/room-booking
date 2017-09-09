@@ -4,6 +4,7 @@ class Api::V1::RoomBookingsController < ApplicationController
   swagger_controller :room_bookings, "Room Bookings Management"
 
   # GET /room_bookings
+  # :nocov:
   swagger_api :index do
     summary "Fetches all Room Bookings of Current User"
     param :query, :page, :integer, :optional, "Page Number"
@@ -11,6 +12,7 @@ class Api::V1::RoomBookingsController < ApplicationController
     response :unauthorized
     response :not_found
   end
+  # :nocov:
   def index
     authorize ActsAsBookable::Booking
     param! :page, Integer
@@ -24,6 +26,7 @@ class Api::V1::RoomBookingsController < ApplicationController
   end
 
   # GET /room_bookings/:id
+  # :nocov:
   swagger_api :show do
     summary "Fetches a single Room Booking item of Current User"
     param :path, :id, :integer, :required, "Room Booking Id"
@@ -31,6 +34,7 @@ class Api::V1::RoomBookingsController < ApplicationController
     response :unauthorized
     response :not_found
   end
+  # :nocov:
   def show
     authorize @booking || ActsAsBookable::Booking
     if @booking.present?
@@ -41,6 +45,7 @@ class Api::V1::RoomBookingsController < ApplicationController
   end
 
   # POST /room_bookings
+  # :nocov:
   swagger_api :create do |api|
     summary "Creates a new Room Booking"
     Api::V1::RoomBookingsController::add_common_params(api)
@@ -50,10 +55,12 @@ class Api::V1::RoomBookingsController < ApplicationController
     response :created, "Success", :RoomBooking
     response :unauthorized
   end
+  # :nocov:
   def create
     request_param
 
     authorize ActsAsBookable::Booking
+    find_project_by_user if params[:project_id].present?
     find_room
     booking = current_user.book! @room, convert_param.merge(amount: 1)
 
@@ -61,6 +68,7 @@ class Api::V1::RoomBookingsController < ApplicationController
   end
 
   # DELETE /room_bookings/:id
+  # :nocov:
   swagger_api :destroy do
     summary "Delete a Room Booking of Current user"
     param :path, :id, :integer, :required, "Room Booking Id"
@@ -68,6 +76,7 @@ class Api::V1::RoomBookingsController < ApplicationController
     response :unauthorized
     response :not_found
   end
+  # :nocov:
   def destroy
     authorize @booking || ActsAsBookable::Booking
 
@@ -80,6 +89,7 @@ class Api::V1::RoomBookingsController < ApplicationController
   end
 
   # POST /room_bookings/search
+  # :nocov:
   swagger_api :search do |api|
     summary "Check Room Available in the range time"
     Api::V1::RoomBookingsController::add_common_params(api)
@@ -87,6 +97,7 @@ class Api::V1::RoomBookingsController < ApplicationController
     response :unauthorized
     response :not_found
   end
+  # :nocov:
   def search
     authorize ActsAsBookable::Booking
     param! :room_id, Integer, required: true
@@ -111,6 +122,7 @@ class Api::V1::RoomBookingsController < ApplicationController
   end
 
   # POST /room_bookings/booked
+  # :nocov:
   swagger_api :room_booked do
     summary "Get list Room Booked in the range time"
     param :query, :page, :integer, :optional, "Page Number"
@@ -120,6 +132,7 @@ class Api::V1::RoomBookingsController < ApplicationController
     response :unauthorized
     response :not_found
   end
+  # :nocov:
   def room_booked
     authorize ActsAsBookable::Booking
     param! :page, Integer
@@ -138,7 +151,7 @@ class Api::V1::RoomBookingsController < ApplicationController
 
   def book_params
     # whitelist params
-    params.permit(:title, :description, :time_start, :time_end, :room_id, :daily)
+    params.permit(:title, :description, :time_start, :time_end, :room_id, :daily, :project_id)
   end
 
   def convert_param
@@ -161,5 +174,14 @@ class Api::V1::RoomBookingsController < ApplicationController
     param! :time_end, DateTime, required: true
     param! :project_id, Integer
     param! :daily, :boolean
+  end
+
+  def find_project_by_user
+
+    project = @current_user.projects.where(id: params[:project_id])
+
+    unless project.present?
+      raise(ActiveRecord::RecordNotFound, 'Project Not Found')
+    end
   end
 end

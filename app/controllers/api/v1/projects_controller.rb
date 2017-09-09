@@ -3,12 +3,14 @@ class Api::V1::ProjectsController < ApplicationController
   swagger_controller :room, "Project Management"
 
   # GET /projects
+  # :nocov:
   swagger_api :index do
     summary "Fetches all Projects"
     response :ok, "Success", :Project
     response :unauthorized
     response :not_found
   end
+  # :nocov:
   def index
     @projects = Project.all
     authorize Project
@@ -16,6 +18,7 @@ class Api::V1::ProjectsController < ApplicationController
   end
 
   # GET /projects/:id
+  # :nocov:
   swagger_api :show do
     summary "Fetches a single Project item"
     param :path, :id, :integer, :required, "Project Id"
@@ -23,18 +26,21 @@ class Api::V1::ProjectsController < ApplicationController
     response :unauthorized
     response :not_found
   end
+  # :nocov:
   def show
     authorize @project
     json_response(@project)
   end
 
   # POST /projects
+  # :nocov:
   swagger_api :create do
     summary "Creates a new Project"
     param :form, :name, :string, :required, "Project Name"
     response :created, "Success", :Project
     response :unauthorized
   end
+  # :nocov:
   def create
     @project = Project.new(project_params)
     authorize @project
@@ -46,6 +52,7 @@ class Api::V1::ProjectsController < ApplicationController
   end
 
   # PUT /projects
+  # :nocov:
   swagger_api :update do
     summary "Update a Project"
     param :path, :id, :integer, :required, "Project Id"
@@ -55,6 +62,7 @@ class Api::V1::ProjectsController < ApplicationController
     response :unauthorized
     response :not_found
   end
+  # :nocov:
   def update
     authorize @project
     if @project.update(project_params)
@@ -65,6 +73,7 @@ class Api::V1::ProjectsController < ApplicationController
   end
 
   # DELETE /projects/:id
+  # :nocov:
   swagger_api :destroy do
     summary "Delete a Project"
     param :path, :id, :integer, :required, "Project Id"
@@ -72,6 +81,7 @@ class Api::V1::ProjectsController < ApplicationController
     response :unauthorized
     response :not_found
   end
+  # :nocov:
   def destroy
     authorize @project
     @project.destroy
