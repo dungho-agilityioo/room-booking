@@ -18,13 +18,6 @@
             },
             {
               "paramType": "form",
-              "name": "room_id",
-              "type": "integer",
-              "description": "Room Id",
-              "required": true
-            },
-            {
-              "paramType": "form",
               "name": "time_start",
               "type": "DateTime",
               "description": "Time Start",

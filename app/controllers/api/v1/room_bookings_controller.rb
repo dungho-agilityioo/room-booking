@@ -100,25 +100,12 @@ class Api::V1::RoomBookingsController < ApplicationController
   # :nocov:
   def search
     authorize ActsAsBookable::Booking
-    param! :room_id, Integer, required: true
     param! :time_start, DateTime, required: true
     param! :time_end, DateTime, required: true
-    find_room
-    rs = @room.check_availability({
-                time_start: params[:time_start],
-                time_end: params[:time_end],
-                amount: 1
-              })
-    if rs
-      json_response(
-        { message: "the Room is available from #{params[:time_start].to_s} to #{params[:time_end].to_s}" }
-      )
-    else
-      json_response(
-        { message: "the Room is not available from #{params[:time_start].to_s} to #{params[:time_end].to_s}" },
-        :not_found
-      )
-    end
+    rs = BooksSearchService.check_availability( params[:time_start], params[:time_end] )
+
+    json_response rs
+
   end
 
   # POST /room_bookings/booked

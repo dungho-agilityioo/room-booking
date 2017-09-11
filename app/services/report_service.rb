@@ -21,6 +21,7 @@ class ReportService
       room_bookings = ActsAsBookable::Booking
         .includes(:bookable, :booker)
         .where("time_start >= ?", time_start.to_datetime)
+        .order(:time_start, :bookable_id)
 
       room_bookings = room_bookings.where("time_end <= ?", time_end.to_datetime) if time_end.present?
 
