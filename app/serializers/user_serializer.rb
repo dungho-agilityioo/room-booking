@@ -26,14 +26,7 @@
 #  role                   :integer
 #
 
-require 'json_web_token'
-
 class UserSerializer < ActiveModel::Serializer
-  attributes :id, :email, :name, :first_name, :last_name, :auth_token, :created_at
+  attributes :id, :email, :name, :first_name, :last_name, :created_at
 
-  def auth_token
-    iat = object.current_sign_in_at.to_i
-    secret = Rails.application.secrets.secret_key_base
-    JsonWebToken.encode(object.slice(:id, :email).merge({ iat: iat }), secret)
-  end
 end

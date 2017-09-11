@@ -10,7 +10,7 @@ class Api::V1::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksCon
 
     sign_in @resource, store: false
 
-    render json: @resource
+    render json: @resource, serializer: LoginSerializer
   end
 
   swagger_api :destroy do |api|
