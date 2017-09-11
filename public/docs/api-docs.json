@@ -12,8 +12,8 @@
       "description": "Room Management"
     },
     {
-      "path": "/docs/api/v1/room_bookings.{format}",
-      "description": "Room Bookings Management"
+      "path": "/docs/api/v1/books.{format}",
+      "description": "Books Management"
     },
     {
       "path": "/docs/api/v1/reports.{format}",

@@ -16,7 +16,7 @@ Rails.application.routes.draw do
 
     resources :projects
     resources :rooms
-    resources :room_bookings, except: [:update] do
+    resources :room_bookings, except: [:update], :path => "books" do
       post "search", on: :collection, action: "search"
       post "booked", on: :collection, action: "room_booked"
     end
