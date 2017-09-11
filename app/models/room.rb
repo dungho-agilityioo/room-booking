@@ -19,7 +19,7 @@ class Room < ApplicationRecord
 
   def set_default_schedule
     self.schedule = IceCube::Schedule.new(Date.today, duration: 1.day)
-    self.schedule.add_recurrence_rule IceCube::Rule.weekly.day(:monday, :tuesday, :wednesday, :thursday, :friday)
+    self.schedule.add_recurrence_rule IceCube::Rule.weekly.day(:monday, :tuesday, :wednesday, :thursday, :friday, :saturday, :sunday)
     self.capacity = 1
   end
 
