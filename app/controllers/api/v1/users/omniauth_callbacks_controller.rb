@@ -1,7 +1,7 @@
 class Api::V1::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   before_action :oauth_login, only: [:gitlab]
   skip_before_action :authenticate_request, only: [:gitlab]
-  swagger_controller :omniauth_callbacks, "User Management"
+  swagger_controller :user, "User Management"
 
   def gitlab
     @resource = auth_resource

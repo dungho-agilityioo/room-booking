@@ -36,4 +36,8 @@ FactoryGirl.define do
     last_name { Faker::Name.last_name }
     password { Faker::Number.number(10) }
 	end
+
+  factory :user_admin, class: User, parent: :user do
+    role { :admin }
+  end
 end

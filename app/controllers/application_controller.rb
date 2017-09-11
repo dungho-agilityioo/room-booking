@@ -16,20 +16,24 @@ class ApplicationController < ActionController::Base
       end
     end
 
+    # :nocov:
     def add_common_params(api)
       api.param :form, :room_id, :integer, :required, "Room Id"
       api.param :form, :time_start, :DateTime, :required, "Time Start"
       api.param :form, :time_end, :DateTime, :required, "Time End"
     end
+    # :nocov:
 
     private
+    # :nocov:
     def setup_basic_api_documentation
-      [:index, :show, :create, :update, :destroy, :search, :room_booked, :by_range_date, :by_project].each do |api_action|
+      [:index, :show, :create, :update, :destroy, :search, :room_booked, :by_range_date, :by_project, :projects].each do |api_action|
         swagger_api api_action do
           param :header, 'Authorization', :string, :required, 'Authentication token'
         end
       end
     end
+    # :nocov:
   end
 
   private

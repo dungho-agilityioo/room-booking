@@ -3,19 +3,19 @@ module Response
     render json: object, status: status
   end
 
-  def respone_record_serializer(object, status = :ok)
+  def respone_record_serializer(object, model = ActsAsBookable::BookingSerializer, status = :ok)
     render json: {
-        data: ActsAsBookable::BookingSerializer.new(object)
+        data: model.new(object)
       }, status: status
   end
 
-  def respone_collection_serializer(objects, page, total)
+  def respone_collection_serializer(objects, page, total, model = ActsAsBookable::BookingSerializer)
     limit_value = objects.limit_value
 
     render json: {
         data:
           ActiveModel::Serializer::CollectionSerializer.new(
-            objects, each_serializer: ActsAsBookable::BookingSerializer
+            objects, each_serializer: model
           ).as_json,
         metadata: {
           page: page,
@@ -24,4 +24,5 @@ module Response
           total_page: (total.to_f / limit_value).ceil
         }}, status: 200
   end
+
 end

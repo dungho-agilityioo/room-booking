@@ -17,6 +17,13 @@
               "required": true
             },
             {
+              "paramType": "query",
+              "name": "page",
+              "type": "integer",
+              "description": "Page Number",
+              "required": false
+            },
+            {
               "paramType": "form",
               "name": "room_id",
               "type": "integer",
@@ -67,6 +74,13 @@
               "type": "string",
               "description": "Authentication token",
               "required": true
+            },
+            {
+              "paramType": "query",
+              "name": "page",
+              "type": "integer",
+              "description": "Page Number",
+              "required": false
             },
             {
               "paramType": "form",

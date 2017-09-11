@@ -16,7 +16,22 @@ require "response_code_matchers"
 require 'simplecov'
 require 'devise'
 require 'pundit/matchers'
-SimpleCov.start
+require 'action_mailer'
+require "email_spec"
+SimpleCov.start do
+  add_filter '/spec/'
+  add_filter '/config/'
+
+  # add_group 'Controllers', 'app/controllers'
+  # add_group 'Auth', 'app/auth'
+  # add_group 'Mailers', 'app/mailers'
+  # add_group 'Models', 'app/models'
+  # add_group 'Policies', 'app/policies'
+  # add_group 'Serializers', 'app/serializers'
+  # add_group 'Services', 'app/services'
+  # add_group 'Libs', 'lib'
+end
+
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
@@ -101,3 +116,8 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 =end
 end
+
+# Spec::Runner.configure do |config|
+#   config.include(EmailSpec::Helpers)
+#   config.include(EmailSpec::Matchers)
+# end

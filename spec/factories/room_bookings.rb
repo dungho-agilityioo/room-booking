@@ -6,4 +6,9 @@ FactoryGirl.define do
     time_end { Date.today.next_week + 11.hours }
     amount { 1 }
 	end
+
+  factory :booked_with_user, class: ActsAsBookable::Booking, parent: :room_booking do
+    bookable { create(:room) }
+  end
+
 end

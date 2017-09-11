@@ -6,10 +6,6 @@ class ApplicationPolicy
     @record = record
   end
 
-  def index?
-    false
-  end
-
   def show?
     scope.where(:id => record.id).exists?
   end
@@ -30,16 +26,12 @@ class ApplicationPolicy
     update?
   end
 
-  def destroy?
-    false
-  end
-
   def scope
     Pundit.policy_scope!(current_user, record.class)
   end
 
   def login?
-    @current_user.admin? || @current_user.staff?
+    @current_user.present?
   end
 
   class Scope

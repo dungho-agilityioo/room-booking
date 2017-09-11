@@ -16,12 +16,19 @@ Rails.application.routes.draw do
 
     resources :projects
     resources :rooms
-    resources :room_bookings, except: [:update]
-    post "room_bookings/search", to: "/api/v1/room_bookings#search"
-    post "room_bookings/booked", to: "/api/v1/room_bookings#room_booked"
+    resources :room_bookings, except: [:update] do
+      post "search", on: :collection, action: "search"
+      post "booked", on: :collection, action: "room_booked"
+    end
 
     post "reports/range_date", to: "/api/v1/reports#by_range_date"
     post "reports/projects", to: "/api/v1/reports#by_project"
+    get 'users/projects', to: '/api/v1/users#projects'
+
+    resources :user_projects, except: [:update, :destroy, :show] do
+      put ':project_id', on: :collection, action: "update"
+      delete ':project_id', on: :collection, action: "destroy"
+    end
   end
 
 end
