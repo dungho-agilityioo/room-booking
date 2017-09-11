@@ -273,6 +273,7 @@ GEM
       rails (>= 3)
     thor (0.20.0)
     thread_safe (0.3.6)
+    timecop (0.9.1)
     timeliness (0.3.8)
     tzinfo (1.2.3)
       thread_safe (~> 0.1)
@@ -331,6 +332,7 @@ DEPENDENCIES
   spring
   spring-watcher-listen (~> 2.0.0)
   swagger-docs
+  timecop
   tzinfo-data
   validates_timeliness (~> 4.0)
   versionist

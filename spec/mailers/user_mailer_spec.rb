@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe UserMailer do
   let(:user) { create(:user) }
-  let(:room_booing) {  create(:booked_10_minute_ago, booker: user) }
+  let(:room_booing) {  create(:booked_with_user, booker: user) }
 
   describe '#send email' do
     let(:mail) { described_class.room_booking({ params: room_booing}).deliver_now }

@@ -86,6 +86,7 @@ group :test do
   gem 'shoulda-callback-matchers'
   gem 'pundit-matchers', '~> 1.3.1', require: false
   gem 'email_spec'
+  gem 'timecop'
 end
 
 group :development do
