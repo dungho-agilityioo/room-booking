@@ -32,7 +32,6 @@ class User < ApplicationRecord
   enum role: [:staff, :admin]
 
   # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :trackable, :omniauthable,
          omniauth_providers: [:google_oauth2]
 
@@ -51,13 +50,6 @@ class User < ApplicationRecord
 
   def self.from_omniauth(auth)
     UserService.create_user(auth)
-  end
-
-  protected
-
-  def password_required?
-    return false if skip_password_validation
-    super
   end
 
 end
