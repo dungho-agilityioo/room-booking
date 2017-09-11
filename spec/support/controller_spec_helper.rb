@@ -1,4 +1,5 @@
 module ControllerSpecHelper
+  HMAC_SECRET = Rails.application.secrets.secret_key_base
   # Parse JSON response to ruby hash
   def json
     JSON.parse(response.body)['data']
@@ -6,12 +7,12 @@ module ControllerSpecHelper
 
   # generate tokens from user id
   def token_generator(id)
-    JsonWebToken.encode(id: id)
+    JsonWebToken.encode({id: id}, HMAC_SECRET)
   end
 
   # generate expired tokens from user id
   def expired_token_generator(id)
-    JsonWebToken.encode({ id: id }, (Time.now.to_i - 10))
+    JsonWebToken.encode({ id: id }, HMAC_SECRET, (Time.now.to_i - 10))
   end
 
   # return valid headers

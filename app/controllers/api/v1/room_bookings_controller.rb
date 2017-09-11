@@ -20,7 +20,7 @@ class Api::V1::RoomBookingsController < ApplicationController
 
     total = current_user.bookings.count
 
-    room_bookings = current_user.bookings.page(page)
+    room_bookings = current_user.bookings.includes(:bookable, :booker).page(page)
 
     respone_collection_serializer(room_bookings, page, total)
   end
