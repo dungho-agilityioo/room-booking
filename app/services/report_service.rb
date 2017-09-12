@@ -18,14 +18,16 @@ class ReportService
     def get_booked(time_start, time_end)
       time_start = Time.zone.now if time_start.nil? || time_start < Time.zone.now
 
-      room_bookings = ActsAsBookable::Booking
+      ActsAsBookable::Booking
         .includes(:bookable, :booker)
-        .where("time_start >= ?", time_start.to_datetime)
+        .where( :time_start => time_start..time_end)
+        .or(
+            ActsAsBookable::Booking
+              .includes(:bookable, :booker)
+              .where( :time_end => time_start..time_end)
+          )
         .order(:time_start, :bookable_id)
 
-      room_bookings = room_bookings.where("time_end <= ?", time_end.to_datetime) if time_end.present?
-
-      room_bookings
     end
   end
 end

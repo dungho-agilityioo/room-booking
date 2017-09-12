@@ -102,10 +102,14 @@ class Api::V1::RoomBookingsController < ApplicationController
     authorize ActsAsBookable::Booking
     param! :time_start, DateTime, required: true
     param! :time_end, DateTime, required: true
-    rs = BooksSearchService.check_availability( params[:time_start], params[:time_end] )
 
-    json_response rs
+    rs = BooksSearchService.check_availability( params[:time_start].to_datetime, params[:time_end].to_datetime )
 
+    if rs.present?
+      json_response({ data: rs })
+    else
+      json_response(nil, :no_content )
+    end
   end
 
   # POST /room_bookings/booked
@@ -123,8 +127,8 @@ class Api::V1::RoomBookingsController < ApplicationController
   def room_booked
     authorize ActsAsBookable::Booking
     param! :page, Integer
-    param! :time_start, DateTime
-    param! :time_end, DateTime
+    param! :time_start, DateTime, required: true
+    param! :time_end, DateTime, required: true
 
     page = params[:page].present? && params[:page] || 1
 
