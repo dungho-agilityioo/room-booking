@@ -13,7 +13,7 @@ RSpec.describe Api::V1::RoomBookingsController, type: :controller do
 
   before(:each) { request.headers["Authorization"] = headers["Authorization"] }
 
-  describe 'GET /room_bookings' do
+  describe 'GET /books' do
     before(:each) { get :index }
 
     it { should respond_with(200) }
@@ -24,7 +24,7 @@ RSpec.describe Api::V1::RoomBookingsController, type: :controller do
     end
   end
 
-  describe 'GET /room_bookings/:id' do
+  describe 'GET /books/:id' do
     before { get :show, params: { id: room_booking_id } }
 
     context 'when the record exists' do
@@ -47,7 +47,7 @@ RSpec.describe Api::V1::RoomBookingsController, type: :controller do
 
   end
 
-  describe 'POST /room_bookings' do
+  describe 'POST /books' do
     let(:valid_attributes) do
       FactoryGirl.attributes_for(:room_booking)
         .merge( time_start: Date.today.next_week + 1.day + 8.hours )
@@ -127,7 +127,7 @@ RSpec.describe Api::V1::RoomBookingsController, type: :controller do
 
   end
 
-  describe 'DELETE /room_bookings/:id' do
+  describe 'DELETE /books/:id' do
 
     context 'when room booking is exists' do
       before { delete :destroy, params: { id: room_booking_id } }
@@ -144,49 +144,43 @@ RSpec.describe Api::V1::RoomBookingsController, type: :controller do
     end
   end
 
-  # describe 'POST /room_bookings/search' do
-  #   let!(:room2) { create(:room) }
-  #   before(:each) do
-  #     @booking = ActsAsBookable::Booking.new(amount: 1)
-  #     @booking.booker = user
-  #     @booking.bookable = room2
-  #     @booking.time_start = Date.today.next_week + 8.hours
-  #     @booking.time_end = Date.today.next_week + 9.hours
-  #     @booking.save
-  #   end
+  describe 'POST /books/search' do
+    let!(:room2) { create(:room) }
+    before { create(:booked_with_room, bookable: room2) }
 
-  #   context 'the Room is available' do
-  #     before(:each) do
-  #       post :search, params: {
-  #             room_id: room2.id,
-  #             time_start: Date.today.next_week + 10.hours,
-  #             time_end: Date.today.next_week + 11.hours,
-  #           }
-  #     end
+    context 'the Room is available' do
+      before(:each) do
+        post :search, params: {
+              time_start: Date.today.next_week + 10.hours,
+              time_end: Date.today.next_week + 18.hours,
+            }
+      end
 
-  #     it { should respond_with(200) }
-  #     it 'return a found message' do
-  #       expect(response.body).to match(/the Room is available from/)
-  #     end
-  #   end
+      it { should respond_with(200) }
+      it 'return a list rooms available' do
+        # include room and room2
+        expect(json.size).to eq(2)
+      end
+    end
 
-  #   context 'the Room not available' do
-  #     before do
-  #       post :search, params: {
-  #             room_id: room2.id,
-  #             time_start: Date.today.next_week + 8.hours,
-  #             time_end: Date.today.next_week + 10.hours,
-  #           }
-  #     end
+    context 'the Room not available' do
+      before do
+        post :search, params: {
+              time_start: Date.today.next_week + 10.hours,
+              time_end: Date.today.next_week + 11.hours,
+            }
+      end
 
-  #     it { should respond_with(404) }
-  #     it 'return a not found message' do
-  #       expect(response.body).to match(/the Room is not available from/)
-  #     end
-  #   end
-  # end
+     #  it '' do
+     #   should respond_with(201)
+     # end
+      # it 'return a not found message' do
+      #   expect(response.body).to match(/the Room is not available from/)
+      # end
+    end
+  end
 
-  describe 'POST /room_bookings/booked' do
+  describe 'POST /books/booked' do
     before(:all) do
       user = create(:user)
       room = create(:room)
@@ -215,12 +209,17 @@ RSpec.describe Api::V1::RoomBookingsController, type: :controller do
     end
 
     context 'when assign time start' do
-      before { post :room_booked, params: { time_start: Date.today.next_week + 9.hours + 30.minute } }
+      before { post :room_booked, params: {
+          time_start: Date.today.next_week + 9.hours + 30.minute,
+          time_end: Date.today.next_week + 12.hours + 30.minute,
+        }
+      }
 
       it { should respond_with(200) }
 
       it 'return room booked' do
-        expect(json.count).to eq(2)
+        # include booked on top file
+        expect(json.count).to eq(3)
       end
 
       it 'return correct number of page' do
@@ -232,7 +231,7 @@ RSpec.describe Api::V1::RoomBookingsController, type: :controller do
       end
 
       it 'return correct number of total' do
-        expect(JSON.parse(response.body)["metadata"]["total"].to_i).to eq(2)
+        expect(JSON.parse(response.body)["metadata"]["total"].to_i).to eq(3)
       end
 
       it 'return correct number of total page' do
@@ -244,28 +243,11 @@ RSpec.describe Api::V1::RoomBookingsController, type: :controller do
     context 'when do not assign time start' do
       before { post :room_booked, params: {} }
 
-      it { should respond_with(200) }
+      it { should respond_with(400) }
 
-      it 'return room booked' do
-        expect(json.count).to eq(5)
+      it 'return a error message' do
+        expect(response.body).to match(/Parameter time_start is required/)
       end
-
-      it 'return correct number of page' do
-        expect(JSON.parse(response.body)["metadata"]["page"].to_i).to eq(1)
-      end
-
-      it 'return correct number of per_page' do
-        expect(JSON.parse(response.body)["metadata"]["per_page"].to_i).to eq(10)
-      end
-
-      it 'return correct number of total' do
-        expect(JSON.parse(response.body)["metadata"]["total"].to_i).to eq(5)
-      end
-
-      it 'return correct number of total page' do
-        expect(JSON.parse(response.body)["metadata"]["total_page"].to_i).to eq(1)
-      end
-
     end
   end
 end

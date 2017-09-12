@@ -11,4 +11,7 @@ FactoryGirl.define do
     bookable { create(:room) }
   end
 
+  factory :booked_with_room, class: ActsAsBookable::Booking, parent: :room_booking do
+    booker { create(:user) }
+  end
 end
