@@ -11,5 +11,5 @@
 #
 
 class RoomSerializer < ActiveModel::Serializer
-  attributes :id, :name, :created_at
+  attributes :id, :name
 end

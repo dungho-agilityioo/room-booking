@@ -11,7 +11,7 @@
 #
 
 class ActsAsBookable::BookingSerializer < ActiveModel::Serializer
-  attributes :id, :title, :description, :time_start, :time_end, :created_at
+  attributes :id, :title, :description, :time_start, :time_end
 
   belongs_to :bookable, polymorphic: true
   belongs_to :booker,   polymorphic: true

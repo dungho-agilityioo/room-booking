@@ -21,14 +21,15 @@ Rails.application.routes.draw do
       post "booked", on: :collection, action: "room_booked"
     end
 
-    post "reports/range_date", to: "/api/v1/reports#by_range_date"
-    post "reports/projects", to: "/api/v1/reports#by_project"
+    get "reports", to: "/api/v1/reports#index"
     get 'users/projects', to: '/api/v1/users#projects'
 
     resources :user_projects, except: [:update, :destroy, :show] do
       put ':project_id', on: :collection, action: "update"
       delete ':project_id', on: :collection, action: "destroy"
     end
+
   end
 
 end
+
