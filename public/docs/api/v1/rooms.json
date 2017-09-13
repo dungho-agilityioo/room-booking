@@ -5,7 +5,7 @@
   "resourcePath": "rooms",
   "apis": [
     {
-      "path": "/api/v1/rooms.json",
+      "path": "/api/v1/admin/rooms.json",
       "operations": [
         {
           "summary": "Fetches all Rooms",
@@ -32,7 +32,7 @@
       ]
     },
     {
-      "path": "/api/v1/rooms.json",
+      "path": "/api/v1/admin/rooms.json",
       "operations": [
         {
           "summary": "Creates a new Room",
@@ -63,7 +63,7 @@
       ]
     },
     {
-      "path": "/api/v1/rooms/{id}.json",
+      "path": "/api/v1/admin/rooms/{id}.json",
       "operations": [
         {
           "summary": "Fetches a single Room item",
@@ -99,7 +99,7 @@
       ]
     },
     {
-      "path": "/api/v1/rooms/{id}.json",
+      "path": "/api/v1/admin/rooms/{id}.json",
       "operations": [
         {
           "summary": "Update a Room",
@@ -142,7 +142,7 @@
       ]
     },
     {
-      "path": "/api/v1/rooms/{id}.json",
+      "path": "/api/v1/admin/rooms/{id}.json",
       "operations": [
         {
           "summary": "Delete a Room",

@@ -5,7 +5,7 @@
   "resourcePath": "projects",
   "apis": [
     {
-      "path": "/api/v1/projects.json",
+      "path": "/api/v1/admin/projects.json",
       "operations": [
         {
           "summary": "Fetches all Projects",
@@ -32,7 +32,7 @@
       ]
     },
     {
-      "path": "/api/v1/projects.json",
+      "path": "/api/v1/admin/projects.json",
       "operations": [
         {
           "summary": "Creates a new Project",
@@ -63,7 +63,7 @@
       ]
     },
     {
-      "path": "/api/v1/projects/{id}.json",
+      "path": "/api/v1/admin/projects/{id}.json",
       "operations": [
         {
           "summary": "Fetches a single Project item",
@@ -99,7 +99,7 @@
       ]
     },
     {
-      "path": "/api/v1/projects/{id}.json",
+      "path": "/api/v1/admin/projects/{id}.json",
       "operations": [
         {
           "summary": "Update a Project",
@@ -156,7 +156,7 @@
       ]
     },
     {
-      "path": "/api/v1/projects/{id}.json",
+      "path": "/api/v1/admin/projects/{id}.json",
       "operations": [
         {
           "summary": "Delete a Project",

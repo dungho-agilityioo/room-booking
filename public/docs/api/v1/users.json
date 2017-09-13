@@ -5,7 +5,7 @@
   "resourcePath": "users",
   "apis": [
     {
-      "path": "/api/v1/users/projects.json",
+      "path": "/api/v1/projects.json",
       "operations": [
         {
           "summary": "Fetches all Project of Current User",

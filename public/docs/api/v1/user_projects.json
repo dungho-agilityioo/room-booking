@@ -5,7 +5,7 @@
   "resourcePath": "user_projects",
   "apis": [
     {
-      "path": "/api/v1/user_projects/{project_id}.json",
+      "path": "/api/v1/admin/user_projects/{project_id}.json",
       "operations": [
         {
           "summary": "Update a Project User",
@@ -48,7 +48,7 @@
       ]
     },
     {
-      "path": "/api/v1/user_projects/{project_id}.json",
+      "path": "/api/v1/admin/user_projects/{project_id}.json",
       "operations": [
         {
           "summary": "Delete a Project User",
@@ -84,7 +84,7 @@
       ]
     },
     {
-      "path": "/api/v1/user_projects.json",
+      "path": "/api/v1/admin/user_projects.json",
       "operations": [
         {
           "summary": "Fetches all User Project",
@@ -115,7 +115,7 @@
       ]
     },
     {
-      "path": "/api/v1/user_projects.json",
+      "path": "/api/v1/admin/user_projects.json",
       "operations": [
         {
           "summary": "Creates a new User Project",

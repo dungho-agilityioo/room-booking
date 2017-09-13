@@ -6,15 +6,13 @@ describe Api::V1::ReportsControllerPolicy do
   context 'User admin is granted permission' do
     let(:user) { create(:user, role: :admin) }
 
-    it { is_expected.to permit_action(:by_range_date) }
-    it { is_expected.to permit_action(:by_project) }
+    it { is_expected.to permit_action(:index) }
   end
 
   context 'The staff is do not granted permission' do
     let(:user) { create(:user) }
 
-    it { is_expected.to_not permit_action(:by_range_date) }
-    it { is_expected.to_not permit_action(:by_project) }
+    it { is_expected.to_not permit_action(:index) }
   end
 
 end

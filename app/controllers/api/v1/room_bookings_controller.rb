@@ -92,7 +92,8 @@ class Api::V1::RoomBookingsController < ApplicationController
   # :nocov:
   swagger_api :search do |api|
     summary "Check Room Available in the range time"
-    Api::V1::RoomBookingsController::add_common_params(api)
+    api.param :form, :time_start, :DateTime, :required, "Time Start"
+    api.param :form, :time_end, :DateTime, :required, "Time End"
     response :ok, "Success", :RoomBooking
     response :unauthorized
     response :not_found
@@ -100,6 +101,7 @@ class Api::V1::RoomBookingsController < ApplicationController
   # :nocov:
   def search
     authorize ActsAsBookable::Booking
+    param! :type, String, required: true
     param! :time_start, DateTime, required: true
     param! :time_end, DateTime, required: true
 

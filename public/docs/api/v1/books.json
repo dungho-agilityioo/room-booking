@@ -2,28 +2,12 @@
   "apiVersion": "1.0",
   "swaggerVersion": "1.2",
   "basePath": "/",
-  "resourcePath": "books",
+  "resourcePath": "room_bookings",
   "apis": [
     {
       "path": "/api/v1/books/search.json",
       "operations": [
         {
-          "parameters": [
-            {
-              "paramType": "form",
-              "name": "time_start",
-              "type": "DateTime",
-              "description": "Time Start",
-              "required": true
-            },
-            {
-              "paramType": "form",
-              "name": "time_end",
-              "type": "DateTime",
-              "description": "Time End",
-              "required": true
-            }
-          ],
           "summary": "Check Room Available in the range time",
           "responseMessages": [
             {
@@ -42,23 +26,7 @@
               "message": "Not Found"
             }
           ],
-          "nickname": "Api::V1::RoomBookings#search",
-          "method": "post"
-        }
-      ]
-    },
-    {
-      "path": "/api/v1/books/booked.json",
-      "operations": [
-        {
           "parameters": [
-            {
-              "paramType": "query",
-              "name": "page",
-              "type": "integer",
-              "description": "Page Number",
-              "required": false
-            },
             {
               "paramType": "form",
               "name": "time_start",
@@ -74,25 +42,7 @@
               "required": true
             }
           ],
-          "summary": "Get list Room Booked in the range time",
-          "responseMessages": [
-            {
-              "code": 200,
-              "responseModel": "RoomBooking",
-              "message": "Success"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
-            },
-            {
-              "code": 404,
-              "responseModel": null,
-              "message": "Not Found"
-            }
-          ],
-          "nickname": "Api::V1::RoomBookings#room_booked",
+          "nickname": "Api::V1::RoomBookings#search",
           "method": "post"
         }
       ]
@@ -101,42 +51,19 @@
       "path": "/api/v1/books.json",
       "operations": [
         {
-          "parameters": [
-            {
-              "paramType": "query",
-              "name": "page",
-              "type": "integer",
-              "description": "Page Number",
-              "required": false
-            }
-          ],
-          "summary": "Fetches all Room Bookings of Current User",
+          "summary": "Creates a new Room Booking",
           "responseMessages": [
             {
-              "code": 200,
-              "responseModel": "Room",
+              "code": 201,
+              "responseModel": "RoomBooking",
               "message": "Success"
             },
             {
               "code": 401,
               "responseModel": null,
               "message": "Unauthorized"
-            },
-            {
-              "code": 404,
-              "responseModel": null,
-              "message": "Not Found"
             }
           ],
-          "nickname": "Api::V1::RoomBookings#index",
-          "method": "get"
-        }
-      ]
-    },
-    {
-      "path": "/api/v1/books.json",
-      "operations": [
-        {
           "parameters": [
             {
               "paramType": "form",
@@ -181,19 +108,6 @@
               "required": false
             }
           ],
-          "summary": "Creates a new Room Booking",
-          "responseMessages": [
-            {
-              "code": 201,
-              "responseModel": "RoomBooking",
-              "message": "Success"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
-            }
-          ],
           "nickname": "Api::V1::RoomBookings#create",
           "method": "post"
         }
@@ -203,15 +117,6 @@
       "path": "/api/v1/books/{id}.json",
       "operations": [
         {
-          "parameters": [
-            {
-              "paramType": "path",
-              "name": "id",
-              "type": "integer",
-              "description": "Room Booking Id",
-              "required": true
-            }
-          ],
           "summary": "Fetches a single Room Booking item of Current User",
           "responseMessages": [
             {
@@ -230,15 +135,6 @@
               "message": "Not Found"
             }
           ],
-          "nickname": "Api::V1::RoomBookings#show",
-          "method": "get"
-        }
-      ]
-    },
-    {
-      "path": "/api/v1/books/{id}.json",
-      "operations": [
-        {
           "parameters": [
             {
               "paramType": "path",
@@ -248,6 +144,15 @@
               "required": true
             }
           ],
+          "nickname": "Api::V1::RoomBookings#show",
+          "method": "get"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/books/{id}.json",
+      "operations": [
+        {
           "summary": "Delete a Room Booking of Current user",
           "responseMessages": [
             {
@@ -264,6 +169,15 @@
               "code": 404,
               "responseModel": null,
               "message": "Not Found"
+            }
+          ],
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Room Booking Id",
+              "required": true
             }
           ],
           "nickname": "Api::V1::RoomBookings#destroy",
