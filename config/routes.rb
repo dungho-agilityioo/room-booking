@@ -14,19 +14,21 @@ Rails.application.routes.draw do
       delete "users/logout", to: "users/omniauth_callbacks#destroy"
     end
 
-    resources :projects
-    resources :rooms
     resources :room_bookings, except: [:update], :path => "books" do
       post "search", on: :collection, action: "search"
-      post "booked", on: :collection, action: "room_booked"
     end
 
-    get "reports", to: "/api/v1/reports#index"
-    get 'users/projects', to: '/api/v1/users#projects'
+    get 'projects', to: '/api/v1/users#projects'
 
-    resources :user_projects, except: [:update, :destroy, :show] do
-      put ':project_id', on: :collection, action: "update"
-      delete ':project_id', on: :collection, action: "destroy"
+    scope 'admin', as: 'admin' do
+      resources :projects
+      resources :rooms
+      get "reports", to: "/api/v1/reports#index"
+
+      resources :user_projects, except: [:update, :destroy, :show] do
+        put ':project_id', on: :collection, action: "update"
+        delete ':project_id', on: :collection, action: "destroy"
+      end
     end
 
   end
