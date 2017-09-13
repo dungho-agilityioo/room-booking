@@ -7,12 +7,14 @@ module ControllerSpecHelper
 
   # generate tokens from user id
   def token_generator(id)
-    JsonWebToken.encode({id: id}, HMAC_SECRET)
+    token = JsonWebToken.encode({id: id}, HMAC_SECRET)
+    "Bearer #{token}"
   end
 
   # generate expired tokens from user id
   def expired_token_generator(id)
-    JsonWebToken.encode({ id: id }, HMAC_SECRET, (Time.now.to_i - 10))
+    token = JsonWebToken.encode({ id: id }, HMAC_SECRET, (Time.now.to_i - 10))
+    "Bearer #{token}"
   end
 
   # return valid headers

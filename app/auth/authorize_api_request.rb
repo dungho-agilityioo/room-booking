@@ -55,6 +55,6 @@ class AuthorizeApiRequest
   end
 
   def auth_present?
-    !!headers.fetch("Authorization", "").scan(/Bearer/).flatten.first
+    !!headers.fetch("Authorization", "").to_s.scan(/Bearer/).flatten.first
   end
 end

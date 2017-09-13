@@ -10,7 +10,7 @@ class JsonWebToken
 
     def decode(token, secret)
       # get payload; first index in decoded Array
-      body = JWT.decode(token, secret, true, { verify_iat: true })[0]
+      body = JWT.decode(token, secret)[0]
       HashWithIndifferentAccess.new body
       # rescue from expiry exception
       rescue JWT::ExpiredSignature, JWT::VerificationError => e

@@ -13,7 +13,9 @@ class ApplicationController < ActionController::Base
     api.param :form, :time_end, :DateTime, :required, "Time End"
   end
   # :nocov:
-
+  class << self
+    Swagger::Docs::Generator::set_real_methods
+  end
   private
 
   def authenticate_request
