@@ -8,14 +8,20 @@
       "path": "/api/v1/reports/range_date.json",
       "operations": [
         {
-          "parameters": [
+          "summary": "Fetches all Rooms Booking in the range time",
+          "responseMessages": [
             {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
+              "code": 200,
+              "responseModel": "Room",
+              "message": "Success"
             },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            }
+          ],
+          "parameters": [
             {
               "paramType": "query",
               "name": "page",
@@ -45,7 +51,16 @@
               "required": true
             }
           ],
-          "summary": "Fetches all Rooms Booking in the range time",
+          "nickname": "Api::V1::Reports#by_range_date",
+          "method": "post"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/reports/projects.json",
+      "operations": [
+        {
+          "summary": "Fetches all Rooms Booking by project id",
           "responseMessages": [
             {
               "code": 200,
@@ -58,23 +73,7 @@
               "message": "Unauthorized"
             }
           ],
-          "nickname": "Api::V1::Reports#by_range_date",
-          "method": "post"
-        }
-      ]
-    },
-    {
-      "path": "/api/v1/reports/projects.json",
-      "operations": [
-        {
           "parameters": [
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            },
             {
               "paramType": "query",
               "name": "page",
@@ -88,19 +87,6 @@
               "type": "integer",
               "description": "Project Id",
               "required": true
-            }
-          ],
-          "summary": "Fetches all Rooms Booking by project id",
-          "responseMessages": [
-            {
-              "code": 200,
-              "responseModel": "Room",
-              "message": "Success"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
             }
           ],
           "nickname": "Api::V1::Reports#by_project",

@@ -10,13 +10,6 @@
         {
           "parameters": [
             {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            },
-            {
               "paramType": "form",
               "name": "time_start",
               "type": "DateTime",
@@ -59,13 +52,6 @@
       "operations": [
         {
           "parameters": [
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            },
             {
               "paramType": "query",
               "name": "page",
@@ -117,13 +103,6 @@
         {
           "parameters": [
             {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            },
-            {
               "paramType": "query",
               "name": "page",
               "type": "integer",
@@ -159,13 +138,6 @@
       "operations": [
         {
           "parameters": [
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            },
             {
               "paramType": "form",
               "name": "room_id",
@@ -233,13 +205,6 @@
         {
           "parameters": [
             {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            },
-            {
               "paramType": "path",
               "name": "id",
               "type": "integer",
@@ -275,13 +240,6 @@
       "operations": [
         {
           "parameters": [
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            },
             {
               "paramType": "path",
               "name": "id",

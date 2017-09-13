@@ -8,29 +8,6 @@
       "path": "/api/v1/user_projects/{project_id}.json",
       "operations": [
         {
-          "parameters": [
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            },
-            {
-              "paramType": "path",
-              "name": "project_id",
-              "type": "integer",
-              "description": "Project Id",
-              "required": true
-            },
-            {
-              "paramType": "form",
-              "name": "user_id",
-              "type": "integer",
-              "description": "User Id",
-              "required": true
-            }
-          ],
           "summary": "Update a Project User",
           "responseMessages": [
             {
@@ -49,6 +26,22 @@
               "message": "Not Found"
             }
           ],
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "project_id",
+              "type": "integer",
+              "description": "Project Id",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "user_id",
+              "type": "integer",
+              "description": "User Id",
+              "required": true
+            }
+          ],
           "nickname": "Api::V1::UserProjects#update",
           "method": "put"
         }
@@ -58,22 +51,6 @@
       "path": "/api/v1/user_projects/{project_id}.json",
       "operations": [
         {
-          "parameters": [
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            },
-            {
-              "paramType": "path",
-              "name": "project_id",
-              "type": "integer",
-              "description": "Project Id",
-              "required": true
-            }
-          ],
           "summary": "Delete a Project User",
           "responseMessages": [
             {
@@ -92,6 +69,15 @@
               "message": "Not Found"
             }
           ],
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "project_id",
+              "type": "integer",
+              "description": "Project Id",
+              "required": true
+            }
+          ],
           "nickname": "Api::V1::UserProjects#destroy",
           "method": "delete"
         }
@@ -101,22 +87,6 @@
       "path": "/api/v1/user_projects.json",
       "operations": [
         {
-          "parameters": [
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            },
-            {
-              "paramType": "query",
-              "name": "page",
-              "type": "integer",
-              "description": "Page Number",
-              "required": false
-            }
-          ],
           "summary": "Fetches all User Project",
           "responseMessages": [
             {
@@ -130,6 +100,15 @@
               "message": "Unauthorized"
             }
           ],
+          "parameters": [
+            {
+              "paramType": "query",
+              "name": "page",
+              "type": "integer",
+              "description": "Page Number",
+              "required": false
+            }
+          ],
           "nickname": "Api::V1::UserProjects#index",
           "method": "get"
         }
@@ -139,14 +118,20 @@
       "path": "/api/v1/user_projects.json",
       "operations": [
         {
-          "parameters": [
+          "summary": "Creates a new User Project",
+          "responseMessages": [
             {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
+              "code": 201,
+              "responseModel": "UserProject",
+              "message": "Success"
             },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            }
+          ],
+          "parameters": [
             {
               "paramType": "form",
               "name": "project_id",
@@ -160,19 +145,6 @@
               "type": "integer",
               "description": "User Id",
               "required": true
-            }
-          ],
-          "summary": "Creates a new User Project",
-          "responseMessages": [
-            {
-              "code": 201,
-              "responseModel": "UserProject",
-              "message": "Success"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
             }
           ],
           "nickname": "Api::V1::UserProjects#create",

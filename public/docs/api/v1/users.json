@@ -8,15 +8,6 @@
       "path": "/api/v1/users/projects.json",
       "operations": [
         {
-          "parameters": [
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            }
-          ],
           "summary": "Fetches all Project of Current User",
           "responseMessages": [
             {
@@ -44,15 +35,6 @@
       "path": "/api/v1/users/logout.json",
       "operations": [
         {
-          "parameters": [
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            }
-          ],
           "summary": "Logout",
           "responseMessages": [
             {

@@ -8,15 +8,6 @@
       "path": "/api/v1/projects.json",
       "operations": [
         {
-          "parameters": [
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            }
-          ],
           "summary": "Fetches all Projects",
           "responseMessages": [
             {
@@ -44,22 +35,6 @@
       "path": "/api/v1/projects.json",
       "operations": [
         {
-          "parameters": [
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            },
-            {
-              "paramType": "form",
-              "name": "name",
-              "type": "string",
-              "description": "Project Name",
-              "required": true
-            }
-          ],
           "summary": "Creates a new Project",
           "responseMessages": [
             {
@@ -73,6 +48,15 @@
               "message": "Unauthorized"
             }
           ],
+          "parameters": [
+            {
+              "paramType": "form",
+              "name": "name",
+              "type": "string",
+              "description": "Project Name",
+              "required": true
+            }
+          ],
           "nickname": "Api::V1::Projects#create",
           "method": "post"
         }
@@ -82,22 +66,6 @@
       "path": "/api/v1/projects/{id}.json",
       "operations": [
         {
-          "parameters": [
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            },
-            {
-              "paramType": "path",
-              "name": "id",
-              "type": "integer",
-              "description": "Project Id",
-              "required": true
-            }
-          ],
           "summary": "Fetches a single Project item",
           "responseMessages": [
             {
@@ -116,6 +84,15 @@
               "message": "Not Found"
             }
           ],
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Project Id",
+              "required": true
+            }
+          ],
           "nickname": "Api::V1::Projects#show",
           "method": "get"
         }
@@ -125,14 +102,25 @@
       "path": "/api/v1/projects/{id}.json",
       "operations": [
         {
-          "parameters": [
+          "summary": "Update a Project",
+          "responseMessages": [
             {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
+              "code": 200,
+              "responseModel": "Project",
+              "message": "Success"
             },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            },
+            {
+              "code": 404,
+              "responseModel": null,
+              "message": "Not Found"
+            }
+          ],
+          "parameters": [
             {
               "paramType": "path",
               "name": "id",
@@ -162,24 +150,6 @@
               }
             }
           ],
-          "summary": "Update a Project",
-          "responseMessages": [
-            {
-              "code": 200,
-              "responseModel": "Project",
-              "message": "Success"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
-            },
-            {
-              "code": 404,
-              "responseModel": null,
-              "message": "Not Found"
-            }
-          ],
           "nickname": "Api::V1::Projects#update",
           "method": "patch"
         }
@@ -189,22 +159,6 @@
       "path": "/api/v1/projects/{id}.json",
       "operations": [
         {
-          "parameters": [
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            },
-            {
-              "paramType": "path",
-              "name": "id",
-              "type": "integer",
-              "description": "Project Id",
-              "required": true
-            }
-          ],
           "summary": "Delete a Project",
           "responseMessages": [
             {
@@ -221,6 +175,15 @@
               "code": 404,
               "responseModel": null,
               "message": "Not Found"
+            }
+          ],
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Project Id",
+              "required": true
             }
           ],
           "nickname": "Api::V1::Projects#destroy",

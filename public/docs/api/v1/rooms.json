@@ -8,15 +8,6 @@
       "path": "/api/v1/rooms.json",
       "operations": [
         {
-          "parameters": [
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            }
-          ],
           "summary": "Fetches all Rooms",
           "responseMessages": [
             {
@@ -44,22 +35,6 @@
       "path": "/api/v1/rooms.json",
       "operations": [
         {
-          "parameters": [
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            },
-            {
-              "paramType": "form",
-              "name": "name",
-              "type": "string",
-              "description": "Room Name",
-              "required": true
-            }
-          ],
           "summary": "Creates a new Room",
           "responseMessages": [
             {
@@ -73,6 +48,15 @@
               "message": "Unauthorized"
             }
           ],
+          "parameters": [
+            {
+              "paramType": "form",
+              "name": "name",
+              "type": "string",
+              "description": "Room Name",
+              "required": true
+            }
+          ],
           "nickname": "Api::V1::Rooms#create",
           "method": "post"
         }
@@ -82,22 +66,6 @@
       "path": "/api/v1/rooms/{id}.json",
       "operations": [
         {
-          "parameters": [
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            },
-            {
-              "paramType": "path",
-              "name": "id",
-              "type": "integer",
-              "description": "Room Id",
-              "required": true
-            }
-          ],
           "summary": "Fetches a single Room item",
           "responseMessages": [
             {
@@ -116,6 +84,15 @@
               "message": "Not Found"
             }
           ],
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Room Id",
+              "required": true
+            }
+          ],
           "nickname": "Api::V1::Rooms#show",
           "method": "get"
         }
@@ -125,29 +102,6 @@
       "path": "/api/v1/rooms/{id}.json",
       "operations": [
         {
-          "parameters": [
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            },
-            {
-              "paramType": "path",
-              "name": "id",
-              "type": "integer",
-              "description": "Room Id",
-              "required": true
-            },
-            {
-              "paramType": "form",
-              "name": "name",
-              "type": "string",
-              "description": "Room Name",
-              "required": true
-            }
-          ],
           "summary": "Update a Room",
           "responseMessages": [
             {
@@ -166,6 +120,22 @@
               "message": "Not Found"
             }
           ],
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Room Id",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "name",
+              "type": "string",
+              "description": "Room Name",
+              "required": true
+            }
+          ],
           "nickname": "Api::V1::Rooms#update",
           "method": "patch"
         }
@@ -175,22 +145,6 @@
       "path": "/api/v1/rooms/{id}.json",
       "operations": [
         {
-          "parameters": [
-            {
-              "paramType": "header",
-              "name": "Authorization",
-              "type": "string",
-              "description": "Authentication token",
-              "required": true
-            },
-            {
-              "paramType": "path",
-              "name": "id",
-              "type": "integer",
-              "description": "Room Id",
-              "required": true
-            }
-          ],
           "summary": "Delete a Room",
           "responseMessages": [
             {
@@ -207,6 +161,15 @@
               "code": 404,
               "responseModel": null,
               "message": "Not Found"
+            }
+          ],
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Room Id",
+              "required": true
             }
           ],
           "nickname": "Api::V1::Rooms#destroy",
