@@ -5,7 +5,7 @@
   "resourcePath": "reports",
   "apis": [
     {
-      "path": "/api/v1/reports/range_date.json",
+      "path": "/api/v1/reports.json",
       "operations": [
         {
           "summary": "Fetches all Rooms Booking in the range time",
@@ -30,67 +30,50 @@
               "required": false
             },
             {
-              "paramType": "form",
+              "paramType": "query",
+              "name": "type",
+              "type": "string",
+              "description": "Type",
+              "required": true,
+              "allowableValues": {
+                "valueType": "LIST",
+                "values": [
+                  "date",
+                  "project"
+                ]
+              }
+            },
+            {
+              "paramType": "query",
               "name": "room_id",
               "type": "integer",
               "description": "Room Id",
-              "required": true
-            },
-            {
-              "paramType": "form",
-              "name": "time_start",
-              "type": "DateTime",
-              "description": "Time Start",
-              "required": true
-            },
-            {
-              "paramType": "form",
-              "name": "time_end",
-              "type": "DateTime",
-              "description": "Time End",
-              "required": true
-            }
-          ],
-          "nickname": "Api::V1::Reports#by_range_date",
-          "method": "post"
-        }
-      ]
-    },
-    {
-      "path": "/api/v1/reports/projects.json",
-      "operations": [
-        {
-          "summary": "Fetches all Rooms Booking by project id",
-          "responseMessages": [
-            {
-              "code": 200,
-              "responseModel": "Room",
-              "message": "Success"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
-            }
-          ],
-          "parameters": [
-            {
-              "paramType": "query",
-              "name": "page",
-              "type": "integer",
-              "description": "Page Number",
               "required": false
             },
             {
-              "paramType": "form",
+              "paramType": "query",
               "name": "project_id",
               "type": "integer",
               "description": "Project Id",
-              "required": true
+              "required": false
+            },
+            {
+              "paramType": "query",
+              "name": "time_start",
+              "type": "DateTime",
+              "description": "Time Start",
+              "required": false
+            },
+            {
+              "paramType": "query",
+              "name": "time_end",
+              "type": "DateTime",
+              "description": "Time End",
+              "required": false
             }
           ],
-          "nickname": "Api::V1::Reports#by_project",
-          "method": "post"
+          "nickname": "Api::V1::Reports#index",
+          "method": "get"
         }
       ]
     }
