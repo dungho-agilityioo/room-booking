@@ -1,7 +1,7 @@
 class Api::V1::RoomBookingsController < ApplicationController
 
   before_action :find_booking, only: [:show, :destroy]
-  swagger_controller :room_bookings, "Books Management"
+  swagger_controller :books, "Books Management"
 
   # GET /room_bookings
   # :nocov:
