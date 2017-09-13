@@ -4,7 +4,7 @@ ActsAsBookable::Booking.class_eval do
   validates_datetime :time_start, :on => :create, :on_or_after => lambda { Time.zone.now }
   before_create :reset_time_end
 
-  after_create :gen_next_schedule, if: :daily?
+  after_create :generate_next_schedule, if: :daily?
   after_create :send_email
   after_destroy :remove_future_schedule, if: :daily?
 
@@ -14,7 +14,7 @@ ActsAsBookable::Booking.class_eval do
     UserMailer.room_booking({params: self}).deliver_later
   end
 
-  def gen_next_schedule
+  def generate_next_schedule
     RoomBookingService.new(self, 7).call
   end
 
@@ -25,5 +25,4 @@ ActsAsBookable::Booking.class_eval do
   def reset_time_end
     self.time_end = self.time_end - 1.second
   end
-
 end
