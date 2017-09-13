@@ -5,6 +5,10 @@ module ControllerSpecHelper
     JSON.parse(response.body)['data']
   end
 
+  def metadata
+    JSON.parse(response.body)["metadata"]
+  end
+
   # generate tokens from user id
   def token_generator(id)
     token = JsonWebToken.encode({id: id}, HMAC_SECRET)

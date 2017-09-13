@@ -73,6 +73,8 @@ RSpec.describe Api::V1::RoomBookingsController, type: :controller do
       it 'should be bookable is room' do
         expect(json['bookable']['room']['id'].to_i).to eq(room.id)
       end
+
+
     end
 
     context 'when the request is missing the title' do
@@ -223,19 +225,19 @@ RSpec.describe Api::V1::RoomBookingsController, type: :controller do
       end
 
       it 'return correct number of page' do
-        expect(JSON.parse(response.body)["metadata"]["page"].to_i).to eq(1)
+        expect(metadata["page"].to_i).to eq(1)
       end
 
       it 'return correct number of per_page' do
-        expect(JSON.parse(response.body)["metadata"]["per_page"].to_i).to eq(10)
+        expect(metadata["per_page"].to_i).to eq(10)
       end
 
       it 'return correct number of total' do
-        expect(JSON.parse(response.body)["metadata"]["total"].to_i).to eq(3)
+        expect(metadata["total"].to_i).to eq(3)
       end
 
       it 'return correct number of total page' do
-        expect(JSON.parse(response.body)["metadata"]["total_page"].to_i).to eq(1)
+        expect(metadata["total_page"].to_i).to eq(1)
       end
 
     end
