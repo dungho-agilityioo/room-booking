@@ -71,126 +71,132 @@ RSpec.describe Api::V1::ReportsController, type: :controller do
 
   before(:each) { request.headers["Authorization"] = headers["Authorization"] }
 
-  describe '#by_range_date' do
+  describe 'GET /index' do
 
-    context '#page 1' do
-      before do
-        post :by_range_date, params: {
-                    room_id: @room.id,
-                    time_start: Date.today.next_week + 8.hours,
-                    time_end: Date.today.next_week + 1.day + 17.hours
-                  }
+    context '#date' do
+      context '#page 1' do
+        before do
+          get :index, params: {
+                      type: 'date',
+                      room_id: @room.id,
+                      time_start: Date.today.next_week + 8.hours,
+                      time_end: Date.today.next_week + 1.day + 17.hours
+                    }
+        end
+
+        it { should respond_with(200) }
+
+        it 'return room bookings' do
+          expect(json.count).to eq(10)
+        end
+
+        it 'return correct number of page' do
+          expect(metadata["page"].to_i).to eq(1)
+        end
+
+        it 'return correct number of per_page' do
+          expect(metadata["per_page"].to_i).to eq(10)
+        end
+
+        it 'return correct number of total' do
+          expect(metadata["total"].to_i).to eq(12)
+        end
+
+        it 'return correct number of total page' do
+          expect(metadata["total_page"].to_i).to eq(2)
+        end
       end
 
-      it { should respond_with(200) }
+      context '#page 2' do
+        before do
+          get :index, params: {
+                      type: 'date',
+                      page: 2,
+                      room_id: @room.id,
+                      time_start: Date.today.next_week + 8.hours,
+                      time_end: Date.today.next_week + 1.day + 17.hours
+                    }
+        end
 
-      it 'return room bookings' do
-        expect(json.count).to eq(10)
-      end
+        it { should respond_with(200) }
 
-      it 'return correct number of page' do
-        expect(JSON.parse(response.body)["metadata"]["page"].to_i).to eq(1)
-      end
+        it 'return room bookings' do
+          expect(json.count).to eq(2)
+        end
 
-      it 'return correct number of per_page' do
-        expect(JSON.parse(response.body)["metadata"]["per_page"].to_i).to eq(10)
-      end
+        it 'return correct number of page' do
+          expect(metadata["page"].to_i).to eq(2)
+        end
 
-      it 'return correct number of total' do
-        expect(JSON.parse(response.body)["metadata"]["total"].to_i).to eq(12)
-      end
+        it 'return correct number of per_page' do
+          expect(metadata["per_page"].to_i).to eq(10)
+        end
 
-      it 'return correct number of total page' do
-        expect(JSON.parse(response.body)["metadata"]["total_page"].to_i).to eq(2)
+        it 'return correct number of total' do
+          expect(metadata["total"].to_i).to eq(12)
+        end
+
+        it 'return correct number of total page' do
+          expect(metadata["total_page"].to_i).to eq(2)
+        end
       end
     end
 
-    context '#page 2' do
-      before do
-        post :by_range_date, params: {
-                    page: 2,
-                    room_id: @room.id,
-                    time_start: Date.today.next_week + 8.hours,
-                    time_end: Date.today.next_week + 1.day + 17.hours
-                  }
+    describe '#project' do
+
+      context '#page 1' do
+        before  { get :index, params: { type: 'project', project_id: @project.id } }
+
+        it { should respond_with(200) }
+
+        it 'return room bookings' do
+          expect(json.count).to eq(10)
+        end
+
+        it 'return correct number of page' do
+          expect(metadata["page"].to_i).to eq(1)
+        end
+
+        it 'return correct number of per_page' do
+          expect(metadata["per_page"].to_i).to eq(10)
+        end
+
+        it 'return correct number of total' do
+          expect(metadata["total"].to_i).to eq(12)
+        end
+
+        it 'return correct number of total page' do
+          expect(metadata["total_page"].to_i).to eq(2)
+        end
       end
 
-      it { should respond_with(200) }
+      context '#page 2' do
+        before  { get :index, params: { type: 'project', project_id: @project.id, page: 2 } }
 
-      it 'return room bookings' do
-        expect(json.count).to eq(2)
-      end
+        it { should respond_with(200) }
 
-      it 'return correct number of page' do
-        expect(JSON.parse(response.body)["metadata"]["page"].to_i).to eq(2)
-      end
+        it 'return room bookings' do
+          expect(json.count).to eq(2)
+        end
 
-      it 'return correct number of per_page' do
-        expect(JSON.parse(response.body)["metadata"]["per_page"].to_i).to eq(10)
-      end
+        it 'return correct number of page' do
+          expect(metadata["page"].to_i).to eq(2)
+        end
 
-      it 'return correct number of total' do
-        expect(JSON.parse(response.body)["metadata"]["total"].to_i).to eq(12)
-      end
+        it 'return correct number of per_page' do
+          expect(metadata["per_page"].to_i).to eq(10)
+        end
 
-      it 'return correct number of total page' do
-        expect(JSON.parse(response.body)["metadata"]["total_page"].to_i).to eq(2)
+        it 'return correct number of total' do
+          expect(metadata["total"].to_i).to eq(12)
+        end
+
+        it 'return correct number of total page' do
+          expect(metadata["total_page"].to_i).to eq(2)
+        end
       end
     end
   end
 
-  describe '#by_project' do
 
-    context '#page 1' do
-      before  { post :by_project, params: { project_id: @project.id } }
-
-      it { should respond_with(200) }
-
-      it 'return room bookings' do
-        expect(json.count).to eq(10)
-      end
-
-      it 'return correct number of page' do
-        expect(JSON.parse(response.body)["metadata"]["page"].to_i).to eq(1)
-      end
-
-      it 'return correct number of per_page' do
-        expect(JSON.parse(response.body)["metadata"]["per_page"].to_i).to eq(10)
-      end
-
-      it 'return correct number of total' do
-        expect(JSON.parse(response.body)["metadata"]["total"].to_i).to eq(12)
-      end
-
-      it 'return correct number of total page' do
-        expect(JSON.parse(response.body)["metadata"]["total_page"].to_i).to eq(2)
-      end
-    end
-
-    context '#page 2' do
-      before  { post :by_project, params: { project_id: @project.id, page: 2 } }
-
-      it { should respond_with(200) }
-
-      it 'return room bookings' do
-        expect(json.count).to eq(2)
-      end
-
-      it 'return correct number of page' do
-        expect(JSON.parse(response.body)["metadata"]["page"].to_i).to eq(2)
-      end
-
-      it 'return correct number of per_page' do
-        expect(JSON.parse(response.body)["metadata"]["per_page"].to_i).to eq(10)
-      end
-
-      it 'return correct number of total' do
-        expect(JSON.parse(response.body)["metadata"]["total"].to_i).to eq(12)
-      end
-
-      it 'return correct number of total page' do
-        expect(JSON.parse(response.body)["metadata"]["total_page"].to_i).to eq(2)
-      end
-    end
-  end
 end
