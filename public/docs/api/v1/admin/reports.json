@@ -72,7 +72,7 @@
               "required": false
             }
           ],
-          "nickname": "Api::V1::Reports#index",
+          "nickname": "Api::V1::Admin::Reports#index",
           "method": "get"
         }
       ]

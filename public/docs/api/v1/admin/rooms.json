@@ -26,7 +26,7 @@
               "message": "Not Found"
             }
           ],
-          "nickname": "Api::V1::Rooms#index",
+          "nickname": "Api::V1::Admin::Rooms#index",
           "method": "get"
         }
       ]
@@ -57,7 +57,7 @@
               "required": true
             }
           ],
-          "nickname": "Api::V1::Rooms#create",
+          "nickname": "Api::V1::Admin::Rooms#create",
           "method": "post"
         }
       ]
@@ -93,7 +93,7 @@
               "required": true
             }
           ],
-          "nickname": "Api::V1::Rooms#show",
+          "nickname": "Api::V1::Admin::Rooms#show",
           "method": "get"
         }
       ]
@@ -136,7 +136,7 @@
               "required": true
             }
           ],
-          "nickname": "Api::V1::Rooms#update",
+          "nickname": "Api::V1::Admin::Rooms#update",
           "method": "patch"
         }
       ]
@@ -172,7 +172,7 @@
               "required": true
             }
           ],
-          "nickname": "Api::V1::Rooms#destroy",
+          "nickname": "Api::V1::Admin::Rooms#destroy",
           "method": "delete"
         }
       ]

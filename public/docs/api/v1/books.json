@@ -29,6 +29,20 @@
           "parameters": [
             {
               "paramType": "form",
+              "name": "type",
+              "type": "String",
+              "description": "Search For",
+              "required": true,
+              "allowableValues": {
+                "valueType": "LIST",
+                "values": [
+                  "available",
+                  "booked"
+                ]
+              }
+            },
+            {
+              "paramType": "form",
               "name": "time_start",
               "type": "DateTime",
               "description": "Time Start",
@@ -44,6 +58,42 @@
           ],
           "nickname": "Api::V1::RoomBookings#search",
           "method": "post"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/books.json",
+      "operations": [
+        {
+          "summary": "Fetches all Room Bookings of Current User",
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": "Room",
+              "message": "Success"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            },
+            {
+              "code": 404,
+              "responseModel": null,
+              "message": "Not Found"
+            }
+          ],
+          "parameters": [
+            {
+              "paramType": "query",
+              "name": "page",
+              "type": "integer",
+              "description": "Page Number",
+              "required": false
+            }
+          ],
+          "nickname": "Api::V1::RoomBookings#index",
+          "method": "get"
         }
       ]
     },

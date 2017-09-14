@@ -26,7 +26,7 @@
               "message": "Not Found"
             }
           ],
-          "nickname": "Api::V1::Projects#index",
+          "nickname": "Api::V1::Admin::Projects#index",
           "method": "get"
         }
       ]
@@ -57,7 +57,7 @@
               "required": true
             }
           ],
-          "nickname": "Api::V1::Projects#create",
+          "nickname": "Api::V1::Admin::Projects#create",
           "method": "post"
         }
       ]
@@ -93,7 +93,7 @@
               "required": true
             }
           ],
-          "nickname": "Api::V1::Projects#show",
+          "nickname": "Api::V1::Admin::Projects#show",
           "method": "get"
         }
       ]
@@ -150,7 +150,7 @@
               }
             }
           ],
-          "nickname": "Api::V1::Projects#update",
+          "nickname": "Api::V1::Admin::Projects#update",
           "method": "patch"
         }
       ]
@@ -186,7 +186,7 @@
               "required": true
             }
           ],
-          "nickname": "Api::V1::Projects#destroy",
+          "nickname": "Api::V1::Admin::Projects#destroy",
           "method": "delete"
         }
       ]

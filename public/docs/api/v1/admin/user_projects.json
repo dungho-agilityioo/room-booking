@@ -42,7 +42,7 @@
               "required": true
             }
           ],
-          "nickname": "Api::V1::UserProjects#update",
+          "nickname": "Api::V1::Admin::UserProjects#update",
           "method": "put"
         }
       ]
@@ -78,7 +78,7 @@
               "required": true
             }
           ],
-          "nickname": "Api::V1::UserProjects#destroy",
+          "nickname": "Api::V1::Admin::UserProjects#destroy",
           "method": "delete"
         }
       ]
@@ -109,7 +109,7 @@
               "required": false
             }
           ],
-          "nickname": "Api::V1::UserProjects#index",
+          "nickname": "Api::V1::Admin::UserProjects#index",
           "method": "get"
         }
       ]
@@ -147,7 +147,7 @@
               "required": true
             }
           ],
-          "nickname": "Api::V1::UserProjects#create",
+          "nickname": "Api::V1::Admin::UserProjects#create",
           "method": "post"
         }
       ]
