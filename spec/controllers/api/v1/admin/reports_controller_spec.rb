@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Api::V1::ReportsController, type: :controller do
+RSpec.describe Api::V1::Admin::ReportsController, type: :controller do
   let!(:user) { create(:user, role: :admin) }
   let(:headers) { valid_headers }
 

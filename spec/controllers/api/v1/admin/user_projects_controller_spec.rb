@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Api::V1::UserProjectsController, type: :controller do
+RSpec.describe Api::V1::Admin::UserProjectsController, type: :controller do
   let!(:users) { create_list(:user, 4) }
   let!(:user) { create(:user, role: :admin) }
   let!(:project) { create(:project) }
