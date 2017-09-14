@@ -23,11 +23,13 @@ Rails.application.routes.draw do
     namespace :admin do
       resources :projects
       resources :rooms
-      resources :reports, except: [:create, :update, :destroy, :show]
+      resources :reports, only: [:index]
 
-      resources :user_projects, except: [:update, :destroy, :show] do
-        put ':project_id', on: :collection, action: :update
-        delete ':project_id', on: :collection, action: :destroy
+      resources :user_projects, only: [:index, :create] do
+        collection do
+          put ':project_id', action: :update
+          delete ':project_id', action: :destroy
+        end
       end
     end
 
