@@ -147,109 +147,126 @@ RSpec.describe Api::V1::RoomBookingsController, type: :controller do
   end
 
   describe 'POST /books/search' do
-    let!(:room2) { create(:room) }
-    before { create(:booked_with_room, bookable: room2) }
 
-    context 'the Room is available' do
-      before(:each) do
-        post :search, params: {
-              time_start: Date.today.next_week + 10.hours,
-              time_end: Date.today.next_week + 18.hours,
-            }
+    describe '#available' do
+      let!(:room2) { create(:room) }
+      before { create(:booked_with_room, bookable: room2) }
+
+      context 'the Room is available' do
+        before(:each) do
+          post :search, params: {
+                type: "available",
+                time_start: Date.today.next_week + 10.hours,
+                time_end: Date.today.next_week + 18.hours,
+              }
+        end
+
+        it { should respond_with(200) }
+        it 'return a list rooms available' do
+          # include room and room2
+          expect(json.size).to eq(2)
+        end
       end
 
-      it { should respond_with(200) }
-      it 'return a list rooms available' do
-        # include room and room2
-        expect(json.size).to eq(2)
+      context 'the Room not available' do
+        before do
+          post :search, params: {
+                time_start: Date.today.next_week + 10.hours,
+                time_end: Date.today.next_week + 11.hours,
+              }
+        end
+
+       #  it '' do
+       #   should respond_with(201)
+       # end
+        # it 'return a not found message' do
+        #   expect(response.body).to match(/the Room is not available from/)
+        # end
       end
     end
 
-    context 'the Room not available' do
-      before do
-        post :search, params: {
-              time_start: Date.today.next_week + 10.hours,
-              time_end: Date.today.next_week + 11.hours,
-            }
+    describe '#booked' do
+      before(:all) do
+        user = create(:user)
+        room = create(:room)
+        available_date = [
+          {
+            time_start: Date.today.next_week + 8.hours,
+            time_end: Date.today.next_week + 9.hours,
+          },
+          {
+            time_start: Date.today.next_week + 9.hours,
+            time_end: Date.today.next_week + 10.hours,
+          },
+          {
+            time_start: Date.today.next_week + 10.hours,
+            time_end: Date.today.next_week + 11.hours,
+          },
+          {
+            time_start: Date.today.next_week + 1.day + 14.hours,
+            time_end: Date.today.next_week + 1.day + 15.hours,
+          }
+        ]
+
+        available_date.each do |date|
+          user.book! room, time_start: date[:time_start], time_end: date[:time_end], amount: 1
+        end
       end
 
-     #  it '' do
-     #   should respond_with(201)
-     # end
-      # it 'return a not found message' do
-      #   expect(response.body).to match(/the Room is not available from/)
-      # end
+      context 'when enter time param' do
+        before { post :search, params: {
+            type: 'booked',
+            time_start: Date.today.next_week + 9.hours + 30.minute,
+            time_end: Date.today.next_week + 12.hours + 30.minute,
+          }
+        }
+
+        it { should respond_with(200) }
+
+        it 'return room booked' do
+          # include booked on top file
+          expect(json.count).to eq(3)
+        end
+
+        it 'return correct number of page' do
+          expect(metadata["page"].to_i).to eq(1)
+        end
+
+        it 'return correct number of per_page' do
+          expect(metadata["per_page"].to_i).to eq(10)
+        end
+
+        it 'return correct number of total' do
+          expect(metadata["total"].to_i).to eq(3)
+        end
+
+        it 'return correct number of total page' do
+          expect(metadata["total_page"].to_i).to eq(1)
+        end
+
+      end
+      context 'when do not enter param' do
+        context '#type param' do
+          before { post :search, params: {} }
+
+          it { should respond_with(400) }
+
+          it 'return a error message' do
+            expect(response.body).to match(/Parameter type is required/)
+          end
+        end
+
+        context '#time param' do
+          before { post :search, params: { type: 'booked' } }
+
+          it { should respond_with(400) }
+
+          it 'return a error message' do
+            expect(response.body).to match(/Parameter time_start is required/)
+          end
+        end
+      end
     end
   end
 
-  # describe 'POST /books/booked' do
-  #   before(:all) do
-  #     user = create(:user)
-  #     room = create(:room)
-  #     available_date = [
-  #       {
-  #         time_start: Date.today.next_week + 8.hours,
-  #         time_end: Date.today.next_week + 9.hours,
-  #       },
-  #       {
-  #         time_start: Date.today.next_week + 9.hours,
-  #         time_end: Date.today.next_week + 10.hours,
-  #       },
-  #       {
-  #         time_start: Date.today.next_week + 10.hours,
-  #         time_end: Date.today.next_week + 11.hours,
-  #       },
-  #       {
-  #         time_start: Date.today.next_week + 1.day + 14.hours,
-  #         time_end: Date.today.next_week + 1.day + 15.hours,
-  #       }
-  #     ]
-
-  #     available_date.each do |date|
-  #       user.book! room, time_start: date[:time_start], time_end: date[:time_end], amount: 1
-  #     end
-  #   end
-
-  #   context 'when assign time start' do
-  #     before { post :room_booked, params: {
-  #         time_start: Date.today.next_week + 9.hours + 30.minute,
-  #         time_end: Date.today.next_week + 12.hours + 30.minute,
-  #       }
-  #     }
-
-  #     it { should respond_with(200) }
-
-  #     it 'return room booked' do
-  #       # include booked on top file
-  #       expect(json.count).to eq(3)
-  #     end
-
-  #     it 'return correct number of page' do
-  #       expect(metadata["page"].to_i).to eq(1)
-  #     end
-
-  #     it 'return correct number of per_page' do
-  #       expect(metadata["per_page"].to_i).to eq(10)
-  #     end
-
-  #     it 'return correct number of total' do
-  #       expect(metadata["total"].to_i).to eq(3)
-  #     end
-
-  #     it 'return correct number of total page' do
-  #       expect(metadata["total_page"].to_i).to eq(1)
-  #     end
-
-  #   end
-
-  #   context 'when do not assign time start' do
-  #     before { post :room_booked, params: {} }
-
-  #     it { should respond_with(400) }
-
-  #     it 'return a error message' do
-  #       expect(response.body).to match(/Parameter time_start is required/)
-  #     end
-  #   end
-  # end
 end
