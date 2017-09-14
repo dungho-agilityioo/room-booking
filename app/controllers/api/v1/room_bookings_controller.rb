@@ -3,7 +3,7 @@ class Api::V1::RoomBookingsController < ApplicationController
   before_action :find_booking, only: [:show, :destroy]
   swagger_controller :books, "Books Management"
 
-  # GET /room_bookings
+  # GET /books
   # :nocov:
   swagger_api :index do
     summary "Fetches all Room Bookings of Current User"
@@ -25,7 +25,7 @@ class Api::V1::RoomBookingsController < ApplicationController
     respone_collection_serializer(room_bookings, page, total)
   end
 
-  # GET /room_bookings/:id
+  # GET /books/:id
   # :nocov:
   swagger_api :show do
     summary "Fetches a single Room Booking item of Current User"
@@ -44,7 +44,7 @@ class Api::V1::RoomBookingsController < ApplicationController
     end
   end
 
-  # POST /room_bookings
+  # POST /books
   # :nocov:
   swagger_api :create do |api|
     summary "Creates a new Room Booking"
@@ -67,7 +67,7 @@ class Api::V1::RoomBookingsController < ApplicationController
     respone_record_serializer(booking, ActsAsBookable::BookingSerializer, :created)
   end
 
-  # DELETE /room_bookings/:id
+  # DELETE /books/:id
   # :nocov:
   swagger_api :destroy do
     summary "Delete a Room Booking of Current user"
@@ -88,10 +88,11 @@ class Api::V1::RoomBookingsController < ApplicationController
     end
   end
 
-  # POST /room_bookings/search
+  # POST /books/search
   # :nocov:
   swagger_api :search do |api|
     summary "Check Room Available in the range time"
+    api.param_list :form, :type, :String, :required, "Search For", [:available, :booked]
     api.param :form, :time_start, :DateTime, :required, "Time Start"
     api.param :form, :time_end, :DateTime, :required, "Time End"
     response :ok, "Success", :RoomBooking
@@ -105,39 +106,23 @@ class Api::V1::RoomBookingsController < ApplicationController
     param! :time_start, DateTime, required: true
     param! :time_end, DateTime, required: true
 
-    rs = BooksSearchService.check_availability( params[:time_start].to_datetime, params[:time_end].to_datetime )
+    time_start = params[:time_start].to_datetime
+    time_end = params[:time_end].to_datetime
 
-    if rs.present?
-      json_response({ data: rs })
+    if params[:type] == 'available'
+      rs = BooksSearchService.check_availability( time_start, time_end )
+      if rs.present?
+        json_response({ data: rs })
+      else
+        json_response(nil, :no_content )
+      end
     else
-      json_response(nil, :no_content )
+      page = params[:page].present? && params[:page] || 1
+      total = ReportService.get_booked(params[:time_start], params[:time_end]).count
+      room_bookings = ReportService.get_booked(params[:time_start], params[:time_end]).page(page)
+      respone_collection_serializer(room_bookings, page, total)
     end
-  end
 
-  # POST /room_bookings/booked
-  # :nocov:
-  swagger_api :room_booked do
-    summary "Get list Room Booked in the range time"
-    param :query, :page, :integer, :optional, "Page Number"
-    param :form, :time_start, :DateTime, :required, "Time Start"
-    param :form, :time_end, :DateTime, :required, "Time End"
-    response :ok, "Success", :RoomBooking
-    response :unauthorized
-    response :not_found
-  end
-  # :nocov:
-  def room_booked
-    authorize ActsAsBookable::Booking
-    param! :page, Integer
-    param! :time_start, DateTime, required: true
-    param! :time_end, DateTime, required: true
-
-    page = params[:page].present? && params[:page] || 1
-
-    total = ReportService.get_booked(params[:time_start], params[:time_end]).count
-    room_bookings = ReportService.get_booked(params[:time_start], params[:time_end]).page(page)
-
-    respone_collection_serializer(room_bookings, page, total)
   end
 
   private
