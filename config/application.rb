@@ -46,6 +46,6 @@ module App
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     # config.time_zone = 'Asia/Saigon'
     # config.active_record.default_timezone = :local
-
+    config.active_job.queue_adapter = :google_cloud_pubsub
   end
 end
