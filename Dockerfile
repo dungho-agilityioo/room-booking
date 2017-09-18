@@ -1,36 +1,12 @@
 # Get base ruby 2.4
-FROM ruby:2.4-alpine
+FROM ruby:2.3.3
 
-ENV PATH /google-cloud-sdk/bin:$PATH
-ENV CLOUD_SDK_VERSION 171.0.0
-
-RUN apk update \
-	&& apk upgrade \
-	&& apk add tzdata \
-		sqlite-dev \
-    git \
-		postgresql-dev \
-		zlib-dev \
-		libxml2-dev \
-		libxslt-dev \
-		nodejs \
-		g++ \
-		make \
-		bash \
-    curl \
-    python \
-    libc6-compat \
-    openssh-client \
-  && rm -rf /var/cache/apk/*
-  && curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz && \
-    tar xzf google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz && \
-    rm google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz && \
-    ln -s /lib /lib64 && \
-    gcloud config set core/disable_usage_reporting true && \
-    gcloud config set component_manager/disable_update_check true && \
-    gcloud config set metrics/environment github_docker_image
-
-VOLUME ["/root/.config"]
+# Install runtime dependencies
+RUN apt-get update -qq && apt-get install -y --no-install-recommends \
+        build-essential \
+        libpq-dev \
+        nodejs \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV HOME_PATH /home/app
 ENV RAILS_VERSION 5.0.1
