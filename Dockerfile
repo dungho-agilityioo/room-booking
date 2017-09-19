@@ -1,12 +1,24 @@
 # Get base ruby 2.4
 FROM ruby:2.3.3
 
+ENV PATH /google-cloud-sdk/bin:$PATH
+ENV CLOUD_SDK_VERSION 171.0.0
+
 # Install runtime dependencies
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
         build-essential \
         libpq-dev \
         nodejs \
-    && rm -rf /var/lib/apt/lists/*
+        curl \
+        openjdk-7-jre \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN curl https://sdk.cloud.google.com | bash && \
+  cat /root/google-cloud-sdk/path.bash.inc | bash && \
+  cat /root/google-cloud-sdk/completion.bash.inc | bash && \
+  /root/google-cloud-sdk/bin/gcloud components install -q pubsub-emulator beta
+
 
 ENV HOME_PATH /home/app
 ENV RAILS_VERSION 5.0.1
