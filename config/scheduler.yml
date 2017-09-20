@@ -1,8 +1,0 @@
-generate_future_schedule:
-  cron: "0 0 * * *"
-  class: "GenerateFutureSchedule"
-  queue: generate_future_schedule_job
-reminder_email:
-  cron: "* * * * *"
-  class: "ReminderEmail"
-  queue: reminder_email_job

@@ -21,6 +21,8 @@ Rails.application.routes.draw do
 
     get :projects, to: :projects, controller: :users
 
+    resources :reminders, only: [:index]
+
     namespace :admin do
       resources :projects
       resources :rooms
