@@ -11,8 +11,13 @@
 #
 
 class ActsAsBookable::BookingSerializer < ActiveModel::Serializer
-  attributes :id, :title, :description, :time_start, :time_end
+  attributes :id, :title, :description, :time_start, :time_end, :user, :room
 
-  belongs_to :bookable, polymorphic: true
-  belongs_to :booker,   polymorphic: true
+  def user
+    object.booker.slice(:id, :email, :name, :first_name, :last_name)
+  end
+
+  def room
+    object.bookable.slice(:id, :name)
+  end
 end
