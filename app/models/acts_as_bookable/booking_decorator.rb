@@ -11,29 +11,7 @@ ActsAsBookable::Booking.class_eval do
   private
 
   def send_email
-    @pubsub = Google::Cloud::Pubsub.new( project: ENV['PROJECT_ID'],  keyfile: ENV['GOOGLE_PUS_SUB_KEY_FILE'] )
-    publish_send_mail
-  end
-
-  def get_topic
-    topic_name = "send-mail-after-books"
-    topic = @pubsub.topic topic_name
-
-    topic = @pubsub.create_topic(topic_name) if topic.nil?
-    topic
-  end
-
-  def publish_send_mail
-    topic = get_topic
-    topic.subscribe "send-mail-after-books-#{Time.now.to_i}"
-    topic.publish "send mail completed",
-      user_name: self.booker&.name,
-      room_name: self.bookable&.name,
-      title: self.title,
-      start_date: self.time_start,
-      end_date: self.time_end,
-      daily: self.daily
-
+    PubsubService.new.send_email(self)
   end
 
   def generate_next_schedule
