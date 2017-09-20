@@ -11,7 +11,7 @@ ActsAsBookable::Booking.class_eval do
   private
 
   def send_email
-    UserMailer.room_booking({params: self}).deliver_later
+    PubsubService.new.send_email(self)
   end
 
   def generate_next_schedule

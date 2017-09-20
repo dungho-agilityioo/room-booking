@@ -17,10 +17,20 @@ services:
     command: bundle exec puma -C config/puma.rb
     volumes:
       - .:/home/app
-      # - ./bundle:/bundle
     stdin_open: true
     ports:
       - 3000:3000
+    links:
+      - postgres:db
+  job:
+    build: ./../rb-background-job
+    container_name: job
+    env_file:
+      - .env
+    command: echo "job"
+    volumes:
+      - ./../rb-background-job:/home/app
+    stdin_open: true
     links:
       - postgres:db
   redis:
@@ -33,17 +43,15 @@ services:
       - 6379:6379
     volumes:
       - redis:/var/lib/redis/data
-
   sidekiq:
     depends_on:
-      - postgres
       - redis
-    build: .
+    build: ./../rb-background-job
     container_name: sidekiq
     env_file:
       - .env
     volumes:
-      - .:/home/app
-    command: bundle exec sidekiq
+      - ./../rb-background-job:/home/app
+    command: echo "job running..."
 volumes:
   redis:

@@ -12,13 +12,14 @@ Rails.application.routes.draw do
     devise_scope :user do
       get "/users/auth/gitlab/callback", to: "/api/v1/users/omniauth_callbacks#gitlab"
       delete "logout", to: "users/omniauth_callbacks#destroy"
+      # delete :logout, to: :destroy, controller: :omniauth_callbacks
     end
 
     resources :room_bookings, except: [:update], :path => "books" do
-      post "search", on: :collection, action: :search
+      post :search, on: :collection, action: :search
     end
 
-    get 'projects', to: '/api/v1/users#projects'
+    get :projects, to: :projects, controller: :users
 
     namespace :admin do
       resources :projects
@@ -36,4 +37,3 @@ Rails.application.routes.draw do
   end
 
 end
-

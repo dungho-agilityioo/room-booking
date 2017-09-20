@@ -64,7 +64,7 @@ gem 'acts_as_bookable'
 gem 'rails_param'
 
 gem "activejob-google_cloud_pubsub", "~> 0.5.0"
-gem 'google-protobuf', '3.4.1'
+gem 'google-protobuf', '3.2.0'
 
 
 group :development, :test do
