@@ -2,8 +2,8 @@
 <p> - Room: <%= @room_name %></p>
 <p> - Title: <%= @title %></p>
 <p> - Description: <%= @description %></p>
-<p> - Start date: <%= @start_date.strftime('%m-%d-%Y %H-%M') %></p>
-<p> - End date: <%= @end_date.strftime('%m-%d-%Y %H-%M') %></p>
-<% if @daily.present? && @daily %>
+<p> - Start date: <%= @start_date %></p>
+<p> - End date: <%= @end_date %></p>
+<% if @daily.present? && @daily == 'true' %>
 <p> - Booking Type: Daily</p>
 <% end %>
