@@ -23,7 +23,7 @@ Rails.application.routes.draw do
 
     resources :backgrounds, only: [:index] do
       collection do
-        post :pull, action: :send_email
+        post "push/:token", action: :send_email
       end
     end
 

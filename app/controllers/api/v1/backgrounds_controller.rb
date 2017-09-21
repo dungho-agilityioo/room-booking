@@ -1,5 +1,6 @@
 class Api::V1::BackgroundsController < ApplicationController
   skip_before_action :authenticate_request
+  before_action :auth_token
 
   # GET /backgrounds
   # Get all booking before 10 minutes to get started
@@ -10,16 +11,23 @@ class Api::V1::BackgroundsController < ApplicationController
     respone_collection_serializer( bookings, 1, 1000 )
   end
 
-  # GET /backgrounds/pull
+  # POST /backgrounds/push
   def send_email
-    messages = PubsubService.new.pull_books_messages
-    puts "@12 #{messages.inspect}"
-    messages.each do |msg|
-      UserMailer.room_booking(msg.attributes).deliver_now
-      msg.acknowledge!
+    message = JSON.parse request.body.read
+
+    unless message.nil?
+      attributes = message["message"]["attributes"]
+
+      UserMailer.room_booking(attributes).deliver_now
     end
 
-    json_response( {sucessed: true})
+    json_response( {sucessed: true} )
   end
+
+  private
+
+    def auth_token
+      return json_response({ message: Message.invalid_token }, 401) if params[:token] != ENV['PUBSUB_VERIFICATION_TOKEN']
+    end
 
 end
