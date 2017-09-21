@@ -12,19 +12,19 @@
       "description": "User Management"
     },
     {
-      "path": "/docs/api/v1/projects.{format}",
+      "path": "/docs/api/v1/admin/projects.{format}",
       "description": "Project Management"
     },
     {
-      "path": "/docs/api/v1/rooms.{format}",
+      "path": "/docs/api/v1/admin/rooms.{format}",
       "description": "Room Management"
     },
     {
-      "path": "/docs/api/v1/reports.{format}",
+      "path": "/docs/api/v1/admin/reports.{format}",
       "description": "Room Management"
     },
     {
-      "path": "/docs/api/v1/user_projects.{format}",
+      "path": "/docs/api/v1/admin/user_projects.{format}",
       "description": "Administrator can assign project for user"
     }
   ],
