@@ -8,7 +8,12 @@ class Api::V1::BackgroundsController < ApplicationController
     time = (Time.now + 10.minute ).strftime('%Y-%m-%d %H:%M')
 
     bookings = ReminderService.booked_remider(time)
-    respone_collection_serializer( bookings, 1, 1000 )
+    render json: {
+        data:
+          ActiveModel::Serializer::CollectionSerializer.new(
+            bookings, each_serializer: ActsAsBookable::BookingSerializer
+          ).as_json
+        }
   end
 
   # POST /backgrounds/push
@@ -27,7 +32,8 @@ class Api::V1::BackgroundsController < ApplicationController
   private
 
     def auth_token
-      return json_response({ message: Message.invalid_token }, 401) if params[:token] != ENV['PUBSUB_VERIFICATION_TOKEN']
+      token = params[:token] || request.headers["Authorization"]
+      return json_response({ message: Message.invalid_token }, 401) if token != ENV['PUBSUB_VERIFICATION_TOKEN'] && token != ENV['AUTHORIZATION_APIKEY']
     end
 
 end
