@@ -2,7 +2,8 @@ class PubsubService
   def initialize
     @pubsub = Google::Cloud::Pubsub.new( project: ENV['PROJECT_ID'],  keyfile: ENV['GOOGLE_PUS_SUB_KEY_FILE'] )
   end
-  def send_email(booking)
+
+  def publish_books_message(booking)
     publish_send_mail(booking)
   end
 
@@ -16,12 +17,15 @@ class PubsubService
 
     def subscribe_if_not_exists(topic, name)
       subscription = topic.subscription name
-      topic.subscribe(name) if subscription.nil?
+      topic.subscribe( name,
+          deadline: 120,
+          endpoint: "#{ENV['BASE_PATH']}/api/v1/backgrounds/push/#{ENV['PUBSUB_VERIFICATION_TOKEN']}"
+        ) if subscription.nil?
     end
 
     def publish_send_mail(booking)
-      topic = get_or_create_topic "send-mail-after-books"
-      subscribe_if_not_exists(topic, 'send-mail-after-books-subscription')
+      topic = get_or_create_topic ENV['PUBSUB_TOPIC_SEND_MAIL']
+      subscribe_if_not_exists(topic, "#{ENV['PUBSUB_TOPIC_SEND_MAIL']}-subscription")
       topic.publish "send mail completed",
         user_name: booking.booker&.name,
         room_name: booking.bookable&.name,

@@ -21,7 +21,11 @@ Rails.application.routes.draw do
 
     get :projects, to: :projects, controller: :users
 
-    resources :reminders, only: [:index]
+    resources :backgrounds, only: [:index] do
+      collection do
+        post "push/:token", action: :send_email
+      end
+    end
 
     namespace :admin do
       resources :projects

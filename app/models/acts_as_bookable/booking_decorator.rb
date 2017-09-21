@@ -11,7 +11,7 @@ ActsAsBookable::Booking.class_eval do
   private
 
   def send_email
-    PubsubService.new.send_email(self)
+    PubsubService.new.publish_books_message(self)
   end
 
   def generate_next_schedule
