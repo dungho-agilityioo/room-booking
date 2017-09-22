@@ -1,0 +1,8 @@
+# send_mail_after_books:
+#   cron: "* * * * *"
+#   class: "SendMail"
+#   queue: send_mail_after_books_job
+reminder_email:
+  cron: "* * * * *"
+  class: "ReminderMail"
+  queue: reminder_email_job

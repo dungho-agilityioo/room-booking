@@ -1,0 +1,11 @@
+source 'https://rubygems.org'
+
+# Use Redis adapter to run Action Cable in production
+gem 'redis', '~> 3.0'
+gem 'sidekiq', '~> 4.2.2'
+gem 'sidekiq-cron', '~> 0.4.0'
+gem 'google-cloud-pubsub'
+gem 'actionmailer', '~> 5.0', '>= 5.0.0.1'
+gem 'dotenv-rails'
+gem 'byebug'
+gem 'httparty', '~> 0.13.6'
