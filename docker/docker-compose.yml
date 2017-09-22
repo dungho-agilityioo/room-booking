@@ -4,32 +4,32 @@ services:
     image: postgres:9.6.4-alpine
     container_name: db
     env_file:
-      - .env
+      - ./../api/.env
     ports:
       - 5432:5432
     volumes:
-      - ./db-data:/var/lib/postgresql/data
+      - ./../api/db-data:/var/lib/postgresql/data
   api:
-    build: .
+    build: ./../api
     container_name: api
     env_file:
-      - .env
+      - ./../api/.env
     command: bundle exec puma -C config/puma.rb
     volumes:
-      - .:/home/app
+      - ./../api:/home/app
     stdin_open: true
     ports:
       - 3000:3000
     links:
       - postgres:db
   job:
-    build: ./../rb-background-job
+    build: ./../background
     container_name: job
     env_file:
-      - .env
+      - ./../background/.env
     command: bundle exec sidekiq -r ./config/all_jobs.rb
     volumes:
-      - ./../rb-background-job:/home/app
+      - ./../background:/home/app
     stdin_open: true
     links:
       - api
@@ -46,12 +46,12 @@ services:
   sidekiq:
     depends_on:
       - redis
-    build: ./../rb-background-job
+    build: ./../background
     container_name: sidekiq
     env_file:
-      - .env
+      - ./../background/.env
     volumes:
-      - ./../rb-background-job:/home/app
+      - ./../background:/home/app
     command: echo "job running..."
 volumes:
   redis:
