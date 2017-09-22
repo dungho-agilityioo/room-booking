@@ -5,19 +5,19 @@
 #   git config --global core.excludesfile '~/.gitignore_global'
 
 # Ignore bundler config.
-/.bundle
+/api/.bundle
 
 # Ignore all logfiles and tempfiles.
-/log/*
-/tmp/*
+/api/log/*
+/api/tmp/*
 !/log/.keep
 !/tmp/.keep
 
 # Ignore Byebug command history file.
 .byebug_history
-/bundle
-/db-data
+/api/bundle
+/api/db-data
 .env
-/doc
-/coverage
-/google-cloud-sdk
+/api/doc
+/api/coverage
+
