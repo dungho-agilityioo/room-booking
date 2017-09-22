@@ -1,0 +1,64 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  namespace: rb-staging
+  name: proxy
+  labels:
+    name: proxy
+    project: rooms-booking
+    environment: staging
+spec:
+  replicas: 1
+  template:
+    metadata:
+      namespace: rb-staging
+      name: proxy
+      labels:
+        name: proxy
+        project: rooms-booking
+        tier: backend
+        environment: staging
+    spec:
+      imagePullSecrets:
+        - name: docker-registry-secret
+      containers:
+      - name: proxy
+        image: asia.gcr.io/rooms-booking-177603/rooms-booking-proxy:1.0.2
+        imagePullPolicy: Always
+        lifecycle:
+            preStop:
+              exec:
+                command: ["/usr/sbin/nginx","-s","quit"]
+        ports:
+          - containerPort: 80
+        volumeMounts:
+        - mountPath: "/home/app/.env"
+          name: env
+          subPath: api
+      volumes:
+        - name: env
+          configMap:
+            name: env
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: rb-staging
+  name: proxy
+  labels:
+    name: proxy
+    project: rooms-booking
+    tier: loadbalancer
+    environment: staging
+spec:
+  selector:
+    name: proxy
+    project: rooms-booking
+    tier: backend
+    environment: staging
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
