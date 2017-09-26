@@ -11,8 +11,8 @@ services:
       - ./db-data:/var/lib/postgresql/data
   api-staging:
     build:
-      context: .
-      dockerfile: Dockerfile-staging
+      context: ./../api
+      dockerfile: Dockerfile.staging
     container_name: api-staging
     env_file:
       - .env
@@ -24,17 +24,34 @@ services:
       - 3000:3000
     links:
       - postgres:db
-  job:
-    build: ./../rb-background-job
-    container_name: job
+  proxy:
+    build:
+      context: ./nginx
+      args:
+        DOMAIN: dungho.tk
+    container_name: nignx-ssl
     env_file:
-      - .env
-    command: bundle exec sidekiq -r ./config/all_jobs.rb
+      - ./.env
     volumes:
-      - ./../rb-background-job:/home/app
-    stdin_open: true
+      - letsencrypt-certs:/etc/nginx/certs
+      - letsencrypt-www:/var/www/letsencrypt
     links:
       - api-staging
+    ports:
+      - 80:80
+      - 443:443
+    restart: unless-stopped
+  job:
+    build: ./../background
+    container_name: job
+    env_file:
+      - ./../background/.env
+    command: bundle exec sidekiq -r ./config/all_jobs.rb
+    volumes:
+      - ./../background:/home/app
+    stdin_open: true
+    links:
+      - api
   redis:
     image: 'redis:3.2-alpine'
     container_name: redis
@@ -48,12 +65,14 @@ services:
   sidekiq:
     depends_on:
       - redis
-    build: ./../rb-background-job
+    build: ./../background
     container_name: sidekiq
     env_file:
-      - .env
+      - ./../background/.env
     volumes:
-      - ./../rb-background-job:/home/app
+      - ./../background:/home/app
     command: echo "job running..."
 volumes:
   redis:
+  letsencrypt-certs:
+  letsencrypt-www:

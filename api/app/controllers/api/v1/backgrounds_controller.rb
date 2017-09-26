@@ -18,7 +18,10 @@ class Api::V1::BackgroundsController < ApplicationController
 
   # POST /backgrounds/push
   def send_email
-    message = JSON.parse request.body.read
+    message = nil
+    body = request.body.read
+    logger.info "Body >> #{body}"
+    message = JSON.parse body unless body.blank?
 
     unless message.nil?
       attributes = message["message"]["attributes"]

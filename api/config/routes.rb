@@ -21,11 +21,7 @@ Rails.application.routes.draw do
 
     get :projects, to: :projects, controller: :users
 
-    resources :backgrounds, only: [:index] do
-      collection do
-        post "push/:token", action: :send_email
-      end
-    end
+    resources :backgrounds, only: [:index]
 
     namespace :admin do
       resources :projects
@@ -41,5 +37,7 @@ Rails.application.routes.draw do
     end
 
   end
+
+  post "_ah/push-handlers/push/:token", to: "api/v1/backgrounds#send_email"
 
 end

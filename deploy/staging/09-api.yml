@@ -23,7 +23,7 @@ spec:
         - name: docker-registry-secret
       containers:
       - name: api
-        image: asia.gcr.io/rooms-booking-177603/rooms-booking-api:1.0.2
+        image: asia.gcr.io/rooms-booking-177603/rooms-booking-api:1.0.5
         imagePullPolicy: Always
         command: ["/bin/sh", -c]
         args: ["bundle exec puma -C config/puma.rb"]
@@ -58,6 +58,6 @@ spec:
   type: LoadBalancer
   ports:
     - name: http
-      port: 80
+      port: 3000
       protocol: TCP
       targetPort: 3000
