@@ -10,7 +10,7 @@ map $http_upgrade $connection_upgrade {
 
 server {
     listen 80;
-    server_name dungho.tk;
+    server_name ${DOMAIN};
 
     location /.well-known/acme-challenge {
         root /var/www/letsencrypt;
@@ -23,10 +23,10 @@ server {
 
 server {
     listen 443 ssl default_server;
-    server_name dungho.tk;
+    server_name ${DOMAIN};
 
-    ssl_certificate /etc/letsencrypt/live/dungho.tk/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/dungho.tk/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
 
     location / {
         proxy_set_header Host $host;
