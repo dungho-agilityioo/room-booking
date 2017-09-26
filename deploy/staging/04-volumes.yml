@@ -34,3 +34,41 @@ spec:
   glusterfs:
     endpoints: glusterfs-cluster
     path: redis-data
+
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  namespace: rb-staging
+  name: letsencrypt-certs-data
+  labels:
+    name: letsencrypt-certs-data
+    type: local
+spec:
+  persistentVolumeReclaimPolicy: Retain
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  glusterfs:
+    endpoints: glusterfs-cluster
+    path: letsencrypt-certs-data
+
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  namespace: rb-staging
+  name: letsencrypt-www-data
+  labels:
+    name: letsencrypt-www-data
+    type: local
+spec:
+  persistentVolumeReclaimPolicy: Retain
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  glusterfs:
+    endpoints: glusterfs-cluster
+    path: letsencrypt-www-data
