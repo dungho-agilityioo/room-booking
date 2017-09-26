@@ -19,7 +19,7 @@ class PubsubService
       subscription = topic.subscription name
       topic.subscribe( name,
           deadline: 120,
-          endpoint: "#{ENV['BASE_PATH']}/api/v1/backgrounds/push/#{ENV['PUBSUB_VERIFICATION_TOKEN']}"
+          endpoint: "#{ENV['BASE_PATH']}/_ah/push-handlers/push/#{ENV['PUBSUB_VERIFICATION_TOKEN']}"
         ) if subscription.nil?
     end
 
