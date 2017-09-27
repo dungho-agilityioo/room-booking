@@ -8,15 +8,15 @@ machine:
     - docker
 dependencies:
   pre:
-    - gcloud --quiet components update --version 120.0.0
-    - gcloud --quiet components update --version 120.0.0 kubectl
+    - /opt/google-cloud-sdk/bin/gcloud --quiet components update --version 120.0.0
+    - /opt/google-cloud-sdk/bin/gcloud --quiet components update --version 120.0.0 kubectl
     - echo $GOOGLE_AUTH | base64 --decode -i > ${HOME}/gcloud-service-key.json
-    - gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
-    - gcloud --quiet config set project $GOOGLE_PROJECT_ID
-    - gcloud --quiet config set container/cluster $GOOGLE_CLUSTER_NAME
+    - /opt/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
+    - /opt/google-cloud-sdk/bin/gcloud --quiet config set project $GOOGLE_PROJECT_ID
+    - /opt/google-cloud-sdk/bin/gcloud --quiet config set container/cluster $GOOGLE_CLUSTER_NAME
     # Reading the zone from the env var is not working so we set it here
-    - gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
-    - gcloud --quiet container clusters get-credentials $GOOGLE_CLUSTER_NAME
+    - /opt/google-cloud-sdk/bin/gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+    - /opt/google-cloud-sdk/bin/gcloud --quiet container clusters get-credentials $GOOGLE_CLUSTER_NAME
     - docker build -f Dockerfile.staging -t ${GOOGLE_PROJECT_NAME}-api-staging:$CIRCLE_SHA1 .
     # Using a separate tag command until Docker 1.10 is available on CircleCI, then we can use two tags in the build command above
     - docker tag ${GOOGLE_PROJECT_NAME}-api-staging:$CIRCLE_SHA1 asia.gcr.io/${GOOGLE_PROJECT_NAME}/${GOOGLE_PROJECT_NAME}-api:latest
