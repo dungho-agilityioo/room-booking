@@ -19,7 +19,7 @@ dependencies:
     - sudo /opt/google-cloud-sdk/bin/gcloud --quiet container clusters get-credentials $GOOGLE_CLUSTER_NAME
     - docker build -f ./api/Dockerfile.circleci.staging --rm=false -t ${GOOGLE_PROJECT_NAME}-api-staging:$CIRCLE_SHA1 .
     # Using a separate tag command until Docker 1.10 is available on CircleCI, then we can use two tags in the build command above
-    - docker tag ${GOOGLE_PROJECT_NAME}-api-staging:$CIRCLE_SHA1 asia.gcr.io/${GOOGLE_PROJECT_NAME}/${GOOGLE_PROJECT_NAME}-api:latest
+    - docker tag ${GOOGLE_PROJECT_NAME}-api-staging:$CIRCLE_SHA1 asia.gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_PROJECT_NAME}-api:latest
 deployment:
   staging:
     branch: develop
