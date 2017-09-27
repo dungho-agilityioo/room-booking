@@ -2,5 +2,5 @@
 /db-data
 /doc
 .env
-/deploy
 /coverage
+/tmp

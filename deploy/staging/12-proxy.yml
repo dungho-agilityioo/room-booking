@@ -1,0 +1,100 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  namespace: rb-staging
+  name: letsencrypt-certs-claim
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1G
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  namespace: rb-staging
+  name: letsencrypt-www-claim
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1G
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  namespace: rb-staging
+  name: proxy
+  labels:
+    name: proxy
+    project: rooms-booking
+    environment: staging
+spec:
+  replicas: 1
+  template:
+    metadata:
+      namespace: rb-staging
+      name: proxy
+      labels:
+        name: proxy
+        project: rooms-booking
+        tier: backend
+        environment: staging
+    spec:
+      imagePullSecrets:
+        - name: docker-registry-secret
+      containers:
+      - name: proxy
+        image: asia.gcr.io/rooms-booking-177603/rooms-booking-proxy:1.0.6
+        imagePullPolicy: Always
+        lifecycle:
+            preStop:
+              exec:
+                command: ["/usr/sbin/nginx","-s","quit"]
+        ports:
+          - containerPort: 80
+          - containerPort: 443
+        volumeMounts:
+          - mountPath: /certs
+            name: letsencrypt-certs-data
+          - mountPath: /letsencrypt
+            name: letsencrypt-www-data
+      volumes:
+      - name: letsencrypt-certs-data
+        persistentVolumeClaim:
+          claimName: letsencrypt-certs-claim
+      - name: letsencrypt-www-data
+        persistentVolumeClaim:
+          claimName: letsencrypt-www-claim
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: rb-staging
+  name: proxy
+  labels:
+    name: proxy
+    project: rooms-booking
+    tier: loadbalancer
+    environment: staging
+spec:
+  selector:
+    name: proxy
+    project: rooms-booking
+    tier: backend
+    environment: staging
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 80
+    - name: https
+      port: 443
+      protocol: TCP
+      targetPort: 443
