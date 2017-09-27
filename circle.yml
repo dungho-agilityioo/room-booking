@@ -8,18 +8,21 @@ machine:
     - docker
 dependencies:
   pre:
-    - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update --version 120.0.0
-    - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update --version 120.0.0 kubectl
+    - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update
+    - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update kubectl
     - echo $GOOGLE_AUTH | base64 --decode -i > ${HOME}/gcloud-service-key.json
+
     - sudo /opt/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
     - sudo /opt/google-cloud-sdk/bin/gcloud --quiet config set project $GOOGLE_PROJECT_ID
     - sudo /opt/google-cloud-sdk/bin/gcloud --quiet config set container/cluster $GOOGLE_CLUSTER_NAME
+
     # Reading the zone from the env var is not working so we set it here
     - sudo /opt/google-cloud-sdk/bin/gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
     - sudo /opt/google-cloud-sdk/bin/gcloud --quiet container clusters get-credentials $GOOGLE_CLUSTER_NAME
-    - docker build -f ./api/Dockerfile.circleci.staging --rm=false -t ${GOOGLE_PROJECT_NAME}-api-staging:$CIRCLE_SHA1 .
+
+    - docker build -f ./api/Dockerfile.circleci.staging --rm=false -t ${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1 .
     # Using a separate tag command until Docker 1.10 is available on CircleCI, then we can use two tags in the build command above
-    - docker tag ${GOOGLE_PROJECT_NAME}-api-staging:$CIRCLE_SHA1 asia.gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1
+    - docker tag ${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1 asia.gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1
 deployment:
   staging:
     branch: develop
