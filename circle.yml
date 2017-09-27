@@ -10,8 +10,8 @@ dependencies:
   pre:
     - gcloud --quiet components update --version 120.0.0
     - gcloud --quiet components update --version 120.0.0 kubectl
-    - echo $GOOGLE_AUTH | base64 --decode -i > ${HOME}/Documents/Project/rooms-booking/rooms-booking-7757a1929f6d.json
-    - gcloud auth activate-service-account --key-file ${HOME}/Documents/Project/rooms-booking/rooms-booking-7757a1929f6d.json
+    - echo $GOOGLE_AUTH | base64 --decode -i > ${HOME}/gcloud-service-key.json
+    - gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
     - gcloud --quiet config set project $GOOGLE_PROJECT_ID
     - gcloud --quiet config set container/cluster $GOOGLE_CLUSTER_NAME
     # Reading the zone from the env var is not working so we set it here
