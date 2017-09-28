@@ -4,7 +4,7 @@ class PubsubService
   end
 
   def publish_books_message(booking)
-    publish_send_mail(booking)
+    publish_send_mail(booking) unless Rails.env.test?
   end
 
   private

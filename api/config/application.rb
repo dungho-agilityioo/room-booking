@@ -47,14 +47,13 @@ module App
     # config.time_zone = 'Asia/Saigon'
     # config.active_record.default_timezone = :local
     # config.active_job.queue_adapter = :google_cloud_pubsub
-    config.active_job.queue_adapter = ActiveJob::GoogleCloudPubsub::Adapter.new(
-      async:  false,
-      logger: Rails.logger,
+    # config.active_job.queue_adapter = ActiveJob::GoogleCloudPubsub::Adapter.new(
+    #   async:  false,
+    #   logger: Rails.logger
 
-      pubsub: Google::Cloud::Pubsub.new(
-        project: ENV['PROJECT_ID'],
-        keyfile: ENV['GOOGLE_PUS_SUB_KEY_FILE']
-      )
-    )
+    #   # pubsub: Google::Cloud::Pubsub.new(
+    #   #   project: ENV['PROJECT_ID']
+    #   # )
+    # )
   end
 end
