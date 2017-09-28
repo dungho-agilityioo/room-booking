@@ -1,6 +1,6 @@
 class PubsubService
   def initialize
-    @pubsub = Google::Cloud::Pubsub.new( project: ENV['PROJECT_ID'],  keyfile: ENV['GOOGLE_PUS_SUB_KEY_FILE'] )
+    @pubsub = Google::Cloud::Pubsub.new( project: ENV['PROJECT_ID'],  keyfile: get_or_create_file )
   end
 
   def publish_books_message(booking)
@@ -33,5 +33,17 @@ class PubsubService
         start_date: booking.time_start,
         end_date: booking.time_end,
         daily: booking.daily
+    end
+
+    def get_or_create_file
+      file_name = File.join(Rails.root, 'config', 'google_pubsub_account.json')
+
+      return file_name if File.exist?(file_name)
+
+      open(file_name, 'w') do |f|
+        f << Base64.decode64( ENV['GOOGLE_PUS_SUB_ACCOUNT'] )
+      end
+
+      file_name
     end
 end
