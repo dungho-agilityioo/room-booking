@@ -47,15 +47,16 @@ jobs:
           command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
           environment:
             DOCKERIZE_VERSION: v0.3.0
-      - name: Set up DB
-        command: |
-          bundle exec rake db:create db:schema:load --trace
-          bundle exec rake db:migrate
-        environment:
-          POSTGRES_HOST: 127.0.0.1
-          POSTGRES_PASSWORD: ""
-          POSTGRES_USER: room-booking-test
-          POSTGRES_DB_TEST: room_booking_test
+      - run:
+          name: Set up DB
+          command: |
+            bundle exec rake db:create db:schema:load --trace
+            bundle exec rake db:migrate
+          environment:
+            POSTGRES_HOST: 127.0.0.1
+            POSTGRES_PASSWORD: ""
+            POSTGRES_USER: room-booking-test
+            POSTGRES_DB_TEST: room_booking_test
 test:
   post:
     - docker run asia.gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1 rspec:
