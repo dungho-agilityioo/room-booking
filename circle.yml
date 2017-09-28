@@ -1,3 +1,4 @@
+version: 2.0
 machine:
   environment:
     GOOGLE_PROJECT_ID: rooms-booking-177603
@@ -23,6 +24,38 @@ dependencies:
     - docker build -f ./api/Dockerfile.circleci.staging --rm=false -t ${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1 .
     # Using a separate tag command until Docker 1.10 is available on CircleCI, then we can use two tags in the build command above
     - docker tag ${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1 asia.gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1
+jobs:
+  build:
+    working_directory: ~/rooms-booking
+    docker:
+      - image: asia.gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1
+        environment:
+          POSTGRES_HOST: 127.0.0.1
+          POSTGRES_PASSWORD: ""
+          POSTGRES_USER: room-booking-test
+          POSTGRES_DB_TEST: room_booking_test
+          RAILS_ENV: test
+      - image: postgres:9.6.4-alpine
+        environment:
+          POSTGRES_USER: room-booking-test
+          POSTGRES_DB: room_booking_test
+          POSTGRES_PASSWORD: ""
+    steps:
+      - checkout
+      - run:
+          name: install dockerize
+          command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+          environment:
+            DOCKERIZE_VERSION: v0.3.0
+      - name: Set up DB
+        command: |
+          bundle exec rake db:create db:schema:load --trace
+          bundle exec rake db:migrate
+        environment:
+          POSTGRES_HOST: 127.0.0.1
+          POSTGRES_PASSWORD: ""
+          POSTGRES_USER: room-booking-test
+          POSTGRES_DB_TEST: room_booking_test
 test:
   post:
     - docker run asia.gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1 rspec:
