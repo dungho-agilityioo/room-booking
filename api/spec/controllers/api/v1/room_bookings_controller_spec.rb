@@ -67,11 +67,11 @@ RSpec.describe Api::V1::RoomBookingsController, type: :controller do
       end
 
       it 'should be booker is user' do
-        expect(json['booker']['user']['id'].to_i).to eq(user.id)
+        expect(json['user']['id'].to_i).to eq(user.id)
       end
 
       it 'should be bookable is room' do
-        expect(json['bookable']['room']['id'].to_i).to eq(room.id)
+        expect(json['room']['id'].to_i).to eq(room.id)
       end
 
 
