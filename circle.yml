@@ -23,6 +23,11 @@ dependencies:
     - docker build -f ./api/Dockerfile.circleci.staging --rm=false -t ${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1 .
     # Using a separate tag command until Docker 1.10 is available on CircleCI, then we can use two tags in the build command above
     - docker tag ${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1 asia.gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1
+test:
+  post:
+    - bundle exec rspec api/spec:
+      environment:
+        RAILS_ENV: test
 deployment:
   staging:
     branch: develop
