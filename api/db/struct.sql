@@ -34,7 +34,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: acts_as_bookable_bookings; Type: TABLE; Schema: public; Owner: room_booking9832
+-- Name: acts_as_bookable_bookings; Type: TABLE; Schema: public; Owner: ubuntu
 --
 
 CREATE TABLE acts_as_bookable_bookings (
@@ -57,10 +57,10 @@ CREATE TABLE acts_as_bookable_bookings (
 );
 
 
-ALTER TABLE acts_as_bookable_bookings OWNER TO room_booking9832;
+ALTER TABLE acts_as_bookable_bookings OWNER TO ubuntu;
 
 --
--- Name: acts_as_bookable_bookings_id_seq; Type: SEQUENCE; Schema: public; Owner: room_booking9832
+-- Name: acts_as_bookable_bookings_id_seq; Type: SEQUENCE; Schema: public; Owner: ubuntu
 --
 
 CREATE SEQUENCE acts_as_bookable_bookings_id_seq
@@ -71,17 +71,17 @@ CREATE SEQUENCE acts_as_bookable_bookings_id_seq
     CACHE 1;
 
 
-ALTER TABLE acts_as_bookable_bookings_id_seq OWNER TO room_booking9832;
+ALTER TABLE acts_as_bookable_bookings_id_seq OWNER TO ubuntu;
 
 --
--- Name: acts_as_bookable_bookings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: room_booking9832
+-- Name: acts_as_bookable_bookings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ubuntu
 --
 
 ALTER SEQUENCE acts_as_bookable_bookings_id_seq OWNED BY acts_as_bookable_bookings.id;
 
 
 --
--- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: room_booking9832
+-- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: ubuntu
 --
 
 CREATE TABLE ar_internal_metadata (
@@ -92,10 +92,10 @@ CREATE TABLE ar_internal_metadata (
 );
 
 
-ALTER TABLE ar_internal_metadata OWNER TO room_booking9832;
+ALTER TABLE ar_internal_metadata OWNER TO ubuntu;
 
 --
--- Name: projects; Type: TABLE; Schema: public; Owner: room_booking9832
+-- Name: projects; Type: TABLE; Schema: public; Owner: ubuntu
 --
 
 CREATE TABLE projects (
@@ -107,10 +107,10 @@ CREATE TABLE projects (
 );
 
 
-ALTER TABLE projects OWNER TO room_booking9832;
+ALTER TABLE projects OWNER TO ubuntu;
 
 --
--- Name: projects_id_seq; Type: SEQUENCE; Schema: public; Owner: room_booking9832
+-- Name: projects_id_seq; Type: SEQUENCE; Schema: public; Owner: ubuntu
 --
 
 CREATE SEQUENCE projects_id_seq
@@ -121,17 +121,17 @@ CREATE SEQUENCE projects_id_seq
     CACHE 1;
 
 
-ALTER TABLE projects_id_seq OWNER TO room_booking9832;
+ALTER TABLE projects_id_seq OWNER TO ubuntu;
 
 --
--- Name: projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: room_booking9832
+-- Name: projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ubuntu
 --
 
 ALTER SEQUENCE projects_id_seq OWNED BY projects.id;
 
 
 --
--- Name: rooms; Type: TABLE; Schema: public; Owner: room_booking9832
+-- Name: rooms; Type: TABLE; Schema: public; Owner: ubuntu
 --
 
 CREATE TABLE rooms (
@@ -144,10 +144,10 @@ CREATE TABLE rooms (
 );
 
 
-ALTER TABLE rooms OWNER TO room_booking9832;
+ALTER TABLE rooms OWNER TO ubuntu;
 
 --
--- Name: rooms_id_seq; Type: SEQUENCE; Schema: public; Owner: room_booking9832
+-- Name: rooms_id_seq; Type: SEQUENCE; Schema: public; Owner: ubuntu
 --
 
 CREATE SEQUENCE rooms_id_seq
@@ -158,17 +158,17 @@ CREATE SEQUENCE rooms_id_seq
     CACHE 1;
 
 
-ALTER TABLE rooms_id_seq OWNER TO room_booking9832;
+ALTER TABLE rooms_id_seq OWNER TO ubuntu;
 
 --
--- Name: rooms_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: room_booking9832
+-- Name: rooms_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ubuntu
 --
 
 ALTER SEQUENCE rooms_id_seq OWNED BY rooms.id;
 
 
 --
--- Name: schema_migrations; Type: TABLE; Schema: public; Owner: room_booking9832
+-- Name: schema_migrations; Type: TABLE; Schema: public; Owner: ubuntu
 --
 
 CREATE TABLE schema_migrations (
@@ -176,10 +176,10 @@ CREATE TABLE schema_migrations (
 );
 
 
-ALTER TABLE schema_migrations OWNER TO room_booking9832;
+ALTER TABLE schema_migrations OWNER TO ubuntu;
 
 --
--- Name: user_projects; Type: TABLE; Schema: public; Owner: room_booking9832
+-- Name: user_projects; Type: TABLE; Schema: public; Owner: ubuntu
 --
 
 CREATE TABLE user_projects (
@@ -191,10 +191,10 @@ CREATE TABLE user_projects (
 );
 
 
-ALTER TABLE user_projects OWNER TO room_booking9832;
+ALTER TABLE user_projects OWNER TO ubuntu;
 
 --
--- Name: user_projects_id_seq; Type: SEQUENCE; Schema: public; Owner: room_booking9832
+-- Name: user_projects_id_seq; Type: SEQUENCE; Schema: public; Owner: ubuntu
 --
 
 CREATE SEQUENCE user_projects_id_seq
@@ -205,17 +205,17 @@ CREATE SEQUENCE user_projects_id_seq
     CACHE 1;
 
 
-ALTER TABLE user_projects_id_seq OWNER TO room_booking9832;
+ALTER TABLE user_projects_id_seq OWNER TO ubuntu;
 
 --
--- Name: user_projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: room_booking9832
+-- Name: user_projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ubuntu
 --
 
 ALTER SEQUENCE user_projects_id_seq OWNED BY user_projects.id;
 
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: room_booking9832
+-- Name: users; Type: TABLE; Schema: public; Owner: ubuntu
 --
 
 CREATE TABLE users (
@@ -244,10 +244,10 @@ CREATE TABLE users (
 );
 
 
-ALTER TABLE users OWNER TO room_booking9832;
+ALTER TABLE users OWNER TO ubuntu;
 
 --
--- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: room_booking9832
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: ubuntu
 --
 
 CREATE SEQUENCE users_id_seq
@@ -258,52 +258,52 @@ CREATE SEQUENCE users_id_seq
     CACHE 1;
 
 
-ALTER TABLE users_id_seq OWNER TO room_booking9832;
+ALTER TABLE users_id_seq OWNER TO ubuntu;
 
 --
--- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: room_booking9832
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ubuntu
 --
 
 ALTER SEQUENCE users_id_seq OWNED BY users.id;
 
 
 --
--- Name: acts_as_bookable_bookings id; Type: DEFAULT; Schema: public; Owner: room_booking9832
+-- Name: acts_as_bookable_bookings id; Type: DEFAULT; Schema: public; Owner: ubuntu
 --
 
 ALTER TABLE ONLY acts_as_bookable_bookings ALTER COLUMN id SET DEFAULT nextval('acts_as_bookable_bookings_id_seq'::regclass);
 
 
 --
--- Name: projects id; Type: DEFAULT; Schema: public; Owner: room_booking9832
+-- Name: projects id; Type: DEFAULT; Schema: public; Owner: ubuntu
 --
 
 ALTER TABLE ONLY projects ALTER COLUMN id SET DEFAULT nextval('projects_id_seq'::regclass);
 
 
 --
--- Name: rooms id; Type: DEFAULT; Schema: public; Owner: room_booking9832
+-- Name: rooms id; Type: DEFAULT; Schema: public; Owner: ubuntu
 --
 
 ALTER TABLE ONLY rooms ALTER COLUMN id SET DEFAULT nextval('rooms_id_seq'::regclass);
 
 
 --
--- Name: user_projects id; Type: DEFAULT; Schema: public; Owner: room_booking9832
+-- Name: user_projects id; Type: DEFAULT; Schema: public; Owner: ubuntu
 --
 
 ALTER TABLE ONLY user_projects ALTER COLUMN id SET DEFAULT nextval('user_projects_id_seq'::regclass);
 
 
 --
--- Name: users id; Type: DEFAULT; Schema: public; Owner: room_booking9832
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: ubuntu
 --
 
 ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
 
 
 --
--- Name: acts_as_bookable_bookings acts_as_bookable_bookings_pkey; Type: CONSTRAINT; Schema: public; Owner: room_booking9832
+-- Name: acts_as_bookable_bookings acts_as_bookable_bookings_pkey; Type: CONSTRAINT; Schema: public; Owner: ubuntu
 --
 
 ALTER TABLE ONLY acts_as_bookable_bookings
@@ -311,7 +311,7 @@ ALTER TABLE ONLY acts_as_bookable_bookings
 
 
 --
--- Name: ar_internal_metadata ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: room_booking9832
+-- Name: ar_internal_metadata ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: ubuntu
 --
 
 ALTER TABLE ONLY ar_internal_metadata
@@ -319,7 +319,7 @@ ALTER TABLE ONLY ar_internal_metadata
 
 
 --
--- Name: projects projects_pkey; Type: CONSTRAINT; Schema: public; Owner: room_booking9832
+-- Name: projects projects_pkey; Type: CONSTRAINT; Schema: public; Owner: ubuntu
 --
 
 ALTER TABLE ONLY projects
@@ -327,7 +327,7 @@ ALTER TABLE ONLY projects
 
 
 --
--- Name: rooms rooms_pkey; Type: CONSTRAINT; Schema: public; Owner: room_booking9832
+-- Name: rooms rooms_pkey; Type: CONSTRAINT; Schema: public; Owner: ubuntu
 --
 
 ALTER TABLE ONLY rooms
@@ -335,7 +335,7 @@ ALTER TABLE ONLY rooms
 
 
 --
--- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: room_booking9832
+-- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: ubuntu
 --
 
 ALTER TABLE ONLY schema_migrations
@@ -343,7 +343,7 @@ ALTER TABLE ONLY schema_migrations
 
 
 --
--- Name: user_projects user_projects_pkey; Type: CONSTRAINT; Schema: public; Owner: room_booking9832
+-- Name: user_projects user_projects_pkey; Type: CONSTRAINT; Schema: public; Owner: ubuntu
 --
 
 ALTER TABLE ONLY user_projects
@@ -351,7 +351,7 @@ ALTER TABLE ONLY user_projects
 
 
 --
--- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: room_booking9832
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: ubuntu
 --
 
 ALTER TABLE ONLY users
@@ -359,56 +359,56 @@ ALTER TABLE ONLY users
 
 
 --
--- Name: index_acts_as_bookable_bookings_bookable; Type: INDEX; Schema: public; Owner: room_booking9832
+-- Name: index_acts_as_bookable_bookings_bookable; Type: INDEX; Schema: public; Owner: ubuntu
 --
 
 CREATE INDEX index_acts_as_bookable_bookings_bookable ON acts_as_bookable_bookings USING btree (bookable_type, bookable_id);
 
 
 --
--- Name: index_acts_as_bookable_bookings_booker; Type: INDEX; Schema: public; Owner: room_booking9832
+-- Name: index_acts_as_bookable_bookings_booker; Type: INDEX; Schema: public; Owner: ubuntu
 --
 
 CREATE INDEX index_acts_as_bookable_bookings_booker ON acts_as_bookable_bookings USING btree (booker_type, booker_id);
 
 
 --
--- Name: index_acts_as_bookable_bookings_project; Type: INDEX; Schema: public; Owner: room_booking9832
+-- Name: index_acts_as_bookable_bookings_project; Type: INDEX; Schema: public; Owner: ubuntu
 --
 
 CREATE INDEX index_acts_as_bookable_bookings_project ON acts_as_bookable_bookings USING btree (project_id);
 
 
 --
--- Name: index_user_projects_on_project_id; Type: INDEX; Schema: public; Owner: room_booking9832
+-- Name: index_user_projects_on_project_id; Type: INDEX; Schema: public; Owner: ubuntu
 --
 
 CREATE INDEX index_user_projects_on_project_id ON user_projects USING btree (project_id);
 
 
 --
--- Name: index_user_projects_on_user_id; Type: INDEX; Schema: public; Owner: room_booking9832
+-- Name: index_user_projects_on_user_id; Type: INDEX; Schema: public; Owner: ubuntu
 --
 
 CREATE INDEX index_user_projects_on_user_id ON user_projects USING btree (user_id);
 
 
 --
--- Name: index_users_on_email; Type: INDEX; Schema: public; Owner: room_booking9832
+-- Name: index_users_on_email; Type: INDEX; Schema: public; Owner: ubuntu
 --
 
 CREATE UNIQUE INDEX index_users_on_email ON users USING btree (email);
 
 
 --
--- Name: index_users_on_reset_password_token; Type: INDEX; Schema: public; Owner: room_booking9832
+-- Name: index_users_on_reset_password_token; Type: INDEX; Schema: public; Owner: ubuntu
 --
 
 CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (reset_password_token);
 
 
 --
--- Name: user_projects fk_rails_d19c0da646; Type: FK CONSTRAINT; Schema: public; Owner: room_booking9832
+-- Name: user_projects fk_rails_d19c0da646; Type: FK CONSTRAINT; Schema: public; Owner: ubuntu
 --
 
 ALTER TABLE ONLY user_projects
@@ -416,7 +416,7 @@ ALTER TABLE ONLY user_projects
 
 
 --
--- Name: user_projects fk_rails_f58e9073ce; Type: FK CONSTRAINT; Schema: public; Owner: room_booking9832
+-- Name: user_projects fk_rails_f58e9073ce; Type: FK CONSTRAINT; Schema: public; Owner: ubuntu
 --
 
 ALTER TABLE ONLY user_projects
