@@ -64,10 +64,7 @@ workflows:
   build-and-test:
     jobs:
       - build
-      - bundle_dependencies:
-          requires:
-            - build
       - test:
         requires:
-            - bundle_dependencies
+            - build
 
