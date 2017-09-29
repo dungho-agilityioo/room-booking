@@ -4,7 +4,7 @@ machine:
     GOOGLE_PROJECT_NAME: rooms-booking
     GOOGLE_CLUSTER_NAME: rooms-booking-staging
     GOOGLE_COMPUTE_ZONE: asia-northeast1-a
-    DATABASE_URL_TEST: postgresql://ubuntu:@127.0.0.1:5432/circle_test
+    DATABASE_URL_TEST: postgres://ubuntu:@localhost:5432/circle_test
   services:
     - docker
 dependencies:
