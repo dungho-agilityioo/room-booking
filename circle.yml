@@ -28,10 +28,10 @@ jobs:
           command: sudo apt-get update && sudo apt-get install -y --no-install-recommends build-essential libpq-dev
       - run:
           name: Create DB
-          command: bundle exec rake db:create db:schema:load --trace
+          command: cd api && bundle exec rake db:create db:schema:load --trace && cd ..
       - run:
           name: Run spec
-          command: bundle exec rspec spec
+          command: cd api && bundle exec rspec spec && cd ..
           environment:
             RAILS_ENV: test
 workflows:
