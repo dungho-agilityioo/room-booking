@@ -25,7 +25,7 @@ dependencies:
     - docker tag ${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1 asia.gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1
 database:
   override:
-    - psql -U ubuntu -d circle_test -1 -f api/db/backup.sql
+    - psql -U ubuntu -d circle_test -1 -f api/db/struct.sql
 test:
   override:
     - docker run asia.gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1 rspec:
