@@ -1,0 +1,40 @@
+machine:
+  environment:
+    GOOGLE_PROJECT_ID: rooms-booking-177603
+    GOOGLE_PROJECT_NAME: rooms-booking
+    GOOGLE_CLUSTER_NAME: rooms-booking-staging
+    GOOGLE_COMPUTE_ZONE: asia-northeast1-a
+  services:
+    - docker
+dependencies:
+  pre:
+    - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update
+    - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update kubectl
+    - echo $GOOGLE_AUTH | base64 --decode -i > ${HOME}/gcloud-service-key.json
+
+    - sudo /opt/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
+    - sudo /opt/google-cloud-sdk/bin/gcloud --quiet config set project $GOOGLE_PROJECT_ID
+    - sudo /opt/google-cloud-sdk/bin/gcloud --quiet config set container/cluster $GOOGLE_CLUSTER_NAME
+
+    # Reading the zone from the env var is not working so we set it here
+    - sudo /opt/google-cloud-sdk/bin/gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+    - sudo /opt/google-cloud-sdk/bin/gcloud --quiet container clusters get-credentials $GOOGLE_CLUSTER_NAME
+
+    - docker build -f ./api/Dockerfile.circleci.staging --rm=false -t ${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1 .
+    # Using a separate tag command until Docker 1.10 is available on CircleCI, then we can use two tags in the build command above
+    - docker tag ${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1 asia.gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1
+database:
+  override:
+    - psql -U ubuntu -d circle_test -1 -f api/db/backup.sql
+test:
+  override:
+    - docker run asia.gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1 rspec:
+      environment:
+        RAILS_ENV: test
+        POSTGRES_USER: ubuntu
+        POSTGRES_DB: circle_test
+deployment:
+  staging:
+    branch: develop
+    commands:
+      - sh ./deploy/staging/deploy.sh
