@@ -9,11 +9,20 @@ jobs:
       GOOGLE_COMPUTE_ZONE: asia-northeast1-a
       CLOUDSDK_CORE_DISABLE_PROMPTS: 1
     docker:
-      - image: ruby:2.3.3
+      - image: google/cloud-sdk
     steps:
       - run:
-          name: Install and Config Google Cloud Sdk
-          command: sh ./deploy/staging/install_google_sdk.sh
+          name: Config Google Cloud Sdk
+          command: |
+            echo $GOOGLE_AUTH | base64 --decode -i > ${HOME}/gcloud-service-key.json
+
+            /root/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
+            /root/google-cloud-sdk/bin/gcloud --quiet config set project $GOOGLE_PROJECT_ID
+            /root/google-cloud-sdk/bin/gcloud --quiet config set container/cluster $GOOGLE_CLUSTER_NAME
+
+            # Reading the zone from the env var is not working so we set it here
+            /root/google-cloud-sdk/bin/gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+            /root/google-cloud-sdk/bin/gcloud --quiet container clusters get-credentials $GOOGLE_CLUSTER_NAME
       - run:
           name: Build the api image
           command: |
