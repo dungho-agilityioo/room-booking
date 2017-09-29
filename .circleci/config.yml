@@ -9,6 +9,18 @@ jobs:
       GOOGLE_COMPUTE_ZONE: asia-northeast1-a
     steps:
       - checkout
+      # Restore bundle cache
+      - type: cache-restore
+        key: rooms-booking-{{ checksum "api/Gemfile.lock" }}
+
+      # Bundle install dependencies
+      - run: bundle install --path api/vendor/bundle
+
+      # Store bundle cache
+      - type: cache-save
+        key: rooms-booking-{{ checksum "api/Gemfile.lock" }}
+        paths:
+          - api/vendor/bundle
       - run:
           name: Update google cloud
           command: sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update
