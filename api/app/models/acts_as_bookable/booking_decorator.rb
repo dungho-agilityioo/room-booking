@@ -5,7 +5,7 @@ ActsAsBookable::Booking.class_eval do
   before_create :reset_time_end
 
   after_create :generate_next_schedule, if: :daily?
-  after_create :send_email
+  after_create :send_email unless Rails.env.test?
   after_destroy :remove_future_schedule, if: :daily?
 
   private
