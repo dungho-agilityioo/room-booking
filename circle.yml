@@ -7,7 +7,6 @@ machine:
     DATABASE_URL_TEST: postgresql://ubuntu:@127.0.0.1:5432/circle_test
   services:
     - docker
-    - postgres
 dependencies:
   pre:
     # - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update
