@@ -10,10 +10,12 @@ jobs:
       CLOUDSDK_CORE_DISABLE_PROMPTS: 1
     docker:
       - image: google/cloud-sdk
+      - image: docker:17.05.0-ce-git
     steps:
       - run:
           name: Config Google Cloud Sdk
           command: |
+            gcloud components install kubectl
             echo $GOOGLE_AUTH | base64 --decode -i > ${HOME}/gcloud-service-key.json
 
             gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
