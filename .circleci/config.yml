@@ -17,7 +17,7 @@ jobs:
       - restore_cache:
           keys:
             - gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum "./api/Gemfile.lock" }}
-      - run: bundle install --path ./api/vendor/bundle
+      - run: cd api && bundle install --path vendor/bundle && cd ..
       - save_cache:
           key: gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum "./api/Gemfile.lock" }}
           paths:
