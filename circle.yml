@@ -34,3 +34,8 @@ jobs:
           command: bundle exec rspec spec
           environment:
             RAILS_ENV: test
+workflows:
+  version: 2
+  build-and-test:
+    jobs:
+      - test
