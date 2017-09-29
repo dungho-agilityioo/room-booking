@@ -11,12 +11,12 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum "api/Gemfile.lock" }}
-      - run: bundle install --path api/vendor/bundle
+            - gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum "./api/Gemfile.lock" }}
+      - run: bundle install --path ./api/vendor/bundle
       - save_cache:
-          key: gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum "api/Gemfile.lock" }}
+          key: gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum "./api/Gemfile.lock" }}
           paths:
-            - api/vendor/bundle
+            - ./api/vendor/bundle
       - run:
           name: Update google cloud
           command: sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update
@@ -50,6 +50,9 @@ jobs:
       GOOGLE_PROJECT_ID: rooms-booking-177603
       GOOGLE_PROJECT_NAME: rooms-booking
     steps:
+      - restore_cache:
+          keys:
+            - gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum "./api/Gemfile.lock" }}
       - run:
           name: Run spec
           command: docker run asia.gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1 rspec
