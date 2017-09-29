@@ -13,19 +13,19 @@ jobs:
           POSTGRES_USER: ubuntu
     steps:
       - checkout
-      - run:
-          name: Install System Dependencies
-          command: apt-get update -qq && apt-get install -y --no-install-recommends build-essential libpq-dev curl git
       - restore_cache:
           keys:
-            - gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum api/Gemfile.lock" }}
+            - gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum Gemfile.lock" }}
       - run:
           name: Install Ruby Dependencies
           command: cd api && bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3 && cd ..
       - save_cache:
-          key: gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum api/Gemfile.lock" }}
+          key: gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum Gemfile.lock" }}
           paths:
             - api/vendor/bundle
+      - run:
+          name: Install System Dependencies
+          command: sudo apt-get update -qq && apt-get install -y --no-install-recommends build-essential libpq-dev
       - run:
           name: Create DB
           command: bundle exec rake db:create db:schema:load --trace
