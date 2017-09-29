@@ -1,6 +1,6 @@
 version: 2.0
 jobs:
-  build:
+  deploy_to_gce:
     working_directory: ~/rooms-booking
     environment:
       GOOGLE_PROJECT_ID: rooms-booking-177603
@@ -8,31 +8,8 @@ jobs:
       GOOGLE_CLUSTER_NAME: rooms-booking-staging
       GOOGLE_COMPUTE_ZONE: asia-northeast1-a
     docker:
-      - image: circleci/ruby:2.3
-        environment:
-          RAILS_ENV: staging
+      - image: google/cloud-sdk
     steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum api/Gemfile.lock" }}
-      - run:
-          name: Install Ruby Dependencies
-          command: cd api && bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3 && cd ..
-      - save_cache:
-          key: gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum api/Gemfile.lock" }}
-          paths:
-            - api/vendor/bundle
-      - run:
-          name: Install System Dependencies
-          command: sudo apt-get update && sudo apt-get install -y --no-install-recommends build-essential libpq-dev
-      - run:
-          name: Install Google Cloud SDK
-          command: |
-            curl https://sdk.cloud.google.com | bash && \
-              cat /opt/google-cloud-sdk/path.bash.inc | bash && \
-              cat /opt/google-cloud-sdk/completion.bash.inc | bash && \
-              /opt/google-cloud-sdk/bin/gcloud components install -q pubsub-emulator beta
       - run:
           name: Confirguration Google Cloud
           command: |
@@ -52,6 +29,12 @@ jobs:
           command: |
             docker build -f ./api/Dockerfile.circleci.staging --rm=false -t ${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1 .
             docker tag ${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1 asia.gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1
+      - run:
+          name: Deploy to google cloud
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "develop" ]; then
+              sh ./deploy/staging/deploy.sh
+            fi
   test:
     working_directory: ~/rooms-booking
     environment:
@@ -91,22 +74,12 @@ jobs:
           command: cd api && bundle exec rspec spec && cd ..
           environment:
             RAILS_ENV: test
-  deploy:
-    working_directory: ~/rooms-booking
-    steps:
-      - run:
-          name: Deploy to google cloud
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "develop" ]; then
-              sh ./deploy/staging/deploy.sh
-            fi
 workflows:
   version: 2
   build-and-test:
     jobs:
-      - build
       - test
-      - deploy:
+      - deploy_to_gce:
           requires:
-            - build
+            - test
 
