@@ -58,13 +58,11 @@ jobs:
           command: docker run asia.gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1 rspec
           environment:
             RAILS_ENV: test
-
 workflows:
   version: 2
   build-and-test:
     jobs:
       - build
       - test:
-        requires:
+          requires:
             - build
-
