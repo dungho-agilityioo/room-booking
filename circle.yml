@@ -92,10 +92,14 @@ jobs:
           environment:
             RAILS_ENV: test
   deploy:
-    command: |
-      if [ "${CIRCLE_BRANCH}" == "develop" ]; then
-        sh ./deploy/staging/deploy.sh
-      fi
+    working_directory: ~/rooms-booking
+    steps:
+      - run:
+          name: Deploy to google cloud
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "develop" ]; then
+              sh ./deploy/staging/deploy.sh
+            fi
 workflows:
   version: 2
   build-and-test:
