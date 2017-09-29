@@ -10,7 +10,10 @@ jobs:
       CLOUDSDK_CORE_DISABLE_PROMPTS: 1
     docker:
       - image: google/cloud-sdk
+      - image: docker:17.05.0-ce-git
     steps:
+      - checkout
+      - setup_remote_docker
       - run:
           name: Config Google Cloud Sdk
           command: |
@@ -24,7 +27,6 @@ jobs:
             # Reading the zone from the env var is not working so we set it here
             gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
             gcloud --quiet container clusters get-credentials $GOOGLE_CLUSTER_NAME
-      - setup_remote_docker
       - run:
           name: Build the api image
           command: |
