@@ -13,8 +13,6 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-       # use a primary image that already has Docker (recommended)
-      # or install it during a build like we do here
       - run:
           name: Install Docker client
           command: |
@@ -24,19 +22,6 @@ jobs:
             curl -L -o /tmp/docker-$VER.tgz https://get.docker.com/builds/Linux/x86_64/docker-$VER.tgz
             tar -xz -C /tmp -f /tmp/docker-$VER.tgz
             mv /tmp/docker/* /usr/bin
-      - run:
-          name: Config Google Cloud Sdk
-          command: |
-            apt-get install kubectl
-            echo $GOOGLE_AUTH | base64 --decode -i > ${HOME}/gcloud-service-key.json
-
-            gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
-            gcloud --quiet config set project $GOOGLE_PROJECT_ID
-            gcloud --quiet config set container/cluster $GOOGLE_CLUSTER_NAME
-
-            # Reading the zone from the env var is not working so we set it here
-            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
-            gcloud --quiet container clusters get-credentials $GOOGLE_CLUSTER_NAME
       - run:
           name: Build the api image
           command: |
