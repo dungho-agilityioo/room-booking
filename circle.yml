@@ -91,5 +91,8 @@ workflows:
   version: 2
   build-and-test:
     jobs:
-      - deploy_to_gce
+      - test
+      - deploy_to_gce:
+          requires:
+            - test
 
