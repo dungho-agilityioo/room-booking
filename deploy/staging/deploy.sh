@@ -20,11 +20,11 @@ while true; do
   fi
 done
 
-echo '=============== deploy_tasks output'
-if [[ `kubectl get pods -n rb-staging -a --selector="name=api-migration-job" -o 'jsonpath={.items[0].status.phase}'` != 'Succeeded' ]]; then
-  kubectl attach $(kubectl get pods -n rb-staging -a --selector="name=api-migration-job" -o 'jsonpath={.items[0].metadata.name}') -n rb-staging
-fi
-echo '==============='
+echo '=========== deploying output ==========='
+# if [[ `kubectl get pods -n rb-staging -a --selector="name=api-migration-job" -o 'jsonpath={.items[0].status.phase}'` != 'Succeeded' ]]; then
+#   kubectl attach $(kubectl get pods -n rb-staging -a --selector="name=api-migration-job" -o 'jsonpath={.items[0].metadata.name}') -n rb-staging
+# fi
+# echo '==============='
 
 while true; do
   phase=`kubectl get pods -n rb-staging -a --selector="name=api-migration-job" -o 'jsonpath={.items[0].status.phase}'`
@@ -40,7 +40,7 @@ while true; do
 done
 
 # Deployment
-kubectl patch -f deploy/staging/09-api.yml -p '{"spec":{"template":{"spec":{"containers":[{"name":"api","image":'"$IMAGE"'}]}}}}'
-kubectl describe -f deploy/staging/09-api.yml
+kubectl patch -f deploy/staging/09-api.yml -p '{"spec":{"template":{"spec":{"containers":[{"name":"api","image":"'"$IMAGE"'"}]}}}}'
+kubectl describe deployment api -n rb-staging
 kubectl delete job api-migration-job  -n rb-staging || true
-kubectl rollout status -f deploy/staging/09-api.yml
+kubectl rollout status deployment/api -n rb-staging
