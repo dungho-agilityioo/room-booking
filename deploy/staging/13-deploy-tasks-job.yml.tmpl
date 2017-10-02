@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  namespace: rb-staging
+  name: api-migration-job
+  labels:
+    name: api-migration-job
+    project: rooms-booking
+    environment: staging
+spec:
+  template:
+    metadata:
+      labels:
+        name: api-migration-job
+    spec:
+      imagePullSecrets:
+        - name: docker-registry-secret
+      restartPolicy: Never
+      containers:
+        - name: api
+          image: $IMAGE
+          command: ["/bin/sh", "-c"]
+          args: ["bundle exec rake db:migrate"]
+          volumeMounts:
+            - name: env
+              subPath: api
+              mountPath: "/home/app/.env"
+      volumes:
+        - name: env
+          configMap:
+            name: env
