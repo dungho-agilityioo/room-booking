@@ -16,6 +16,7 @@ jobs:
       - run:
           name: Install Docker client
           command: |
+            # gettext-base to use the command envsubst
             apt-get install curl gettext-base
             set -x
             VER="17.03.0-ce"
