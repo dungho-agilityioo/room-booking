@@ -21,6 +21,7 @@ while true; do
 done
 
 echo '=========== deploying output ==========='
+echo `kubectl get pods -n rb-staging -a --selector="name=api-migration-job" -o 'jsonpath={.items[0].status.phase}'`
 # if [[ `kubectl get pods -n rb-staging -a --selector="name=api-migration-job" -o 'jsonpath={.items[0].status.phase}'` != 'Succeeded' ]]; then
 #   kubectl attach $(kubectl get pods -n rb-staging -a --selector="name=api-migration-job" -o 'jsonpath={.items[0].metadata.name}') -n rb-staging
 # fi
