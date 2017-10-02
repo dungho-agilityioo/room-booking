@@ -44,7 +44,8 @@ jobs:
           name: Deploy to google cloud
           command: |
             if [ "${CIRCLE_BRANCH}" == "develop" ]; then
-              sh ./deploy/staging/deploy.sh
+              chmod +x ./deploy/staging/deploy.sh
+              ./deploy/staging/deploy.sh
             fi
   test:
     working_directory: ~/rooms-booking
