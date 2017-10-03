@@ -26,21 +26,25 @@ jobs:
       - run:
           name: Config and authentication google cloud
           command: |
-            echo $GOOGLE_AUTH | base64 --decode -i > ${HOME}/gcloud-service-key.json
+            if [ "${CIRCLE_BRANCH}" == "develop" ] || ["${CIRCLE_BRANCH}" == "master"]; then
+              echo $GOOGLE_AUTH | base64 --decode -i > ${HOME}/gcloud-service-key.json
 
-            gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
-            gcloud --quiet config set project $GOOGLE_PROJECT_ID
-            gcloud --quiet config set container/cluster $GOOGLE_CLUSTER_NAME
+              gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
+              gcloud --quiet config set project $GOOGLE_PROJECT_ID
+              gcloud --quiet config set container/cluster $GOOGLE_CLUSTER_NAME
 
-            # Reading the zone from the env var is not working so we set it here
-            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
-            gcloud --quiet container clusters get-credentials $GOOGLE_CLUSTER_NAME
+              # Reading the zone from the env var is not working so we set it here
+              gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+              gcloud --quiet container clusters get-credentials $GOOGLE_CLUSTER_NAME
+            fi
       - run:
           name: Build and push the api image
           command: |
             docker build -f ./api/Dockerfile.circleci.staging --rm=false -t ${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1 .
-            docker tag ${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1 asia.gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1
-            gcloud docker -- push asia.gcr.io/${GOOGLE_PROJECT_ID}/rooms-booking-api:$CIRCLE_SHA1
+            if [ "${CIRCLE_BRANCH}" == "develop" ] || ["${CIRCLE_BRANCH}" == "master"]; then
+              docker tag ${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1 asia.gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1
+              gcloud docker -- push asia.gcr.io/${GOOGLE_PROJECT_ID}/rooms-booking-api:$CIRCLE_SHA1
+            fi
       - run:
           name: Deploy to google cloud
           command: |
