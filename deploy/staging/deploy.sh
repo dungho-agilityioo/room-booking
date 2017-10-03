@@ -15,17 +15,15 @@ cat deploy/staging/13-deploy-tasks-job.yml.tmpl | envsubst | kubectl apply -f -
 
 while true; do
   phase=`kubectl get pods -n rb-staging -a --selector="name=api-migration-job" -o 'jsonpath={.items[0].status.phase}' || 'false'`
-  if [[ "$phase" != 'Pending' ]]; then
+  if [[ "$phase" != 'Pending' ]] && [[ "$phase" != 'Running' ]] ; then
     break
   fi
 done
 
 echo '=========== deploying output ==========='
-echo `kubectl get pods -n rb-staging -a --selector="name=api-migration-job" -o 'jsonpath={.items[0].status.phase}'`
-# if [[ `kubectl get pods -n rb-staging -a --selector="name=api-migration-job" -o 'jsonpath={.items[0].status.phase}'` != 'Succeeded' ]]; then
-#   kubectl attach $(kubectl get pods -n rb-staging -a --selector="name=api-migration-job" -o 'jsonpath={.items[0].metadata.name}') -n rb-staging
-# fi
-# echo '==============='
+if [[ `kubectl get pods -n rb-staging -a --selector="name=api-migration-job" -o 'jsonpath={.items[0].status.phase}'` != 'Succeeded' ]]; then
+  kubectl attach $(kubectl get pods -n rb-staging -a --selector="name=api-migration-job" -o 'jsonpath={.items[0].metadata.name}') -n rb-staging
+fi
 
 while true; do
   phase=`kubectl get pods -n rb-staging -a --selector="name=api-migration-job" -o 'jsonpath={.items[0].status.phase}'`
