@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: slack8s
+  namespace: rb-staging
+data:
+  slack-token: "xoxb-250513187584-Cwh5MiLCOnliCIUc02iQ48wk"
+  slack-channel: "#general"
