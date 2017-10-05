@@ -1,16 +1,3 @@
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  namespace: rb-staging
-  name: postgres-data-claim
-spec:
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 1Gi
-
----
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -20,24 +7,11 @@ metadata:
     name: postgres
     project: rooms-booking
     environment: staging
-  annotations:
-    pod.beta.kubernetes.io/init-containers: '[
-      {
-        "name": "remove-lost-found",
-        "image": "busybox",
-        "command": ["rm", "-fr", "/var/lib/postgresql/data/pgdata/lost+found"],
-        "volumeMounts": [
-          {
-            "name": "data",
-            "mountPath": "/var/lib/postgresql/data/pgdata"
-          }
-        ]
-      }
-    ]'
 spec:
   replicas: 1
   template:
     metadata:
+      namespace: rb-staging
       name: postgres
       labels:
         name: postgres
@@ -46,40 +20,35 @@ spec:
         environment: staging
     spec:
       containers:
-      - name: postgres
-        image: postgres:alpine
-        env:
-        - name: PGDATA
-          value: /var/lib/postgresql/data/pgdata
-        volumeMounts:
-          - mountPath: /var/lib/postgresql/data
-            name: postgres-data
-        livenessProbe:
-          exec:
-            command:
-            - /bin/bash
-            - -c
-            - pg_isready -U postgres
-          initialDelaySeconds: 30
-          timeoutSeconds: 3
-        readinessProbe:
-          exec:
-            command:
-            - /bin/bash
-            - -c
-            - pg_isready -U postgres
-          initialDelaySeconds: 30
-          timeoutSeconds: 3
-        resources:
-          limits:
-            memory: 128M
-          requests:
-            memory: 128M
+        # [START proxy_container]
+        - image: gcr.io/cloudsql-docker/gce-proxy:1.09
+          name: cloudsql-proxy
+          command: ["/cloud_sql_proxy", "--dir=/cloudsql",
+                    "-instances=rooms-booking-177603:asia-northeast1:rb-postgresql-staging=tcp:0.0.0.0:5432",
+                    "-credential_file=/secrets/cloudsql/credentials.json"]
+          ports:
+            - name: port-db1
+              containerPort: 5432
+          volumeMounts:
+            - name: cloudsql-instance-credentials
+              mountPath: /secrets/cloudsql
+              readOnly: true
+            - name: ssl-certs
+              mountPath: /etc/ssl/certs
+            - name: cloudsql
+              mountPath: /cloudsql
+        # [END proxy_container]
+      # [START volumes]
       volumes:
-      - name: postgres-data
-        persistentVolumeClaim:
-          claimName: postgres-data-claim
-
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials
+        - name: ssl-certs
+          hostPath:
+            path: /etc/ssl/certs
+        - name: cloudsql
+          emptyDir:
+      # [END volumes]
 ---
 apiVersion: v1
 kind: Service
@@ -100,3 +69,4 @@ spec:
   clusterIP: None
   ports:
     - port: 5432
+      targetPort: port-db1

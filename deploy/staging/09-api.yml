@@ -22,17 +22,30 @@ spec:
       imagePullSecrets:
         - name: docker-registry-secret
       containers:
-      - name: api
-        image: asia.gcr.io/rooms-booking-177603/rooms-booking-api:1.0.5
-        imagePullPolicy: Always
-        command: ["/bin/sh", -c]
-        args: ["bundle exec puma -C config/puma.rb"]
-        ports:
-          - containerPort: 3000
-        volumeMounts:
-        - mountPath: "/home/app/.env"
-          name: env
-          subPath: api
+        - image: asia.gcr.io/rooms-booking-177603/rooms-booking-api:58e31424e786ac2782ad9c7cabb6e4da7c3ce22e
+          name: api
+          imagePullPolicy: Always
+          command: ["/bin/sh", -c]
+          args: ["bundle exec puma -C config/puma.rb"]
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+          - mountPath: "/home/app/.env"
+            name: env
+            subPath: api
+          env:
+            - name: POSTGRES_HOST
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql-db-credentials
+                  key: password
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql-db-credentials
+                  key: username
       volumes:
         - name: env
           configMap:
