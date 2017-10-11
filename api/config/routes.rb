@@ -15,24 +15,21 @@ Rails.application.routes.draw do
       # delete :logout, to: :destroy, controller: :omniauth_callbacks
     end
 
-    resources :room_bookings, except: [:update], :path => "books" do
-      post :search, on: :collection, action: :search
-    end
-
-    # get :projects, to: :projects, controller: :users
-
     resources :backgrounds, only: [:index]
 
     resources :projects
-    resources :rooms
+    resources :rooms do
+      resources :bookings, except: [:update]
+      get :search, on: :collection, action: :search
+    end
     resources :reports, only: [:index]
 
-    resources :user_projects, only: [:index, :create] do
-      collection do
-        put ':project_id', action: :update
-        delete ':project_id', action: :destroy
-      end
-    end
+    # resources :user_projects, only: [:index, :create] do
+    #   collection do
+    #     put ':project_id', action: :update
+    #     delete ':project_id', action: :destroy
+    #   end
+    # end
   end
 
   post "_ah/push-handlers/push/:token", to: "api/v1/backgrounds#send_email"
