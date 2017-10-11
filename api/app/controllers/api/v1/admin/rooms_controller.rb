@@ -36,7 +36,7 @@ module Api
         # :nocov:
         def show
           authorize @room
-          json_response(@room)
+          respone_record_serializer(@room, RoomSerializer)
         end
 
 
@@ -53,7 +53,7 @@ module Api
           @room = Room.new(room_params)
           authorize @room
           if @room.save
-            json_response(@room, :created)
+            respone_record_serializer(@room, RoomSerializer, :created)
           else
             json_response(@room.errors.full_messages, :unprocessable_entity)
           end
@@ -73,7 +73,7 @@ module Api
         def update
           authorize @room
           if @room.update(room_params)
-            json_response(@room, :ok)
+            respone_record_serializer(@room, RoomSerializer, :ok)
           else
             json_response(@room.errors.full_messages, :unprocessable_entity)
           end
