@@ -4,16 +4,12 @@
   "basePath": "/",
   "apis": [
     {
-      "path": "/docs/api/v1/books.{format}",
-      "description": "Books Management"
-    },
-    {
-      "path": "/docs/api/v1/users.{format}",
-      "description": "User Management"
-    },
-    {
       "path": "/docs/api/v1/projects.{format}",
       "description": "Project Management"
+    },
+    {
+      "path": "/docs/api/v1/bookings.{format}",
+      "description": "Bookings Management"
     },
     {
       "path": "/docs/api/v1/rooms.{format}",
@@ -22,10 +18,6 @@
     {
       "path": "/docs/api/v1/reports.{format}",
       "description": "Room Management"
-    },
-    {
-      "path": "/docs/api/v1/user_projects.{format}",
-      "description": "Administrator can assign project for user"
     }
   ],
   "authorizations": null,

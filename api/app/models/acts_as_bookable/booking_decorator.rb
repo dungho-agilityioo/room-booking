@@ -8,6 +8,8 @@ ActsAsBookable::Booking.class_eval do
   after_create :send_email unless Rails.env.test?
   after_destroy :remove_future_schedule, if: :daily?
 
+  scope :by_room, ->(room_id) { where(bookable_id: room_id) }
+
   private
 
   def send_email

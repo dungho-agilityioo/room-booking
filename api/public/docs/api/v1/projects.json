@@ -8,7 +8,7 @@
       "path": "/api/v1/projects.json",
       "operations": [
         {
-          "summary": "Fetches all Projects",
+          "summary": "Fetches all Projects of Current User",
           "responseMessages": [
             {
               "code": 200,
@@ -35,7 +35,7 @@
               "required": false
             }
           ],
-          "nickname": "Api::V1::Admin::Projects#index",
+          "nickname": "Api::V1::Projects#index",
           "method": "get"
         }
       ]
@@ -66,7 +66,7 @@
               "required": true
             }
           ],
-          "nickname": "Api::V1::Admin::Projects#create",
+          "nickname": "Api::V1::Projects#create",
           "method": "post"
         }
       ]
@@ -102,7 +102,7 @@
               "required": true
             }
           ],
-          "nickname": "Api::V1::Admin::Projects#show",
+          "nickname": "Api::V1::Projects#show",
           "method": "get"
         }
       ]
@@ -159,7 +159,7 @@
               }
             }
           ],
-          "nickname": "Api::V1::Admin::Projects#update",
+          "nickname": "Api::V1::Projects#update",
           "method": "patch"
         }
       ]
@@ -195,7 +195,7 @@
               "required": true
             }
           ],
-          "nickname": "Api::V1::Admin::Projects#destroy",
+          "nickname": "Api::V1::Projects#destroy",
           "method": "delete"
         }
       ]

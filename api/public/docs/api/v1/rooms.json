@@ -35,7 +35,7 @@
               "required": false
             }
           ],
-          "nickname": "Api::V1::Admin::Rooms#index",
+          "nickname": "Api::V1::Rooms#index",
           "method": "get"
         }
       ]
@@ -66,7 +66,7 @@
               "required": true
             }
           ],
-          "nickname": "Api::V1::Admin::Rooms#create",
+          "nickname": "Api::V1::Rooms#create",
           "method": "post"
         }
       ]
@@ -102,7 +102,7 @@
               "required": true
             }
           ],
-          "nickname": "Api::V1::Admin::Rooms#show",
+          "nickname": "Api::V1::Rooms#show",
           "method": "get"
         }
       ]
@@ -145,7 +145,7 @@
               "required": true
             }
           ],
-          "nickname": "Api::V1::Admin::Rooms#update",
+          "nickname": "Api::V1::Rooms#update",
           "method": "patch"
         }
       ]
@@ -181,7 +181,7 @@
               "required": true
             }
           ],
-          "nickname": "Api::V1::Admin::Rooms#destroy",
+          "nickname": "Api::V1::Rooms#destroy",
           "method": "delete"
         }
       ]
