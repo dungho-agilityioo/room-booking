@@ -50,6 +50,7 @@ class Api::V1::RoomBookingsController < ApplicationController
     summary "Creates a new Room Booking"
     Api::V1::RoomBookingsController::add_common_params(api)
     param :form, :title, :string, :required, "Title"
+    param :form, :description, :string, :optional, "Description"
     param :form, :project_id, :integer, :optional, "Project Id"
     param :form, :daily, :boolean, :optional, "Daily"
     response :created, "Success", :RoomBooking
