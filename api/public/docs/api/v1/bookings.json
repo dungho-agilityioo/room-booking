@@ -5,63 +5,6 @@
   "resourcePath": "bookings",
   "apis": [
     {
-      "path": "/api/v1/rooms/{room_id}/bookings/search.json",
-      "operations": [
-        {
-          "summary": "Check Room Available in the range time",
-          "responseMessages": [
-            {
-              "code": 200,
-              "responseModel": "RoomBooking",
-              "message": "Success"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
-            },
-            {
-              "code": 404,
-              "responseModel": null,
-              "message": "Not Found"
-            }
-          ],
-          "parameters": [
-            {
-              "paramType": "form",
-              "name": "type",
-              "type": "String",
-              "description": "Search For",
-              "required": true,
-              "allowableValues": {
-                "valueType": "LIST",
-                "values": [
-                  "available",
-                  "booked"
-                ]
-              }
-            },
-            {
-              "paramType": "form",
-              "name": "time_start",
-              "type": "DateTime",
-              "description": "Time Start",
-              "required": true
-            },
-            {
-              "paramType": "form",
-              "name": "time_end",
-              "type": "DateTime",
-              "description": "Time End",
-              "required": true
-            }
-          ],
-          "nickname": "Api::V1::Bookings#search",
-          "method": "get"
-        }
-      ]
-    },
-    {
       "path": "/api/v1/rooms/{room_id}/bookings.json",
       "operations": [
         {
@@ -123,7 +66,7 @@
           ],
           "parameters": [
             {
-              "paramType": "form",
+              "paramType": "path",
               "name": "room_id",
               "type": "integer",
               "description": "Room Id",
@@ -202,9 +145,16 @@
           "parameters": [
             {
               "paramType": "path",
+              "name": "room_id",
+              "type": "integer",
+              "description": "Room Id",
+              "required": true
+            },
+            {
+              "paramType": "path",
               "name": "id",
               "type": "integer",
-              "description": "Room Booking Id",
+              "description": "Booking Id",
               "required": true
             }
           ],
@@ -236,6 +186,13 @@
             }
           ],
           "parameters": [
+            {
+              "paramType": "path",
+              "name": "room_id",
+              "type": "integer",
+              "description": "Room Id",
+              "required": true
+            },
             {
               "paramType": "path",
               "name": "id",

@@ -10,7 +10,7 @@ module Response
   end
 
   def respone_collection_serializer(objects, page, total, model = ActsAsBookable::BookingSerializer)
-    limit_value = objects.limit_value
+    limit_value = objects.limit_value || 1
 
     render json: {
         data:

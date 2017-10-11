@@ -35,6 +35,7 @@ class Api::V1::BookingsController < ApplicationController
   # :nocov:
   swagger_api :show do
     summary "Fetches a single Room Booking item of Current User"
+    param :path, :room_id, :integer, :required, "Room ID"
     param :path, :id, :integer, :required, "Room Booking Id"
     response :ok, "Success", :Room
     response :unauthorized
@@ -78,6 +79,7 @@ class Api::V1::BookingsController < ApplicationController
   # :nocov:
   swagger_api :destroy do
     summary "Delete a Room Booking of Current user"
+    param :path, :room_id, :integer, :required, "Room Id"
     param :path, :id, :integer, :required, "Room Booking Id"
     response :no_content, "Success", :RoomBooking
     response :unauthorized
@@ -114,7 +116,12 @@ class Api::V1::BookingsController < ApplicationController
   end
 
   def find_booking
-    @booking = current_user.bookings.where(id: params[:id]).first
+    room_id = params[:room_id]
+    if current_user.admin?
+      @booking = ActsAsBookable::Booking.by_room(room_id).includes(:bookable, :booker).find(params[:id])
+    else
+      @booking = current_user.bookings.by_room(room_id).includes(:bookable, :booker).where(id: params[:id]).first
+    end
   end
 
   def request_param
