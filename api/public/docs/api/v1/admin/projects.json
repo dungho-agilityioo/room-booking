@@ -26,6 +26,15 @@
               "message": "Not Found"
             }
           ],
+          "parameters": [
+            {
+              "paramType": "query",
+              "name": "page",
+              "type": "integer",
+              "description": "Page Number",
+              "required": false
+            }
+          ],
           "nickname": "Api::V1::Admin::Projects#index",
           "method": "get"
         }
