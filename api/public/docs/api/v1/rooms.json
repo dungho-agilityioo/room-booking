@@ -2,17 +2,17 @@
   "apiVersion": "1.0",
   "swaggerVersion": "1.2",
   "basePath": "/",
-  "resourcePath": "projects",
+  "resourcePath": "rooms",
   "apis": [
     {
-      "path": "/api/v1/admin/projects.json",
+      "path": "/api/v1/rooms.json",
       "operations": [
         {
-          "summary": "Fetches all Projects",
+          "summary": "Fetches all Rooms",
           "responseMessages": [
             {
               "code": 200,
-              "responseModel": "Project",
+              "responseModel": "Room",
               "message": "Success"
             },
             {
@@ -35,20 +35,20 @@
               "required": false
             }
           ],
-          "nickname": "Api::V1::Admin::Projects#index",
+          "nickname": "Api::V1::Admin::Rooms#index",
           "method": "get"
         }
       ]
     },
     {
-      "path": "/api/v1/admin/projects.json",
+      "path": "/api/v1/rooms.json",
       "operations": [
         {
-          "summary": "Creates a new Project",
+          "summary": "Creates a new Room",
           "responseMessages": [
             {
               "code": 201,
-              "responseModel": "Project",
+              "responseModel": "Room",
               "message": "Success"
             },
             {
@@ -62,24 +62,24 @@
               "paramType": "form",
               "name": "name",
               "type": "string",
-              "description": "Project Name",
+              "description": "Room Name",
               "required": true
             }
           ],
-          "nickname": "Api::V1::Admin::Projects#create",
+          "nickname": "Api::V1::Admin::Rooms#create",
           "method": "post"
         }
       ]
     },
     {
-      "path": "/api/v1/admin/projects/{id}.json",
+      "path": "/api/v1/rooms/{id}.json",
       "operations": [
         {
-          "summary": "Fetches a single Project item",
+          "summary": "Fetches a single Room item",
           "responseMessages": [
             {
               "code": 200,
-              "responseModel": "Project",
+              "responseModel": "Room",
               "message": "Success"
             },
             {
@@ -98,24 +98,24 @@
               "paramType": "path",
               "name": "id",
               "type": "integer",
-              "description": "Project Id",
+              "description": "Room Id",
               "required": true
             }
           ],
-          "nickname": "Api::V1::Admin::Projects#show",
+          "nickname": "Api::V1::Admin::Rooms#show",
           "method": "get"
         }
       ]
     },
     {
-      "path": "/api/v1/admin/projects/{id}.json",
+      "path": "/api/v1/rooms/{id}.json",
       "operations": [
         {
-          "summary": "Update a Project",
+          "summary": "Update a Room",
           "responseMessages": [
             {
               "code": 200,
-              "responseModel": "Project",
+              "responseModel": "Room",
               "message": "Success"
             },
             {
@@ -134,45 +134,31 @@
               "paramType": "path",
               "name": "id",
               "type": "integer",
-              "description": "Project Id",
+              "description": "Room Id",
               "required": true
             },
             {
               "paramType": "form",
               "name": "name",
               "type": "string",
-              "description": "Project Name",
+              "description": "Room Name",
               "required": true
-            },
-            {
-              "paramType": "form",
-              "name": "status",
-              "type": "string",
-              "description": "Status",
-              "required": true,
-              "allowableValues": {
-                "valueType": "LIST",
-                "values": [
-                  "active",
-                  "inactive"
-                ]
-              }
             }
           ],
-          "nickname": "Api::V1::Admin::Projects#update",
+          "nickname": "Api::V1::Admin::Rooms#update",
           "method": "patch"
         }
       ]
     },
     {
-      "path": "/api/v1/admin/projects/{id}.json",
+      "path": "/api/v1/rooms/{id}.json",
       "operations": [
         {
-          "summary": "Delete a Project",
+          "summary": "Delete a Room",
           "responseMessages": [
             {
               "code": 204,
-              "responseModel": "Project",
+              "responseModel": "Room",
               "message": "Success"
             },
             {
@@ -191,11 +177,11 @@
               "paramType": "path",
               "name": "id",
               "type": "integer",
-              "description": "Project Id",
+              "description": "Room Id",
               "required": true
             }
           ],
-          "nickname": "Api::V1::Admin::Projects#destroy",
+          "nickname": "Api::V1::Admin::Rooms#destroy",
           "method": "delete"
         }
       ]

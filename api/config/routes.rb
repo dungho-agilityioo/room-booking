@@ -19,23 +19,20 @@ Rails.application.routes.draw do
       post :search, on: :collection, action: :search
     end
 
-    get :projects, to: :projects, controller: :users
+    # get :projects, to: :projects, controller: :users
 
     resources :backgrounds, only: [:index]
 
-    namespace :admin do
-      resources :projects
-      resources :rooms
-      resources :reports, only: [:index]
+    resources :projects
+    resources :rooms
+    resources :reports, only: [:index]
 
-      resources :user_projects, only: [:index, :create] do
-        collection do
-          put ':project_id', action: :update
-          delete ':project_id', action: :destroy
-        end
+    resources :user_projects, only: [:index, :create] do
+      collection do
+        put ':project_id', action: :update
+        delete ':project_id', action: :destroy
       end
     end
-
   end
 
   post "_ah/push-handlers/push/:token", to: "api/v1/backgrounds#send_email"
