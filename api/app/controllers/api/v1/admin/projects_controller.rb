@@ -20,7 +20,7 @@ module Api
           param! :page, Integer
           page = params[:page].present? && params[:page] || 1
           total = Project.count
-          projects = Project.page(page)
+          projects = Project.includes(:users).page(page)
 
           respone_collection_serializer(projects, page, total, ProjectSerializer)
         end
@@ -104,7 +104,7 @@ module Api
         end
 
         def find_project
-          @project = Project.find(params[:id])
+          @project = Project.includes(:users).find(params[:id])
         end
       end
     end
