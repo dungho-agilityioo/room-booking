@@ -9,15 +9,20 @@ module Api
         # :nocov:
         swagger_api :index do
           summary "Fetches all Projects"
+          param :query, :page, :integer, :optional, "Page Number"
           response :ok, "Success", :Project
           response :unauthorized
           response :not_found
         end
         # :nocov:
         def index
-          @projects = Project.all
           authorize Project
-          json_response(@projects)
+          param! :page, Integer
+          page = params[:page].present? && params[:page] || 1
+          total = Project.count
+          projects = Project.page(page)
+
+          respone_collection_serializer(projects, page, total, ProjectSerializer)
         end
 
         # GET /projects/:id
