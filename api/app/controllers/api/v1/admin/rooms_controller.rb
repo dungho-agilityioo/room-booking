@@ -9,15 +9,19 @@ module Api
         # :nocov:
         swagger_api :index do
           summary "Fetches all Rooms"
+          param :query, :page, :integer, :optional, "Page Number"
           response :ok, "Success", :Room
           response :unauthorized
           response :not_found
         end
         # :nocov:
         def index
-          @rooms = Room.all
           authorize Room
-          json_response(@rooms)
+          page = params[:page].present? && params[:page].to_i || 1
+          total = Room.count
+          rooms = Room.page(page)
+
+          respone_collection_serializer(rooms, page, total, RoomSerializer)
         end
 
         # GET /rooms/:id
