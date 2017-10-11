@@ -37,7 +37,7 @@ module Api
         # :nocov:
         def show
           authorize @project
-          json_response(@project)
+          respone_record_serializer(@project, ProjectSerializer)
         end
 
         # POST /projects
@@ -53,7 +53,7 @@ module Api
           @project = Project.new(project_params)
           authorize @project
           if @project.save
-            json_response(@project, :created)
+            respone_record_serializer(@project, ProjectSerializer, :created)
           else
             json_response(@project.errors.full_messages, :unprocessable_entity)
           end
@@ -74,7 +74,7 @@ module Api
         def update
           authorize @project
           if @project.update(project_params)
-            json_response(@project, :ok)
+            respone_record_serializer(@project, ProjectSerializer, :ok)
           else
             json_response(@project.errors.full_messages, :unprocessable_entity)
           end
