@@ -5,7 +5,7 @@
   "resourcePath": "bookings",
   "apis": [
     {
-      "path": "/api/v1/rooms/{room_id}/bookings.json",
+      "path": "/api/v1/rooms/{room_id}/bookings",
       "operations": [
         {
           "summary": "Fetches all Room Bookings of Current User",
@@ -48,7 +48,7 @@
       ]
     },
     {
-      "path": "/api/v1/rooms/{room_id}/bookings.json",
+      "path": "/api/v1/rooms/{room_id}/bookings",
       "operations": [
         {
           "summary": "Creates a new Room Booking",
@@ -121,7 +121,7 @@
       ]
     },
     {
-      "path": "/api/v1/rooms/{room_id}/bookings/{id}.json",
+      "path": "/api/v1/rooms/{room_id}/bookings/{id}",
       "operations": [
         {
           "summary": "Fetches a single Room Booking item of Current User",
@@ -164,7 +164,7 @@
       ]
     },
     {
-      "path": "/api/v1/rooms/{room_id}/bookings/{id}.json",
+      "path": "/api/v1/rooms/{room_id}/bookings/{id}",
       "operations": [
         {
           "summary": "Delete a Room Booking of Current user",

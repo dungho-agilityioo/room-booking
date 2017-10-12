@@ -5,7 +5,7 @@
   "resourcePath": "reports",
   "apis": [
     {
-      "path": "/api/v1/reports.json",
+      "path": "/api/v1/reports",
       "operations": [
         {
           "summary": "Fetches all Rooms Booking in the range time",

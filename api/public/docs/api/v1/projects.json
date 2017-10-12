@@ -5,7 +5,7 @@
   "resourcePath": "projects",
   "apis": [
     {
-      "path": "/api/v1/projects/{id}/assign.json",
+      "path": "/api/v1/projects/{id}/assign",
       "operations": [
         {
           "summary": "Assign user to a project",
@@ -43,7 +43,7 @@
       ]
     },
     {
-      "path": "/api/v1/projects.json",
+      "path": "/api/v1/projects",
       "operations": [
         {
           "summary": "Fetches all Projects of Current User",
@@ -79,7 +79,7 @@
       ]
     },
     {
-      "path": "/api/v1/projects.json",
+      "path": "/api/v1/projects",
       "operations": [
         {
           "summary": "Creates a new Project",
@@ -110,7 +110,7 @@
       ]
     },
     {
-      "path": "/api/v1/projects/{id}.json",
+      "path": "/api/v1/projects/{id}",
       "operations": [
         {
           "summary": "Fetches a single Project item",
@@ -146,7 +146,7 @@
       ]
     },
     {
-      "path": "/api/v1/projects/{id}.json",
+      "path": "/api/v1/projects/{id}",
       "operations": [
         {
           "summary": "Update a Project",
@@ -203,7 +203,7 @@
       ]
     },
     {
-      "path": "/api/v1/projects/{id}.json",
+      "path": "/api/v1/projects/{id}",
       "operations": [
         {
           "summary": "Delete a Project",

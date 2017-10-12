@@ -5,64 +5,7 @@
   "resourcePath": "rooms",
   "apis": [
     {
-      "path": "/api/v1/rooms/search.json",
-      "operations": [
-        {
-          "summary": "Check the status of room",
-          "responseMessages": [
-            {
-              "code": 200,
-              "responseModel": "RoomBooking",
-              "message": "Success"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
-            },
-            {
-              "code": 404,
-              "responseModel": null,
-              "message": "Not Found"
-            }
-          ],
-          "parameters": [
-            {
-              "paramType": "query",
-              "name": "type",
-              "type": "String",
-              "description": "Search For",
-              "required": true,
-              "allowableValues": {
-                "valueType": "LIST",
-                "values": [
-                  "available",
-                  "booked"
-                ]
-              }
-            },
-            {
-              "paramType": "query",
-              "name": "time_start",
-              "type": "DateTime",
-              "description": "Time Start",
-              "required": true
-            },
-            {
-              "paramType": "query",
-              "name": "time_end",
-              "type": "DateTime",
-              "description": "Time End",
-              "required": true
-            }
-          ],
-          "nickname": "Api::V1::Rooms#search",
-          "method": "get"
-        }
-      ]
-    },
-    {
-      "path": "/api/v1/rooms.json",
+      "path": "/api/v1/rooms",
       "operations": [
         {
           "summary": "Fetches all Rooms",
@@ -90,6 +33,35 @@
               "type": "integer",
               "description": "Page Number",
               "required": false
+            },
+            {
+              "paramType": "query",
+              "name": "filter",
+              "type": "String",
+              "description": "Filter For",
+              "required": false,
+              "allowableValues": {
+                "valueType": "LIST",
+                "values": [
+                  "",
+                  "available",
+                  "booked"
+                ]
+              }
+            },
+            {
+              "paramType": "query",
+              "name": "time_start",
+              "type": "DateTime",
+              "description": "Time Start",
+              "required": false
+            },
+            {
+              "paramType": "query",
+              "name": "time_end",
+              "type": "DateTime",
+              "description": "Time End",
+              "required": false
             }
           ],
           "nickname": "Api::V1::Rooms#index",
@@ -98,7 +70,7 @@
       ]
     },
     {
-      "path": "/api/v1/rooms.json",
+      "path": "/api/v1/rooms",
       "operations": [
         {
           "summary": "Creates a new Room",
@@ -129,7 +101,7 @@
       ]
     },
     {
-      "path": "/api/v1/rooms/{id}.json",
+      "path": "/api/v1/rooms/{id}",
       "operations": [
         {
           "summary": "Fetches a single Room item",
@@ -165,7 +137,7 @@
       ]
     },
     {
-      "path": "/api/v1/rooms/{id}.json",
+      "path": "/api/v1/rooms/{id}",
       "operations": [
         {
           "summary": "Update a Room",
@@ -208,7 +180,7 @@
       ]
     },
     {
-      "path": "/api/v1/rooms/{id}.json",
+      "path": "/api/v1/rooms/{id}",
       "operations": [
         {
           "summary": "Delete a Room",
