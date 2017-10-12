@@ -9,6 +9,9 @@ module Api
       swagger_api :index do
         summary "Fetches all Rooms"
         param :query, :page, :integer, :optional, "Page Number"
+        param_list :query, :filter, :String, :optional, "Filter For", ['', :available, :booked]
+        param :query, :time_start, :DateTime, :optional, "Time Start"
+        param :query, :time_end, :DateTime, :optional, "Time End"
         response :ok, "Success", :Room
         response :unauthorized
         response :not_found
@@ -16,11 +19,32 @@ module Api
       # :nocov:
       def index
         authorize Room
-        page = params[:page].present? && params[:page].to_i || 1
-        total = Room.count
-        rooms = Room.page(page)
+        param! :filter, String, required: false
 
-        respone_collection_serializer(rooms, page, total, RoomSerializer)
+
+        if params[:filter].blank?
+          page = params[:page].present? && params[:page].to_i || 1
+          total = Room.count
+          rooms = Room.page(page)
+
+          respone_collection_serializer(rooms, page, total, RoomSerializer)
+        else
+          param! :time_start, DateTime, required: true
+          param! :time_end, DateTime, required: true
+
+          time_start = params[:time_start].to_datetime
+          time_end = params[:time_end].to_datetime
+
+          if params[:filter] == 'available'
+            rs = BookingSearchService.check_availability( time_start, time_end )
+            json_response({ data: rs })
+          else
+            page = params[:page].present? && params[:page] || 1
+            total = ReportService.get_booked(time_start, time_end).count
+            room_bookings = ReportService.get_booked(time_start, time_end).page(page)
+            respone_collection_serializer(room_bookings, page, total)
+          end
+        end
       end
 
       # GET /rooms/:id
@@ -86,39 +110,6 @@ module Api
         authorize @room
         @room.destroy
         json_response( nil, :no_content)
-      end
-
-      # GET /rooms/search
-      # :nocov:
-      swagger_api :search do
-        summary "Check the status of room"
-        param_list :query, :type, :String, :required, "Search For", [:available, :booked]
-        param :query, :time_start, :DateTime, :required, "Time Start"
-        param :query, :time_end, :DateTime, :required, "Time End"
-        response :ok, "Success", :RoomBooking
-        response :unauthorized
-        response :not_found
-      end
-      # :nocov:
-      def search
-        authorize Booking
-        param! :type, String, required: true
-        param! :time_start, DateTime, required: true
-        param! :time_end, DateTime, required: true
-
-        time_start = params[:time_start].to_datetime
-        time_end = params[:time_end].to_datetime
-
-        if params[:type] == 'available'
-          rs = BookingSearchService.check_availability( time_start, time_end )
-          json_response({ data: rs })
-        else
-          page = params[:page].present? && params[:page] || 1
-          total = ReportService.get_booked(time_start, time_end).count
-          room_bookings = ReportService.get_booked(time_start, time_end).page(page)
-          respone_collection_serializer(room_bookings, page, total)
-        end
-
       end
 
       private

@@ -23,7 +23,6 @@ Rails.application.routes.draw do
 
     resources :rooms do
       resources :bookings, except: [:update]
-      get :search, on: :collection, action: :search
     end
     resources :reports, only: [:index]
   end
