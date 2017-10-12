@@ -5,6 +5,44 @@
   "resourcePath": "projects",
   "apis": [
     {
+      "path": "/api/v1/projects/{id}/assign.json",
+      "operations": [
+        {
+          "summary": "Assign user to a project",
+          "responseMessages": [
+            {
+              "code": 201,
+              "responseModel": "UserProject",
+              "message": "Success"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            }
+          ],
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Project Id",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "user_ids",
+              "type": "integer",
+              "description": "User Ids (separated by commas)",
+              "required": true
+            }
+          ],
+          "nickname": "Api::V1::Projects#assign_user",
+          "method": "put"
+        }
+      ]
+    },
+    {
       "path": "/api/v1/projects.json",
       "operations": [
         {
