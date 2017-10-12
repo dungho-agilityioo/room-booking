@@ -1,4 +1,4 @@
-class BooksSearchService
+class BookingSearchService
   class << self
 
     def check_availability(time_start, time_end)

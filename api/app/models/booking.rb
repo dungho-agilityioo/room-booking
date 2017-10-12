@@ -1,5 +1,4 @@
-
-ActsAsBookable::Booking.class_eval do
+class Booking <  ActsAsBookable::Booking
   validates_datetime :time_end, :after => :time_start
   validates_datetime :time_start, :on => :create, :on_or_after => lambda { Time.zone.now }
   before_create :reset_time_end
@@ -7,6 +6,8 @@ ActsAsBookable::Booking.class_eval do
   after_create :generate_next_schedule, if: :daily?
   after_create :send_email unless Rails.env.test?
   after_destroy :remove_future_schedule, if: :daily?
+
+  scope :by_room, ->(room_id) { where(bookable_id: room_id) }
 
   private
 

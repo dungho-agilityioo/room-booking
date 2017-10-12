@@ -5,10 +5,48 @@
   "resourcePath": "projects",
   "apis": [
     {
-      "path": "/api/v1/admin/projects.json",
+      "path": "/api/v1/projects/{id}/assign.json",
       "operations": [
         {
-          "summary": "Fetches all Projects",
+          "summary": "Assign user to a project",
+          "responseMessages": [
+            {
+              "code": 201,
+              "responseModel": "UserProject",
+              "message": "Success"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            }
+          ],
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Project Id",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "user_ids",
+              "type": "integer",
+              "description": "User Ids (separated by commas)",
+              "required": true
+            }
+          ],
+          "nickname": "Api::V1::Projects#assign_user",
+          "method": "put"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/projects.json",
+      "operations": [
+        {
+          "summary": "Fetches all Projects of Current User",
           "responseMessages": [
             {
               "code": 200,
@@ -35,13 +73,13 @@
               "required": false
             }
           ],
-          "nickname": "Api::V1::Admin::Projects#index",
+          "nickname": "Api::V1::Projects#index",
           "method": "get"
         }
       ]
     },
     {
-      "path": "/api/v1/admin/projects.json",
+      "path": "/api/v1/projects.json",
       "operations": [
         {
           "summary": "Creates a new Project",
@@ -66,13 +104,13 @@
               "required": true
             }
           ],
-          "nickname": "Api::V1::Admin::Projects#create",
+          "nickname": "Api::V1::Projects#create",
           "method": "post"
         }
       ]
     },
     {
-      "path": "/api/v1/admin/projects/{id}.json",
+      "path": "/api/v1/projects/{id}.json",
       "operations": [
         {
           "summary": "Fetches a single Project item",
@@ -102,13 +140,13 @@
               "required": true
             }
           ],
-          "nickname": "Api::V1::Admin::Projects#show",
+          "nickname": "Api::V1::Projects#show",
           "method": "get"
         }
       ]
     },
     {
-      "path": "/api/v1/admin/projects/{id}.json",
+      "path": "/api/v1/projects/{id}.json",
       "operations": [
         {
           "summary": "Update a Project",
@@ -159,13 +197,13 @@
               }
             }
           ],
-          "nickname": "Api::V1::Admin::Projects#update",
+          "nickname": "Api::V1::Projects#update",
           "method": "patch"
         }
       ]
     },
     {
-      "path": "/api/v1/admin/projects/{id}.json",
+      "path": "/api/v1/projects/{id}.json",
       "operations": [
         {
           "summary": "Delete a Project",
@@ -195,7 +233,7 @@
               "required": true
             }
           ],
-          "nickname": "Api::V1::Admin::Projects#destroy",
+          "nickname": "Api::V1::Projects#destroy",
           "method": "delete"
         }
       ]

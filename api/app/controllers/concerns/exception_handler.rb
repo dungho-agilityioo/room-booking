@@ -30,7 +30,9 @@ module ExceptionHandler
 
     # JSON response with message; Status code 404 - not found
     def not_found(e)
-      exception_message(e.message, :not_found)
+      message = e.message
+      message = message[0, message.index('[') - 1] if message.match(/\[/)
+      exception_message(message, :not_found)
     end
 
     # JSON response with message; Status code 422 - unprocessable entity

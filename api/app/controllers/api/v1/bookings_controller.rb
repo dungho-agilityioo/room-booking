@@ -1,34 +1,41 @@
-class Api::V1::RoomBookingsController < ApplicationController
+class Api::V1::BookingsController < ApplicationController
 
   before_action :find_booking, only: [:show, :destroy]
-  swagger_controller :books, "Books Management"
+  swagger_controller :books, "Bookings Management"
 
   # GET /books
   # :nocov:
   swagger_api :index do
     summary "Fetches all Room Bookings of Current User"
     param :query, :page, :integer, :optional, "Page Number"
+    param :path, :room_id, :integer, :required, "Room ID"
     response :ok, "Success", :Room
     response :unauthorized
     response :not_found
   end
   # :nocov:
   def index
-    authorize ActsAsBookable::Booking
+    authorize Booking
     param! :page, Integer
     page = params[:page].present? && params[:page] || 1
+    room_id = params[:room_id]
 
-    total = current_user.bookings.count
+    if current_user.admin?
+      total = Booking.by_room(room_id).count
+      bookings = Booking.by_room(room_id).includes(:bookable, :booker).page(page)
+    else
+      total = current_user.bookings.by_room(room_id).count
+      bookings = current_user.bookings.by_room(room_id).includes(:bookable, :booker).page(page)
+    end
 
-    room_bookings = current_user.bookings.includes(:bookable, :booker).page(page)
-
-    respone_collection_serializer(room_bookings, page, total)
+    respone_collection_serializer(bookings, page, total)
   end
 
   # GET /books/:id
   # :nocov:
   swagger_api :show do
     summary "Fetches a single Room Booking item of Current User"
+    param :path, :room_id, :integer, :required, "Room ID"
     param :path, :id, :integer, :required, "Room Booking Id"
     response :ok, "Success", :Room
     response :unauthorized
@@ -36,19 +43,15 @@ class Api::V1::RoomBookingsController < ApplicationController
   end
   # :nocov:
   def show
-    authorize @booking || ActsAsBookable::Booking
-    if @booking.present?
-      respone_record_serializer(@booking)
-    else
-      json_response({message: Message.not_found('Room Booking')}, :not_found)
-    end
+    authorize @booking || Booking
+    respone_record_serializer(@booking)
   end
 
   # POST /books
   # :nocov:
   swagger_api :create do |api|
     summary "Creates a new Room Booking"
-    Api::V1::RoomBookingsController::add_common_params(api)
+    Api::V1::BookingsController::add_common_params(api)
     param :form, :title, :string, :required, "Title"
     param :form, :description, :string, :optional, "Description"
     param :form, :project_id, :integer, :optional, "Project Id"
@@ -60,18 +63,19 @@ class Api::V1::RoomBookingsController < ApplicationController
   def create
     request_param
 
-    authorize ActsAsBookable::Booking
+    authorize Booking
     find_project_by_user if params[:project_id].present?
     find_room
     booking = current_user.book! @room, convert_param.merge(amount: 1)
 
-    respone_record_serializer(booking, ActsAsBookable::BookingSerializer, :created)
+    respone_record_serializer(booking, BookingSerializer, :created)
   end
 
   # DELETE /books/:id
   # :nocov:
   swagger_api :destroy do
     summary "Delete a Room Booking of Current user"
+    param :path, :room_id, :integer, :required, "Room Id"
     param :path, :id, :integer, :required, "Room Booking Id"
     response :no_content, "Success", :RoomBooking
     response :unauthorized
@@ -79,52 +83,12 @@ class Api::V1::RoomBookingsController < ApplicationController
   end
   # :nocov:
   def destroy
-    authorize @booking || ActsAsBookable::Booking
+    authorize @booking || Booking
 
-    if @booking.present?
-      @booking.destroy
-      json_response( nil, :no_content)
-    else
-      json_response({message: Message.not_found('Room Booking')}, :not_found)
-    end
+    @booking.destroy!
+    json_response( nil, :no_content)
   end
 
-  # POST /books/search
-  # :nocov:
-  swagger_api :search do |api|
-    summary "Check Room Available in the range time"
-    api.param_list :form, :type, :String, :required, "Search For", [:available, :booked]
-    api.param :form, :time_start, :DateTime, :required, "Time Start"
-    api.param :form, :time_end, :DateTime, :required, "Time End"
-    response :ok, "Success", :RoomBooking
-    response :unauthorized
-    response :not_found
-  end
-  # :nocov:
-  def search
-    authorize ActsAsBookable::Booking
-    param! :type, String, required: true
-    param! :time_start, DateTime, required: true
-    param! :time_end, DateTime, required: true
-
-    time_start = params[:time_start].to_datetime
-    time_end = params[:time_end].to_datetime
-
-    if params[:type] == 'available'
-      rs = BooksSearchService.check_availability( time_start, time_end )
-      if rs.present?
-        json_response({ data: rs })
-      else
-        json_response(nil, :no_content )
-      end
-    else
-      page = params[:page].present? && params[:page] || 1
-      total = ReportService.get_booked(params[:time_start], params[:time_end]).count
-      room_bookings = ReportService.get_booked(params[:time_start], params[:time_end]).page(page)
-      respone_collection_serializer(room_bookings, page, total)
-    end
-
-  end
 
   private
 
@@ -143,7 +107,12 @@ class Api::V1::RoomBookingsController < ApplicationController
   end
 
   def find_booking
-    @booking = current_user.bookings.where(id: params[:id]).first
+    room_id = params[:room_id]
+    if current_user.admin?
+      @booking = Booking.by_room(room_id).includes(:bookable, :booker).find(params[:id])
+    else
+      @booking = current_user.bookings.by_room(room_id).includes(:bookable, :booker).find(params[:id])
+    end
   end
 
   def request_param

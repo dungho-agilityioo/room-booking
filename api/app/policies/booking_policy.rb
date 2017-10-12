@@ -1,4 +1,4 @@
-class ActsAsBookable::BookingPolicy < ApplicationPolicy
+class BookingPolicy < ApplicationPolicy
 
   def index?
     login?

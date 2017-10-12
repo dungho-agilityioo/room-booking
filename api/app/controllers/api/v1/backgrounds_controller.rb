@@ -11,7 +11,7 @@ class Api::V1::BackgroundsController < ApplicationController
     render json: {
         data:
           ActiveModel::Serializer::CollectionSerializer.new(
-            bookings, each_serializer: ActsAsBookable::BookingSerializer
+            bookings, each_serializer: BookingSerializer
           ).as_json
         }
   end

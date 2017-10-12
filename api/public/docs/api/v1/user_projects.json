@@ -141,9 +141,9 @@
             },
             {
               "paramType": "form",
-              "name": "user_id",
+              "name": "user_ids",
               "type": "integer",
-              "description": "User Id",
+              "description": "User Ids (separated by commas)",
               "required": true
             }
           ],

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Api::V1::Admin::ProjectsController, type: :controller do
+RSpec.describe Api::V1::ProjectsController, type: :controller do
 
   let!(:projects) { create_list(:project, 10) }
   let(:project_id) { projects.first.id }
@@ -54,11 +54,11 @@ RSpec.describe Api::V1::Admin::ProjectsController, type: :controller do
       it { should respond_with(201) }
 
       it 'create a project' do
-        expect(json['attributes']['name']).to eq(valid_attributes[:name])
+        expect(json['name']).to eq(valid_attributes[:name])
       end
 
       it 'with status is active' do
-        expect(json['attributes']['status']).to eq('active')
+        expect(json['status']).to eq('active')
       end
     end
 
@@ -82,7 +82,7 @@ RSpec.describe Api::V1::Admin::ProjectsController, type: :controller do
       it { should respond_with(200) }
 
       it 'updates the record' do
-        expect(json['attributes']['name']).to eq(valid_attributes[:name])
+        expect(json['name']).to eq(valid_attributes[:name])
       end
     end
 
@@ -102,4 +102,38 @@ RSpec.describe Api::V1::Admin::ProjectsController, type: :controller do
 
     it { should respond_with(204) }
   end
+
+  describe 'PUT /assign_user' do
+    let(:valid_attributes) { { id: project_id, user_ids: users.map { |u| u.id } } }
+    let(:users) { create_list(:user, 4) }
+
+    context 'when the request is valid' do
+
+      before { put :assign_user, params: valid_attributes }
+
+      it { should respond_with(201) }
+
+      it 'should create the sucessfully' do
+        expect(json["id"].to_i).to eq(project_id)
+      end
+
+      it 'should be assign user' do
+        user_ids = json["users"].map { |u| u["id"].to_i }
+        expect( user_ids.sort ).to eq(users.map { |u| u.id })
+      end
+
+    end
+
+    context 'when the request is missing the user_id' do
+      before { put :assign_user, params: { id: project_id } }
+
+      it { should respond_with(400) }
+
+      it 'return a validation failure message' do
+        expect(response.body).to match(/Parameter user_ids is required/)
+      end
+    end
+
+  end
+
 end
