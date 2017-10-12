@@ -90,11 +90,11 @@ module Api
 
       # GET /rooms/search
       # :nocov:
-      swagger_api :search do |api|
+      swagger_api :search do
         summary "Check the status of room"
-        api.param_list :form, :type, :String, :required, "Search For", [:available, :booked]
-        api.param :form, :time_start, :DateTime, :required, "Time Start"
-        api.param :form, :time_end, :DateTime, :required, "Time End"
+        param_list :query, :type, :String, :required, "Search For", [:available, :booked]
+        param :query, :time_start, :DateTime, :required, "Time Start"
+        param :query, :time_end, :DateTime, :required, "Time End"
         response :ok, "Success", :RoomBooking
         response :unauthorized
         response :not_found

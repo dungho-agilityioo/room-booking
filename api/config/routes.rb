@@ -17,19 +17,15 @@ Rails.application.routes.draw do
 
     resources :backgrounds, only: [:index]
 
-    resources :projects
+    resources :projects do
+      put :assign, on: :member, action: :assign_user
+    end
+
     resources :rooms do
       resources :bookings, except: [:update]
       get :search, on: :collection, action: :search
     end
     resources :reports, only: [:index]
-
-    # resources :user_projects, only: [:index, :create] do
-    #   collection do
-    #     put ':project_id', action: :update
-    #     delete ':project_id', action: :destroy
-    #   end
-    # end
   end
 
   post "_ah/push-handlers/push/:token", to: "api/v1/backgrounds#send_email"

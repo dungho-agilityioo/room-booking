@@ -1,7 +1,7 @@
 module Api
   module V1
     class ProjectsController < ApplicationController
-      before_action :find_project, only: [:show, :update, :destroy]
+      before_action :find_project, only: [:show, :update, :destroy, :assign_user]
       swagger_controller :room, "Project Management"
 
       # GET /projects
@@ -99,6 +99,24 @@ module Api
         authorize @project
         @project.destroy
         json_response( nil, :no_content)
+      end
+
+      # Assign user to a project
+      # PUT /project/assign
+      # :nocov:
+      swagger_api :assign_user do
+        summary "Assign user to a project"
+        param :path, :id, :integer, :required, "Project Id"
+        param :form, :user_ids, :integer, :required, "User Ids (separated by commas)"
+        response :created, "Success", :UserProject
+        response :unauthorized
+      end
+      # :nocov:
+      def assign_user
+        authorize Project
+        param! :user_ids, Array, required: true
+        @project.user_ids = params[:user_ids]
+        respone_record_serializer(@project, ProjectSerializer, :created)
       end
 
       private

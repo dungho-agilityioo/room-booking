@@ -16,4 +16,8 @@ class ProjectPolicy < ApplicationPolicy
     @current_user.admin?
   end
 
+  def assign_user?
+    @current_user.admin?
+  end
+
 end
