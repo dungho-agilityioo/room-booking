@@ -31,20 +31,6 @@
             },
             {
               "paramType": "query",
-              "name": "type",
-              "type": "string",
-              "description": "Type",
-              "required": true,
-              "allowableValues": {
-                "valueType": "LIST",
-                "values": [
-                  "date",
-                  "project"
-                ]
-              }
-            },
-            {
-              "paramType": "query",
               "name": "room_id",
               "type": "integer",
               "description": "Room Id",
@@ -52,24 +38,17 @@
             },
             {
               "paramType": "query",
-              "name": "project_id",
-              "type": "integer",
-              "description": "Project Id",
-              "required": false
-            },
-            {
-              "paramType": "query",
               "name": "time_start",
               "type": "DateTime",
               "description": "Time Start",
-              "required": false
+              "required": true
             },
             {
               "paramType": "query",
               "name": "time_end",
               "type": "DateTime",
               "description": "Time End",
-              "required": false
+              "required": true
             }
           ],
           "nickname": "Api::V1::Reports#index",

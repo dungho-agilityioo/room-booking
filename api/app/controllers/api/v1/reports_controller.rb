@@ -5,14 +5,12 @@ module Api
 
       # GET reports?
       # :nocov:
-      swagger_api :index do |api|
+      swagger_api :index do
         summary "Fetches all Rooms Booking in the range time"
         param :query, :page, :integer, :optional, "Page Number"
-        param_list :query, :type, :string, :required, "Type", [:date, :project]
-        api.param :query, :room_id, :integer, :optional, "Room Id"
-        api.param :query, :project_id, :integer, :optional, "Project Id"
-        api.param :query, :time_start, :DateTime, :optional, "Time Start"
-        api.param :query, :time_end, :DateTime, :optional, "Time End"
+        param :query, :room_id, :integer, :optional, "Room Id"
+        param :query, :time_start, :DateTime, :required, "Time Start"
+        param :query, :time_end, :DateTime, :required, "Time End"
         response :ok, "Success", :Room
         response :unauthorized
       end
@@ -20,29 +18,15 @@ module Api
       def index
         authorize self
 
-        param! :type, String, required: true
         param! :page, Integer
-
-        if params[:type] == 'date'
-          param! :room_id, Integer, required: true
-          param! :time_start, DateTime, required: true
-          param! :time_end, DateTime, required: true
-        else
-          param! :project_id, Integer, required: true
-        end
+        param! :room_id, Integer, required: false
+        param! :time_start, DateTime, required: true
+        param! :time_end, DateTime, required: true
         page = params[:page].present? && params[:page] || 1
 
-        if params[:type] == 'date'
-          total = ReportService.by_range_date(params).count
+        total = ReportService.by_range_date(params).count
 
-          room_bookings = ReportService.by_range_date(params).page(page)
-        else
-          project_id = params[:project_id]
-
-          total = ReportService.by_project(project_id).count
-
-          room_bookings = ReportService.by_project(project_id).page(page)
-        end
+        room_bookings = ReportService.by_range_date(params).page(page)
 
         respone_collection_serializer(room_bookings, page, total)
       end

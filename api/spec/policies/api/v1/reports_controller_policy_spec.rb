@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Api::V1::Admin::ReportsControllerPolicy do
+describe Api::V1::ReportsControllerPolicy do
   subject { described_class.new(user, self) }
 
   context 'User admin is granted permission' do

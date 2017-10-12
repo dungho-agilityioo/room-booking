@@ -4,10 +4,6 @@
   "basePath": "/",
   "apis": [
     {
-      "path": "/docs/api/v1/projects.{format}",
-      "description": "Project Management"
-    },
-    {
       "path": "/docs/api/v1/bookings.{format}",
       "description": "Bookings Management"
     },
