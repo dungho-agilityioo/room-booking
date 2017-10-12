@@ -110,7 +110,7 @@ module Api
         time_end = params[:time_end].to_datetime
 
         if params[:type] == 'available'
-          rs = BooksSearchService.check_availability( time_start, time_end )
+          rs = BookingSearchService.check_availability( time_start, time_end )
           json_response({ data: rs })
         else
           page = params[:page].present? && params[:page] || 1
