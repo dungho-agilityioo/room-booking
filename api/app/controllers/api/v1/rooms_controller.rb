@@ -70,6 +70,8 @@ module Api
         param :form, :name, :string, :required, "Room Name"
         response :created, "Success", :Room
         response :unauthorized
+        response :forbidden
+        response :unprocessable_entity
       end
       # :nocov:
       def create
@@ -88,6 +90,8 @@ module Api
         response :ok, "Success", :Room
         response :unauthorized
         response :not_found
+        response :forbidden
+        response :unprocessable_entity
       end
       # :nocov:
       def update
@@ -104,6 +108,7 @@ module Api
         response :no_content, "Success", :Room
         response :unauthorized
         response :not_found
+        response :forbidden
       end
       # :nocov:
       def destroy

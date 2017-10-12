@@ -58,6 +58,7 @@ class Api::V1::BookingsController < ApplicationController
     param :form, :daily, :boolean, :optional, "Daily"
     response :created, "Success", :RoomBooking
     response :unauthorized
+    response :unprocessable_entity
   end
   # :nocov:
   def create
