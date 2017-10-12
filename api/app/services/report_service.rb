@@ -16,8 +16,6 @@ class ReportService
     end
 
     def get_booked(time_start, time_end)
-      time_start = Time.zone.now if time_start.nil? || time_start < Time.zone.now
-
       Booking
         .includes(:bookable, :booker)
         .where( :time_start => time_start..time_end)
@@ -27,7 +25,6 @@ class ReportService
               .where( :time_end => time_start..time_end)
           )
         .order(:time_start, :bookable_id)
-
     end
   end
 end

@@ -85,12 +85,8 @@ class Api::V1::BookingsController < ApplicationController
   def destroy
     authorize @booking || Booking
 
-    if @booking.present?
-      @booking.destroy
-      json_response( nil, :no_content)
-    else
-      json_response({message: Message.not_found('Room Booking')}, :not_found)
-    end
+    @booking.destroy!
+    json_response( nil, :no_content)
   end
 
 

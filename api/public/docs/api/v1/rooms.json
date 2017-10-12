@@ -5,6 +5,63 @@
   "resourcePath": "rooms",
   "apis": [
     {
+      "path": "/api/v1/rooms/search.json",
+      "operations": [
+        {
+          "summary": "Check the status of room",
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": "RoomBooking",
+              "message": "Success"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            },
+            {
+              "code": 404,
+              "responseModel": null,
+              "message": "Not Found"
+            }
+          ],
+          "parameters": [
+            {
+              "paramType": "query",
+              "name": "type",
+              "type": "String",
+              "description": "Search For",
+              "required": true,
+              "allowableValues": {
+                "valueType": "LIST",
+                "values": [
+                  "available",
+                  "booked"
+                ]
+              }
+            },
+            {
+              "paramType": "query",
+              "name": "time_start",
+              "type": "DateTime",
+              "description": "Time Start",
+              "required": true
+            },
+            {
+              "paramType": "query",
+              "name": "time_end",
+              "type": "DateTime",
+              "description": "Time End",
+              "required": true
+            }
+          ],
+          "nickname": "Api::V1::Rooms#search",
+          "method": "get"
+        }
+      ]
+    },
+    {
       "path": "/api/v1/rooms.json",
       "operations": [
         {

@@ -28,18 +28,18 @@
           ],
           "parameters": [
             {
-              "paramType": "path",
-              "name": "room_id",
-              "type": "integer",
-              "description": "Room ID",
-              "required": true
-            },
-            {
               "paramType": "query",
               "name": "page",
               "type": "integer",
               "description": "Page Number",
               "required": false
+            },
+            {
+              "paramType": "path",
+              "name": "room_id",
+              "type": "integer",
+              "description": "Room ID",
+              "required": true
             }
           ],
           "nickname": "Api::V1::Bookings#index",
@@ -147,14 +147,14 @@
               "paramType": "path",
               "name": "room_id",
               "type": "integer",
-              "description": "Room Id",
+              "description": "Room ID",
               "required": true
             },
             {
               "paramType": "path",
               "name": "id",
               "type": "integer",
-              "description": "Booking Id",
+              "description": "Room Booking Id",
               "required": true
             }
           ],
