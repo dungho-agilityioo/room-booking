@@ -15,14 +15,14 @@ class Api::V1::BookingsController < ApplicationController
   end
   # :nocov:
   def index
-    authorize ActsAsBookable::Booking
+    authorize Booking
     param! :page, Integer
     page = params[:page].present? && params[:page] || 1
     room_id = params[:room_id]
 
     if current_user.admin?
-      total = ActsAsBookable::Booking.by_room(room_id).count
-      bookings = ActsAsBookable::Booking.by_room(room_id).includes(:bookable, :booker).page(page)
+      total = Booking.by_room(room_id).count
+      bookings = Booking.by_room(room_id).includes(:bookable, :booker).page(page)
     else
       total = current_user.bookings.by_room(room_id).count
       bookings = current_user.bookings.by_room(room_id).includes(:bookable, :booker).page(page)
@@ -43,12 +43,8 @@ class Api::V1::BookingsController < ApplicationController
   end
   # :nocov:
   def show
-    authorize @booking || ActsAsBookable::Booking
-    if @booking.present?
-      respone_record_serializer(@booking)
-    else
-      json_response({message: Message.not_found('Room Booking')}, :not_found)
-    end
+    authorize @booking || Booking
+    respone_record_serializer(@booking)
   end
 
   # POST /books
@@ -67,12 +63,12 @@ class Api::V1::BookingsController < ApplicationController
   def create
     request_param
 
-    authorize ActsAsBookable::Booking
+    authorize Booking
     find_project_by_user if params[:project_id].present?
     find_room
     booking = current_user.book! @room, convert_param.merge(amount: 1)
 
-    respone_record_serializer(booking, ActsAsBookable::BookingSerializer, :created)
+    respone_record_serializer(booking, BookingSerializer, :created)
   end
 
   # DELETE /books/:id
@@ -87,7 +83,7 @@ class Api::V1::BookingsController < ApplicationController
   end
   # :nocov:
   def destroy
-    authorize @booking || ActsAsBookable::Booking
+    authorize @booking || Booking
 
     if @booking.present?
       @booking.destroy
@@ -118,7 +114,7 @@ class Api::V1::BookingsController < ApplicationController
   def find_booking
     room_id = params[:room_id]
     if current_user.admin?
-      @booking = ActsAsBookable::Booking.by_room(room_id).includes(:bookable, :booker).find(params[:id])
+      @booking = Booking.by_room(room_id).includes(:bookable, :booker).find(params[:id])
     else
       @booking = current_user.bookings.by_room(room_id).includes(:bookable, :booker).where(id: params[:id]).first
     end

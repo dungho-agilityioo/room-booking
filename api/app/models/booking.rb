@@ -1,5 +1,4 @@
-
-ActsAsBookable::Booking.class_eval do
+class Booking <  ActsAsBookable::Booking
   validates_datetime :time_end, :after => :time_start
   validates_datetime :time_start, :on => :create, :on_or_after => lambda { Time.zone.now }
   before_create :reset_time_end

@@ -107,7 +107,7 @@ module Api
       end
       # :nocov:
       def search
-        authorize ActsAsBookable::Booking
+        authorize Booking
         param! :type, String, required: true
         param! :time_start, DateTime, required: true
         param! :time_end, DateTime, required: true

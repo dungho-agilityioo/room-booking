@@ -20,7 +20,7 @@ class RoomBookingService
   private
 
   def get_next_schedule
-    ActsAsBookable::Booking
+    Booking
       .where(bookable: @room)
       .where(booker: @user)
       .where('time_start > ?', Time.zone.now)
@@ -59,7 +59,7 @@ class RoomBookingService
   end
 
   def remove_future_schedule
-    ActsAsBookable::Booking
+    Booking
       .where(generate_for_id: @room_booking.id)
       .where('time_start > ?', Time.zone.now)
       .delete_all

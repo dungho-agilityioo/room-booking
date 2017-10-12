@@ -10,7 +10,7 @@
 #  capacity   :integer
 #
 
-class ActsAsBookable::BookingSerializer < ActiveModel::Serializer
+class BookingSerializer < ActiveModel::Serializer
   attributes :id, :title, :description, :time_start, :time_end, :user, :room
 
   def user
