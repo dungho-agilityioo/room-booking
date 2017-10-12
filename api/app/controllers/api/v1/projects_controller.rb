@@ -57,11 +57,8 @@ module Api
       def create
         @project = Project.new(project_params)
         authorize @project
-        if @project.save
-          respone_record_serializer(@project, ProjectSerializer, :created)
-        else
-          json_response(@project.errors.full_messages, :unprocessable_entity)
-        end
+        @project.save!
+        respone_record_serializer(@project, ProjectSerializer, :created)
       end
 
       # PUT /projects
@@ -78,11 +75,8 @@ module Api
       # :nocov:
       def update
         authorize @project
-        if @project.update(project_params)
-          respone_record_serializer(@project, ProjectSerializer, :ok)
-        else
-          json_response(@project.errors.full_messages, :unprocessable_entity)
-        end
+        @project.update!(project_params)
+        respone_record_serializer(@project, ProjectSerializer, :ok)
       end
 
       # DELETE /projects/:id
