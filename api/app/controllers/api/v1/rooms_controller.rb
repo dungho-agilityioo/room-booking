@@ -51,11 +51,8 @@ module Api
       def create
         @room = Room.new(room_params)
         authorize @room
-        if @room.save
-          respone_record_serializer(@room, RoomSerializer, :created)
-        else
-          json_response(@room.errors.full_messages, :unprocessable_entity)
-        end
+        @room.save!
+        respone_record_serializer(@room, RoomSerializer, :created)
       end
 
       # PUT /rooms/:id
@@ -71,11 +68,8 @@ module Api
       # :nocov:
       def update
         authorize @room
-        if @room.update(room_params)
-          respone_record_serializer(@room, RoomSerializer, :ok)
-        else
-          json_response(@room.errors.full_messages, :unprocessable_entity)
-        end
+        @room.update!(room_params)
+        respone_record_serializer(@room, RoomSerializer, :ok)
       end
 
       # DELETE /rooms/:id

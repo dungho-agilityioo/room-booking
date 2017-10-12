@@ -94,7 +94,6 @@ class Api::V1::BookingsController < ApplicationController
   end
 
 
-
   private
 
   def book_params
@@ -116,7 +115,7 @@ class Api::V1::BookingsController < ApplicationController
     if current_user.admin?
       @booking = Booking.by_room(room_id).includes(:bookable, :booker).find(params[:id])
     else
-      @booking = current_user.bookings.by_room(room_id).includes(:bookable, :booker).where(id: params[:id]).first
+      @booking = current_user.bookings.by_room(room_id).includes(:bookable, :booker).find(params[:id])
     end
   end
 
