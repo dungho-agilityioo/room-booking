@@ -102,7 +102,7 @@ module Api
       end
 
       # Assign user to a project
-      # PUT /project/assign
+      # PUT /projects/:id/assign
       # :nocov:
       swagger_api :assign_user do
         summary "Assign user to a project"
