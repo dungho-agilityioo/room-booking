@@ -5,7 +5,7 @@ class BookingPolicy < ApplicationPolicy
   end
 
   def show?
-    login?
+    true
   end
 
   def create?

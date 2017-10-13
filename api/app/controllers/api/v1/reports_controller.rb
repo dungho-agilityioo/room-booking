@@ -1,7 +1,7 @@
 module Api
   module V1
     class ReportsController < ApplicationController
-      swagger_controller :room, "Room Management"
+      swagger_controller :report, "Filter the reporting"
 
       # GET reports?
       # :nocov:
