@@ -22,15 +22,16 @@ module Api
         param! :room_id, Integer, required: false
         param! :time_start, DateTime, required: true
         param! :time_end, DateTime, required: true
-        page = params[:page].present? && params[:page] || 1
 
-        total = ReportService.by_range_date(params).count
+        room_bookings = ReportService.range_date(params)
 
-        room_bookings = ReportService.by_range_date(params).page(page)
-
-        respone_collection_serializer(room_bookings, page, total)
+        render json: {
+          data:
+            ActiveModel::Serializer::CollectionSerializer.new(
+              room_bookings, each_serializer: BookingSerializer
+            ).as_json
+        }
       end
-
     end
   end
 end
