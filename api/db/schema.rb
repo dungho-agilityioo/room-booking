@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170907151245) do
+ActiveRecord::Schema.define(version: 20171013081208) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,9 +31,27 @@ ActiveRecord::Schema.define(version: 20170907151245) do
     t.datetime "created_at"
     t.boolean  "daily",           default: false
     t.integer  "generate_for_id"
+    t.integer  "state",           default: 0
     t.index ["bookable_type", "bookable_id"], name: "index_acts_as_bookable_bookings_bookable", using: :btree
     t.index ["booker_type", "booker_id"], name: "index_acts_as_bookable_bookings_booker", using: :btree
     t.index ["project_id"], name: "index_acts_as_bookable_bookings_project", using: :btree
+  end
+
+  create_table "bookings", force: :cascade do |t|
+    t.integer  "room_id"
+    t.integer  "user_id"
+    t.string   "title"
+    t.integer  "state",          default: 0
+    t.boolean  "daily",          default: false
+    t.integer  "booking_ref_id"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.text     "description"
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.index ["room_id"], name: "index_room_booking", using: :btree
+    t.index ["state"], name: "index_state_booking", using: :btree
+    t.index ["user_id"], name: "index_user_booking", using: :btree
   end
 
   create_table "projects", force: :cascade do |t|
