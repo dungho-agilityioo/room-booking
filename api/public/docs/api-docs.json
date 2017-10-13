@@ -13,7 +13,7 @@
     },
     {
       "path": "/docs/api/v1/reports.{format}",
-      "description": "Room Management"
+      "description": "Filter the reporting"
     }
   ],
   "authorizations": null,

@@ -19,19 +19,21 @@
               "code": 401,
               "responseModel": null,
               "message": "Unauthorized"
-            },
-            {
-              "code": 404,
-              "responseModel": null,
-              "message": "Not Found"
             }
           ],
           "parameters": [
             {
               "paramType": "query",
-              "name": "page",
+              "name": "limit",
               "type": "integer",
-              "description": "Page Number",
+              "description": "Limit",
+              "required": false
+            },
+            {
+              "paramType": "query",
+              "name": "offset",
+              "type": "integer",
+              "description": "Offset",
               "required": false
             },
             {
@@ -78,17 +80,12 @@
             {
               "code": 201,
               "responseModel": "Room",
-              "message": "Success"
+              "message": "Created"
             },
             {
               "code": 401,
               "responseModel": null,
               "message": "Unauthorized"
-            },
-            {
-              "code": 403,
-              "responseModel": null,
-              "message": "Forbidden"
             },
             {
               "code": 422,
@@ -120,11 +117,6 @@
               "code": 200,
               "responseModel": "Room",
               "message": "Success"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
             },
             {
               "code": 404,
@@ -161,11 +153,6 @@
               "code": 401,
               "responseModel": null,
               "message": "Unauthorized"
-            },
-            {
-              "code": 403,
-              "responseModel": null,
-              "message": "Forbidden"
             },
             {
               "code": 404,
@@ -208,7 +195,7 @@
             {
               "code": 204,
               "responseModel": "Room",
-              "message": "Success"
+              "message": "No Content"
             },
             {
               "code": 401,
@@ -216,14 +203,14 @@
               "message": "Unauthorized"
             },
             {
-              "code": 403,
-              "responseModel": null,
-              "message": "Forbidden"
-            },
-            {
               "code": 404,
               "responseModel": null,
               "message": "Not Found"
+            },
+            {
+              "code": 422,
+              "responseModel": null,
+              "message": "Unprocessable Entity"
             }
           ],
           "parameters": [
