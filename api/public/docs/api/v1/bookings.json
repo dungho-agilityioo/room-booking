@@ -109,13 +109,6 @@
             },
             {
               "paramType": "form",
-              "name": "project_id",
-              "type": "integer",
-              "description": "Project Id",
-              "required": false
-            },
-            {
-              "paramType": "form",
               "name": "daily",
               "type": "boolean",
               "description": "Daily",
