@@ -3,9 +3,9 @@ jobs:
   deploy_to_gce:
     working_directory: ~/rooms-booking
     environment:
-      GOOGLE_PROJECT_ID: rooms-booking-177603
-      GOOGLE_PROJECT_NAME: rooms-booking
-      GOOGLE_CLUSTER_NAME: rooms-booking-staging
+      GOOGLE_PROJECT_ID: booking-182401
+      GOOGLE_PROJECT_NAME: booking
+      GOOGLE_CLUSTER_NAME: booking-staging
       GOOGLE_COMPUTE_ZONE: asia-northeast1-a
       CLOUDSDK_CORE_DISABLE_PROMPTS: 1
     docker:
@@ -40,10 +40,10 @@ jobs:
       - run:
           name: Build and push the api image
           command: |
-            docker build -f ./api/Dockerfile.circleci.staging --rm=false -t ${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1 .
+            docker build -f ./api/Dockerfile.staging --rm=false -t ${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1 .
             if [ "${CIRCLE_BRANCH}" == "develop" ] || ["${CIRCLE_BRANCH}" == "master"]; then
               docker tag ${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1 asia.gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1
-              gcloud docker -- push asia.gcr.io/${GOOGLE_PROJECT_ID}/rooms-booking-api:$CIRCLE_SHA1
+              gcloud docker -- push asia.gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1
             fi
       - run:
           name: Deploy to google cloud
@@ -70,16 +70,9 @@ jobs:
           POSTGRES_USER: ubuntu
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum api/Gemfile.lock" }}
       - run:
           name: Install Ruby Dependencies
           command: cd api && bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3 && cd ..
-      - save_cache:
-          key: gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum api/Gemfile.lock" }}
-          paths:
-            - api/vendor/bundle
       - run:
           name: Install System Dependencies
           command: sudo apt-get update && sudo apt-get install -y --no-install-recommends build-essential libpq-dev

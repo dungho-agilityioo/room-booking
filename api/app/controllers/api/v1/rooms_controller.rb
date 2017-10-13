@@ -3,6 +3,7 @@ module Api
     class RoomsController < ApplicationController
     	before_action :find_room, only: [:show, :update, :destroy]
       swagger_controller :room, "Room Management"
+      skip_before_action :authenticate_request, only: [:show]
 
       # GET /rooms
       # :nocov:
@@ -13,14 +14,12 @@ module Api
         param :query, :time_start, :DateTime, :optional, "Time Start"
         param :query, :time_end, :DateTime, :optional, "Time End"
         response :ok, "Success", :Room
-        response :unauthorized
         response :not_found
       end
       # :nocov:
       def index
         authorize Room
         param! :filter, String, required: false
-
 
         if params[:filter].blank?
           page = params[:page].present? && params[:page].to_i || 1
@@ -53,15 +52,12 @@ module Api
         summary "Fetches a single Room item"
         param :path, :id, :integer, :required, "Room Id"
         response :ok, "Success", :Room
-        response :unauthorized
         response :not_found
       end
       # :nocov:
       def show
-        authorize @room
         respone_record_serializer(@room, RoomSerializer)
       end
-
 
       # POST /rooms
       # :nocov:
@@ -70,7 +66,6 @@ module Api
         param :form, :name, :string, :required, "Room Name"
         response :created, "Success", :Room
         response :unauthorized
-        response :forbidden
         response :unprocessable_entity
       end
       # :nocov:
@@ -90,7 +85,6 @@ module Api
         response :ok, "Success", :Room
         response :unauthorized
         response :not_found
-        response :forbidden
         response :unprocessable_entity
       end
       # :nocov:
@@ -108,7 +102,6 @@ module Api
         response :no_content, "Success", :Room
         response :unauthorized
         response :not_found
-        response :forbidden
       end
       # :nocov:
       def destroy
@@ -121,7 +114,7 @@ module Api
 
       def room_params
         # whitelist params
-        params.permit(:name)
+        params.permit(:id, :name)
       end
 
       def find_room

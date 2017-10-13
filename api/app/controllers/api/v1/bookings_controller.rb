@@ -2,6 +2,7 @@ class Api::V1::BookingsController < ApplicationController
 
   before_action :find_booking, only: [:show, :destroy]
   swagger_controller :books, "Bookings Management"
+  skip_before_action :authenticate_request, only: [:show]
 
   # GET /books
   # :nocov:
@@ -24,8 +25,8 @@ class Api::V1::BookingsController < ApplicationController
       total = Booking.by_room(room_id).count
       bookings = Booking.by_room(room_id).includes(:bookable, :booker).page(page)
     else
-      total = current_user.bookings.by_room(room_id).count
-      bookings = current_user.bookings.by_room(room_id).includes(:bookable, :booker).page(page)
+      total = current_user.bookings.where(bookable_id: room_id).count
+      bookings = current_user.bookings.where(bookable_id: room_id).includes(:bookable, :booker).page(page)
     end
 
     respone_collection_serializer(bookings, page, total)
@@ -38,12 +39,10 @@ class Api::V1::BookingsController < ApplicationController
     param :path, :room_id, :integer, :required, "Room ID"
     param :path, :id, :integer, :required, "Room Booking Id"
     response :ok, "Success", :Room
-    response :unauthorized
     response :not_found
   end
   # :nocov:
   def show
-    authorize @booking || Booking
     respone_record_serializer(@booking)
   end
 
@@ -112,7 +111,10 @@ class Api::V1::BookingsController < ApplicationController
     if current_user.admin?
       @booking = Booking.by_room(room_id).includes(:bookable, :booker).find(params[:id])
     else
-      @booking = current_user.bookings.by_room(room_id).includes(:bookable, :booker).find(params[:id])
+      @booking = current_user.bookings
+        .includes(:bookable, :booker)
+        .where(bookable_id: room_id)
+        .where(id: params[:id]).first
     end
   end
 
