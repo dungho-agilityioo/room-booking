@@ -25,6 +25,19 @@ spec:
             - name: env
               subPath: api
               mountPath: "/home/app/.env"
+          env:
+            - name: POSTGRES_HOST
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql-db-credentials
+                  key: password
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql-db-credentials
+                  key: username
       volumes:
         - name: env
           configMap:
