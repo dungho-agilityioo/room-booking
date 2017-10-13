@@ -3,8 +3,7 @@
 # Exit on any error
 set -e
 
-export IMAGE=asia.gcr.io/$GOOGLE_PROJECT_ID/rooms-booking-api:$CIRCLE_SHA1
-
+export IMAGE=asia.gcr.io/$GOOGLE_PROJECT_ID/${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1
 echo "Deploying $IMAGE"
 
 # Clean any old deploy-tasks jobs

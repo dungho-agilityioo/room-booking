@@ -24,10 +24,10 @@ spec:
         - image: gcr.io/cloudsql-docker/gce-proxy:1.09
           name: cloudsql-proxy
           command: ["/cloud_sql_proxy", "--dir=/cloudsql",
-                    "-instances=rooms-booking-177603:asia-northeast1:rb-postgresql-staging=tcp:0.0.0.0:5432",
+                    "-instances=booking-182401:asia-northeast1:rb-postgresql-staging=tcp:0.0.0.0:5432",
                     "-credential_file=/secrets/cloudsql/credentials.json"]
           ports:
-            - name: port-db1
+            - name: port-db
               containerPort: 5432
           volumeMounts:
             - name: cloudsql-instance-credentials
@@ -69,4 +69,4 @@ spec:
   clusterIP: None
   ports:
     - port: 5432
-      targetPort: port-db1
+      targetPort: port-db

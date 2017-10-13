@@ -22,7 +22,7 @@ spec:
       imagePullSecrets:
         - name: docker-registry-secret
       containers:
-        - image: asia.gcr.io/rooms-booking-177603/rooms-booking-api:58e31424e786ac2782ad9c7cabb6e4da7c3ce22e
+        - image: asia.gcr.io/booking-182401/booking-api:1.0
           name: api
           imagePullPolicy: Always
           command: ["/bin/sh", -c]
@@ -71,6 +71,6 @@ spec:
   type: LoadBalancer
   ports:
     - name: http
-      port: 3000
+      port: 80
       protocol: TCP
       targetPort: 3000
