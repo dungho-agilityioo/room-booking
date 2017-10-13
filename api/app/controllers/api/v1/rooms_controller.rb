@@ -9,24 +9,27 @@ module Api
       # :nocov:
       swagger_api :index do
         summary "Fetches all Rooms"
-        param :query, :page, :integer, :optional, "Page Number"
+        param :query, :limit, :integer, :optional, "Limit"
+        param :query, :offset, :integer, :optional, "Offset"
         param_list :query, :filter, :String, :optional, "Filter For", ['', :available, :booked]
         param :query, :time_start, :DateTime, :optional, "Time Start"
         param :query, :time_end, :DateTime, :optional, "Time End"
         response :ok, "Success", :Room
-        response :not_found
+        response :unauthorized
       end
       # :nocov:
       def index
         authorize Room
         param! :filter, String, required: false
+        limit = params[:limit].to_i > 0 && params[:limit].to_i  || 10
+        offset = params[:offset].to_i > 0 && params[:offset].to_i  || 0
 
         if params[:filter].blank?
-          page = params[:page].present? && params[:page].to_i || 1
-          total = Room.count
-          rooms = Room.page(page)
 
-          respone_collection_serializer(rooms, page, total, RoomSerializer)
+          total = Room.count
+          rooms = Room.limit(limit).offset(offset)
+
+          respone_collection_serializer(rooms, limit, offset, total, RoomSerializer)
         else
           param! :time_start, DateTime, required: true
           param! :time_end, DateTime, required: true
@@ -38,10 +41,9 @@ module Api
             rs = BookingSearchService.check_availability( time_start, time_end )
             json_response({ data: rs })
           else
-            page = params[:page].present? && params[:page] || 1
             total = ReportService.get_booked(time_start, time_end).count
-            room_bookings = ReportService.get_booked(time_start, time_end).page(page)
-            respone_collection_serializer(room_bookings, page, total)
+            room_bookings = ReportService.get_booked(time_start, time_end).imit(limit).offset(offset)
+            respone_collection_serializer(room_bookings, limit, offset, total)
           end
         end
       end
@@ -64,7 +66,7 @@ module Api
       swagger_api :create do
         summary "Creates a new Room"
         param :form, :name, :string, :required, "Room Name"
-        response :created, "Success", :Room
+        response :created, "Created", :Room
         response :unauthorized
         response :unprocessable_entity
       end
@@ -99,9 +101,10 @@ module Api
       swagger_api :destroy do
         summary "Delete a Room"
         param :path, :id, :integer, :required, "Room Id"
-        response :no_content, "Success", :Room
+        response :no_content, "No Content", :Room
         response :unauthorized
         response :not_found
+        response :unprocessable_entity
       end
       # :nocov:
       def destroy

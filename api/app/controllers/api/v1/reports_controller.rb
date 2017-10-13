@@ -7,7 +7,6 @@ module Api
       # :nocov:
       swagger_api :index do
         summary "Fetches all Rooms Booking in the range time"
-        param :query, :page, :integer, :optional, "Page Number"
         param :query, :room_id, :integer, :optional, "Room Id"
         param :query, :time_start, :DateTime, :required, "Time Start"
         param :query, :time_end, :DateTime, :required, "Time End"
@@ -22,15 +21,16 @@ module Api
         param! :room_id, Integer, required: false
         param! :time_start, DateTime, required: true
         param! :time_end, DateTime, required: true
-        page = params[:page].present? && params[:page] || 1
 
-        total = ReportService.by_range_date(params).count
+        room_bookings = ReportService.range_date(params)
 
-        room_bookings = ReportService.by_range_date(params).page(page)
-
-        respone_collection_serializer(room_bookings, page, total)
+        render json: {
+          data:
+            ActiveModel::Serializer::CollectionSerializer.new(
+              room_bookings, each_serializer: BookingSerializer
+            ).as_json
+        }
       end
-
     end
   end
 end

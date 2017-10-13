@@ -24,13 +24,6 @@
           "parameters": [
             {
               "paramType": "query",
-              "name": "page",
-              "type": "integer",
-              "description": "Page Number",
-              "required": false
-            },
-            {
-              "paramType": "query",
               "name": "room_id",
               "type": "integer",
               "description": "Room Id",

@@ -9,8 +9,7 @@ module Response
       }, status: status
   end
 
-  def respone_collection_serializer(objects, page, total, model = BookingSerializer)
-    limit_value = objects.limit_value || 1
+  def respone_collection_serializer(objects, limit, offset, total, model = BookingSerializer)
 
     render json: {
         data:
@@ -18,10 +17,9 @@ module Response
             objects, each_serializer: model
           ).as_json,
         metadata: {
-          page: page,
-          per_page: limit_value,
+          limit: limit,
+          offset: offset,
           total: total,
-          total_page: (total.to_f / limit_value).ceil
         }}, status: 200
   end
 
