@@ -49,7 +49,7 @@ spec:
         - name: docker-registry-secret
       containers:
       - name: proxy
-        image: asia.gcr.io/rooms-booking-177603/rooms-booking-proxy:1.0.6
+        image: asia.gcr.io/booking-182401/booking-proxy:1.0
         imagePullPolicy: Always
         lifecycle:
             preStop:
