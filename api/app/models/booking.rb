@@ -1,13 +1,19 @@
-class Booking <  ActsAsBookable::Booking
-  validates_datetime :time_end, :after => :time_start
-  validates_datetime :time_start, :on => :create, :on_or_after => lambda { Time.zone.now }
-  before_create :reset_time_end
+class Booking <  ApplicationRecord
+  enum state: [:available, :conflict]
+
+  belongs_to :user
+  belongs_to :room
+
+  validates_datetime :end_date, :after => :start_date
+  validates_datetime :start_date, :on => :create, :on_or_after => lambda { Time.zone.now }
+  validates_presence_of :title, :room_id, :user_id, :start_date, :end_date
 
   after_create :generate_next_schedule, if: :daily?
   after_create :send_email unless Rails.env.test?
   after_destroy :remove_future_schedule, if: :daily?
+  before_save :check_overlap_and_set_state
 
-  scope :by_room, ->(room_id) { where(bookable_id: room_id) }
+  # scope :by_room, ->(room_id) { where(bookable_id: room_id) }
 
   private
 
@@ -23,7 +29,8 @@ class Booking <  ActsAsBookable::Booking
     RoomBookingService.new(self).call
   end
 
-  def reset_time_end
-    self.time_end = self.time_end - 1.second
+  # check room overlap and reset state
+  def check_overlap_and_set_state
+
   end
 end
