@@ -61,7 +61,6 @@ class Api::V1::BookingsController < ApplicationController
     Api::V1::BookingsController::add_common_params(api)
     param :form, :title, :string, :required, "Title"
     param :form, :description, :string, :optional, "Description"
-    param :form, :project_id, :integer, :optional, "Project Id"
     param :form, :daily, :boolean, :optional, "Daily"
     response :created, "Created", :RoomBooking
     response :unauthorized
