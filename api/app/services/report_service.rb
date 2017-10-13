@@ -4,24 +4,24 @@ class ReportService
     def range_date(params)
       bookings = Booking
         .includes(:bookable, :booker)
-        .where("time_start >= ?", params[:time_start].to_datetime)
-        .where("time_end <= ?", params[:time_end].to_datetime)
+        .where("start_date >= ?", params[:start_date].to_datetime)
+        .where("end_date <= ?", params[:end_date].to_datetime)
 
       bookings = bookings.where(bookable_id: params[:room_id]) if params[:room_id].present?
 
       bookings
     end
 
-    def get_booked(time_start, time_end)
+    def get_booked(start_date, end_date)
       Booking
         .includes(:bookable, :booker)
-        .where( :time_start => time_start..time_end)
+        .where( :start_date => start_date..end_date)
         .or(
             Booking
               .includes(:bookable, :booker)
-              .where( :time_end => time_start..time_end)
+              .where( :end_date => start_date..end_date)
           )
-        .order(:time_start, :bookable_id)
+        .order(:start_date, :bookable_id)
     end
   end
 end

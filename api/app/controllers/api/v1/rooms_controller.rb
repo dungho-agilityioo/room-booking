@@ -12,8 +12,8 @@ module Api
         param :query, :limit, :integer, :optional, "Limit"
         param :query, :offset, :integer, :optional, "Offset"
         param_list :query, :filter, :String, :optional, "Filter For", ['', :available, :booked]
-        param :query, :time_start, :DateTime, :optional, "Time Start"
-        param :query, :time_end, :DateTime, :optional, "Time End"
+        param :query, :start_date, :DateTime, :optional, "Time Start"
+        param :query, :end_date, :DateTime, :optional, "Time End"
         response :ok, "Success", :Room
         response :unauthorized
       end
@@ -31,18 +31,18 @@ module Api
 
           respone_collection_serializer(rooms, limit, offset, total, RoomSerializer)
         else
-          param! :time_start, DateTime, required: true
-          param! :time_end, DateTime, required: true
+          param! :start_date, DateTime, required: true
+          param! :end_date, DateTime, required: true
 
-          time_start = params[:time_start].to_datetime
-          time_end = params[:time_end].to_datetime
+          start_date = params[:start_date].to_datetime
+          end_date = params[:end_date].to_datetime
 
           if params[:filter] == 'available'
-            rs = BookingSearchService.check_availability( time_start, time_end )
+            rs = BookingSearchService.check_availability( start_date, end_date )
             json_response({ data: rs })
           else
-            total = ReportService.get_booked(time_start, time_end).count
-            room_bookings = ReportService.get_booked(time_start, time_end).imit(limit).offset(offset)
+            total = ReportService.get_booked(start_date, end_date).count
+            room_bookings = ReportService.get_booked(start_date, end_date).imit(limit).offset(offset)
             respone_collection_serializer(room_bookings, limit, offset, total)
           end
         end
@@ -72,10 +72,10 @@ module Api
       end
       # :nocov:
       def create
-        @room = Room.new(room_params)
-        authorize @room
-        @room.save!
-        respone_record_serializer(@room, RoomSerializer, :created)
+        room = Room.new(room_params)
+        authorize room
+        room.save!
+        respone_record_serializer(room, RoomSerializer, :created)
       end
 
       # PUT /rooms/:id

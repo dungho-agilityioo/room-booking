@@ -11,13 +11,13 @@
 #
 
 class BookingSerializer < ActiveModel::Serializer
-  attributes :id, :title, :description, :time_start, :time_end, :user, :room
+  attributes :id, :title, :description, :start_date, :end_date, :state, :user, :room
 
   def user
-    object.booker.slice(:id, :email, :name, :first_name, :last_name)
+    object.user.slice(:id, :email, :name, :first_name, :last_name)
   end
 
   def room
-    object.bookable.slice(:id, :name)
+    object.room.slice(:id, :name)
   end
 end

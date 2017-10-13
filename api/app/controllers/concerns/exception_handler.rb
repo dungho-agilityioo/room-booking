@@ -19,7 +19,6 @@ module ExceptionHandler
     rescue_from ActiveRecord::RecordNotFound, with: :not_found
     rescue_from ActionController::ParameterMissing, with: :bad_request
     rescue_from RailsParam::Param::InvalidParameterError, with: :bad_request
-    rescue_from ActsAsBookable::AvailabilityError, with: :bad_request
     rescue_from JWT::DecodeError, with: :unprocessable_entity
 
     private
