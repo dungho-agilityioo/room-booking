@@ -1,7 +1,7 @@
 class ReportService
 
   class << self
-    def by_range_date(params)
+    def range_date(params)
       bookings = Booking
         .includes(:bookable, :booker)
         .where("time_start >= ?", params[:time_start].to_datetime)

@@ -7,7 +7,6 @@ module Api
       # :nocov:
       swagger_api :index do
         summary "Fetches all Rooms Booking in the range time"
-        param :query, :page, :integer, :optional, "Page Number"
         param :query, :room_id, :integer, :optional, "Room Id"
         param :query, :time_start, :DateTime, :required, "Time Start"
         param :query, :time_end, :DateTime, :required, "Time End"

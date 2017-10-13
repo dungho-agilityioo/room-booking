@@ -8,28 +8,36 @@ class Api::V1::BookingsController < ApplicationController
   # :nocov:
   swagger_api :index do
     summary "Fetches all Room Bookings of Current User"
-    param :query, :page, :integer, :optional, "Page Number"
+    param :query, :limit, :integer, :optional, "Limit"
+    param :query, :offset, :integer, :optional, "Offset"
     param :path, :room_id, :integer, :required, "Room ID"
     response :ok, "Success", :Room
     response :unauthorized
-    response :not_found
   end
   # :nocov:
   def index
     authorize Booking
     param! :page, Integer
-    page = params[:page].present? && params[:page] || 1
+    limit = params[:limit].to_i > 0 && params[:limit].to_i  || 10
+    offset = params[:offset].to_i > 0 && params[:offset].to_i  || 0
     room_id = params[:room_id]
 
     if current_user.admin?
       total = Booking.by_room(room_id).count
-      bookings = Booking.by_room(room_id).includes(:bookable, :booker).page(page)
+      bookings = Booking.by_room(room_id)
+                  .includes(:bookable, :booker)
+                  .limit(limit)
+                  .offset(offset)
     else
       total = current_user.bookings.where(bookable_id: room_id).count
-      bookings = current_user.bookings.where(bookable_id: room_id).includes(:bookable, :booker).page(page)
+      bookings = current_user.bookings
+                    .where(bookable_id: room_id)
+                    .includes(:bookable, :booker)
+                    .limit(limit)
+                    .offset(offset)
     end
 
-    respone_collection_serializer(bookings, page, total)
+    respone_collection_serializer(bookings, limit, offset, total)
   end
 
   # GET /books/:id
@@ -55,7 +63,7 @@ class Api::V1::BookingsController < ApplicationController
     param :form, :description, :string, :optional, "Description"
     param :form, :project_id, :integer, :optional, "Project Id"
     param :form, :daily, :boolean, :optional, "Daily"
-    response :created, "Success", :RoomBooking
+    response :created, "Created", :RoomBooking
     response :unauthorized
     response :unprocessable_entity
   end
@@ -76,10 +84,11 @@ class Api::V1::BookingsController < ApplicationController
   swagger_api :destroy do
     summary "Delete a Room Booking of Current user"
     param :path, :room_id, :integer, :required, "Room Id"
-    param :path, :id, :integer, :required, "Room Booking Id"
-    response :no_content, "Success", :RoomBooking
+    param :path, :id, :integer, :required, "Booking Id"
+    response :no_content, "No Content", :RoomBooking
     response :unauthorized
     response :not_found
+    response :unprocessable_entity
   end
   # :nocov:
   def destroy
