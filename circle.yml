@@ -40,7 +40,7 @@ jobs:
       - run:
           name: Build and push the api image
           command: |
-            docker build -f ./api/Dockerfile.staging --rm=false -t ${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1 .
+            docker build -f ./api/Dockerfile.circle.staging --rm=false -t ${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1 .
             if [ "${CIRCLE_BRANCH}" == "develop" ] || ["${CIRCLE_BRANCH}" == "master"]; then
               docker tag ${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1 asia.gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1
               gcloud docker -- push asia.gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1
