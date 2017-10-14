@@ -38,11 +38,11 @@ module Api
           end_date = params[:end_date].to_datetime
 
           if params[:filter] == 'available'
-            rs = BookingSearchService.check_availability( start_date, end_date )
+            rs = BookingService.check_availability( start_date, end_date )
             json_response({ data: rs })
           else
             total = ReportService.get_booked(start_date, end_date).count
-            room_bookings = ReportService.get_booked(start_date, end_date).imit(limit).offset(offset)
+            room_bookings = ReportService.get_booked(start_date, end_date).limit(limit).offset(offset)
             respone_collection_serializer(room_bookings, limit, offset, total)
           end
         end

@@ -1,4 +1,4 @@
-class BookingSearchService
+class BookingService
   class << self
 
     def check_availability(start_date, end_date)
@@ -24,6 +24,8 @@ class BookingSearchService
       end
       availables
     end
+
+
 
     # private
 
