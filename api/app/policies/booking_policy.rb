@@ -12,7 +12,7 @@ class BookingPolicy < ApplicationPolicy
     login?
   end
 
-  def search?
+  def update?
     login?
   end
 

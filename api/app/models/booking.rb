@@ -11,11 +11,39 @@ class Booking <  ApplicationRecord
   after_create :generate_next_schedule, if: :daily?
   after_create :send_email unless Rails.env.test?
   after_destroy :remove_future_schedule, if: :daily?
-  before_save :check_overlap_and_set_state
+  before_save :check_duplicate
+  before_create :set_state
 
-  # scope :by_room, ->(room_id) { where(bookable_id: room_id) }
+  class << self
+    # Check if a given interval overlaps this interval
+    def overlaps?(booking)
+      overlap_query(booking).count() > 0
+    end
+
+    # Check duplicate booking of user
+    def duplicate?(booking)
+      overlap_query(booking)
+      .where(user_id: booking.user_id).count() > 0
+    end
+
+    def overlap_query(booking)
+      self.where(room_id: booking.room_id)
+      .where("end_date::TIMESTAMP >= ?", booking.start_date)
+      .where("start_date::TIMESTAMP < ?", booking.end_date)
+    end
+
+  end
 
   private
+  def check_duplicate
+    if Booking.duplicate?(self)
+      raise ExceptionHandler::BookingDuplicate.new('Booking is overlapping')
+    end
+  end
+
+  def set_state
+    self.state = Booking.overlaps?(self) ? :conflict : :available
+  end
 
   def send_email
     PubsubService.new.publish_books_message(self)
@@ -29,8 +57,4 @@ class Booking <  ApplicationRecord
     RoomBookingService.new(self).call
   end
 
-  # check room overlap and reset state
-  def check_overlap_and_set_state
-
-  end
 end
