@@ -9,18 +9,6 @@
       "operations": [
         {
           "summary": "Fetches all Rooms",
-          "responseMessages": [
-            {
-              "code": 200,
-              "responseModel": "Room",
-              "message": "Success"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
-            }
-          ],
           "parameters": [
             {
               "paramType": "query",
@@ -53,17 +41,29 @@
             },
             {
               "paramType": "query",
-              "name": "time_start",
+              "name": "start_date",
               "type": "DateTime",
               "description": "Time Start",
               "required": false
             },
             {
               "paramType": "query",
-              "name": "time_end",
+              "name": "end_date",
               "type": "DateTime",
               "description": "Time End",
               "required": false
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": "Room",
+              "message": "Success"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
             }
           ],
           "nickname": "Api::V1::Rooms#index",
@@ -76,6 +76,15 @@
       "operations": [
         {
           "summary": "Creates a new Room",
+          "parameters": [
+            {
+              "paramType": "form",
+              "name": "name",
+              "type": "string",
+              "description": "Room Name",
+              "required": true
+            }
+          ],
           "responseMessages": [
             {
               "code": 201,
@@ -93,15 +102,6 @@
               "message": "Unprocessable Entity"
             }
           ],
-          "parameters": [
-            {
-              "paramType": "form",
-              "name": "name",
-              "type": "string",
-              "description": "Room Name",
-              "required": true
-            }
-          ],
           "nickname": "Api::V1::Rooms#create",
           "method": "post"
         }
@@ -112,6 +112,15 @@
       "operations": [
         {
           "summary": "Fetches a single Room item",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Room Id",
+              "required": true
+            }
+          ],
           "responseMessages": [
             {
               "code": 200,
@@ -124,15 +133,6 @@
               "message": "Not Found"
             }
           ],
-          "parameters": [
-            {
-              "paramType": "path",
-              "name": "id",
-              "type": "integer",
-              "description": "Room Id",
-              "required": true
-            }
-          ],
           "nickname": "Api::V1::Rooms#show",
           "method": "get"
         }
@@ -143,6 +143,22 @@
       "operations": [
         {
           "summary": "Update a Room",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Room Id",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "name",
+              "type": "string",
+              "description": "Room Name",
+              "required": true
+            }
+          ],
           "responseMessages": [
             {
               "code": 200,
@@ -165,22 +181,6 @@
               "message": "Unprocessable Entity"
             }
           ],
-          "parameters": [
-            {
-              "paramType": "path",
-              "name": "id",
-              "type": "integer",
-              "description": "Room Id",
-              "required": true
-            },
-            {
-              "paramType": "form",
-              "name": "name",
-              "type": "string",
-              "description": "Room Name",
-              "required": true
-            }
-          ],
           "nickname": "Api::V1::Rooms#update",
           "method": "patch"
         }
@@ -191,6 +191,15 @@
       "operations": [
         {
           "summary": "Delete a Room",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Room Id",
+              "required": true
+            }
+          ],
           "responseMessages": [
             {
               "code": 204,
@@ -211,15 +220,6 @@
               "code": 422,
               "responseModel": null,
               "message": "Unprocessable Entity"
-            }
-          ],
-          "parameters": [
-            {
-              "paramType": "path",
-              "name": "id",
-              "type": "integer",
-              "description": "Room Id",
-              "required": true
             }
           ],
           "nickname": "Api::V1::Rooms#destroy",
