@@ -1,11 +1,11 @@
 require 'rails_helper'
 
-describe ProjectPolicy do
-  subject { ProjectPolicy.new(user, project) }
+describe BookingPolicy do
+  subject { BookingPolicy.new(user, room) }
 
-  context 'User admin is granted permission' do
+  context 'User login granted permission' do
     let(:user) { create(:user, role: :admin) }
-    let(:project) { create(:project) }
+    let(:room) { create(:room) }
 
     it { is_expected.to permit_action(:index) }
     it { is_expected.to permit_action(:new) }
@@ -18,7 +18,7 @@ describe ProjectPolicy do
 
   context 'The staff is do not granted permission' do
     let(:user) { create(:user) }
-    let(:project) { create(:project) }
+    let(:room) { create(:room) }
 
     it { is_expected.to_not permit_action(:new) }
     it { is_expected.to_not permit_action(:create) }
