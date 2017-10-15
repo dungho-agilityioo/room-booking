@@ -15,6 +15,7 @@ class ReportService
     def get_booked(start_date, end_date)
       Booking
         .includes(:room, :user)
+        .where(state: :available)
         .where( :start_date => start_date..end_date)
         .or(
             Booking

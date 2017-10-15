@@ -1,49 +1,47 @@
 class BookingService
   class << self
 
-    def check_availability(start_date, end_date)
-      availables = []
-      start_date = Time.zone.now if start_date < Time.zone.now
-
-      return availables if end_date < start_date
+    def get_availables(start_date, end_date)
+      available_slots = []
 
       booked = ReportService.get_booked(start_date, end_date)
 
       rooms = Room.all
-      time_search = [ start_date, end_date ]
+      filter_time = [ start_date, end_date ]
 
       rooms.each do |room|
-        books = booked.select {|b| b.bookable_id == room.id }
+        room_booked = booked.select {|b| b.room_id == room.id }
         room_name = room.name
 
-        if books.present?
-          get_available(books, availables, time_search, room_name )
+        if room_booked.present?
+          room_available(booked, available_slots, filter_time, room_name )
         else
-          availables << { room: room_name, start_date: start_date, end_date: end_date }
+          available_slots << { room: room_name, start_date: start_date, end_date: end_date }
         end
       end
-      availables
-    end
 
+      available_slots
+    end
 
 
     # private
 
-    def get_available(books, availables, time_search, room_name)
+    def room_available(booked, available_slots, filter_time, room_name)
 
-      range_date  = (merge_date(books) + time_search).uniq.sort
+      range_date  = (pluck_date(booked) + filter_time).uniq.sort
       dates = split_date(range_date)
-      booked_dates = flatter_date(books)
+      booked_dates = booked.as_json.map { |b| b.slice("start_date", "end_date") }
 
       dates.each do |d|
+        start_date = d[:start_date] + 1.second
+        end_date = d[:end_date] - 1.second
+        overlaps = booked_dates.any? { |booking| (booking["start_date"]..booking["end_date"]).overlaps?(start_date..end_date) }
 
-        exists = booked_dates.any? { |h| (h["start_date"]..h["end_date"]).overlaps?((d[:start_date] + 1.second )..d[:end_date]) }
-
-        availables << { room: room_name, start_date: d[:start_date], end_date: d[:end_date] } unless exists
-
+        available_slots << { room: room_name, start_date: start_date, end_date: end_date } unless overlaps
       end
     end
 
+    # Split one-dimensional array into two-dimensional array
     # Input: [Tue, 12 Sep 2017 01:00:00 UTC +00:00, Tue, 12 Sep 2017 03:00:00 UTC +00:00, Tue, 12 Sep 2017 06:00:00 UTC +00:00, Tue, 12 Sep 2017 07:00:00 UTC +00:00]
     # Output: [
     #   {start_date: Tue, 12 Sep 2017 01:00:00 UTC +00:00, end_date: Tue, 12 Sep 2017 03:00:00 UTC +00:00}
@@ -52,22 +50,16 @@ class BookingService
     # ]
     def split_date(dates)
       rs = []
-      dates.each_cons(2) do |ele, next_ele|
-        rs << { start_date: ele, end_date: next_ele }
+      dates.each_cons(2) do |date, next_date|
+        rs << { start_date: date, end_date: next_date}
       end
-
       rs
     end
 
-    def merge_date(books)
-      start_date = books.pluck(:start_date).map(&:to_datetime)
-      end_date = books.pluck(:end_date).map(&:to_datetime)
-
-      start_date + end_date
+    # pluck start and end date
+    def pluck_date(booked)
+      booked.pluck(:start_date).map(&:to_datetime) + booked.pluck(:end_date).map(&:to_datetime)
     end
 
-    def flatter_date(books)
-      books.as_json.map { |b| b.slice("start_date", "end_date") }
-    end
   end
 end

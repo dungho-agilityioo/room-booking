@@ -10,10 +10,9 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
   before(:each) { request.headers["Authorization"] = headers["Authorization"] }
 
   describe 'GET /rooms' do
-    let!(:rooms) { create_list(:room, 15) }
-
     context '#getall' do
 
+      let!(:rooms) { create_list(:room, 15) }
       context '#limit, #offset is blank' do
         before { get :index }
 
@@ -37,9 +36,11 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
 
     context '#filter' do
       before(:all) do
+        room = create(:room)
         15.times do |t|
           create(
               :booking_all,
+              room: room,
               start_date: Date.today.next_week + t.hours,
               end_date: Date.today.next_week + t.hours + 30.minutes
             )
@@ -90,19 +91,15 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
 
       context '#available' do
         context 'when the request valid' do
-
-          context '#limit, #offset is blank' do
-            before {
-              get :index, params: {
-                filter: 'available',
-                start_date: Date.today.next_week + 3.hours,
-                end_date: Date.today.next_week + 7.hours
-              }
+          before {
+            get :index, params: {
+              filter: 'available',
+              start_date: Date.today.next_week + 3.hours,
+              end_date: Date.today.next_week + 7.hours
             }
-            it { should respond_with(200) }
-            specify { expect(json.size).to eq(5) }
-            specify { expect(metadata['total']).to eq(5) }
-          end
+          }
+          it { should respond_with(200) }
+          specify { expect(json.size).to eq(4) }
         end
 
         context 'when the request invalid' do

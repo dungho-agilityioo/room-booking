@@ -31,7 +31,6 @@ ActiveRecord::Schema.define(version: 20171013081208) do
     t.datetime "created_at"
     t.boolean  "daily",           default: false
     t.integer  "generate_for_id"
-    t.integer  "state",           default: 0
     t.index ["bookable_type", "bookable_id"], name: "index_acts_as_bookable_bookings_bookable", using: :btree
     t.index ["booker_type", "booker_id"], name: "index_acts_as_bookable_bookings_booker", using: :btree
     t.index ["project_id"], name: "index_acts_as_bookable_bookings_project", using: :btree
@@ -54,28 +53,12 @@ ActiveRecord::Schema.define(version: 20171013081208) do
     t.index ["user_id"], name: "index_user_booking", using: :btree
   end
 
-  create_table "projects", force: :cascade do |t|
-    t.string   "name"
-    t.integer  "status",     default: 0
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-  end
-
   create_table "rooms", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text     "schedule"
     t.integer  "capacity"
-  end
-
-  create_table "user_projects", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "project_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["project_id"], name: "index_user_projects_on_project_id", using: :btree
-    t.index ["user_id"], name: "index_user_projects_on_user_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|
@@ -104,6 +87,4 @@ ActiveRecord::Schema.define(version: 20171013081208) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
-  add_foreign_key "user_projects", "projects"
-  add_foreign_key "user_projects", "users"
 end

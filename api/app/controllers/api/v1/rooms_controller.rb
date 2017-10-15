@@ -38,7 +38,11 @@ module Api
           end_date = params[:end_date].to_datetime
 
           if params[:filter] == 'available'
-            rs = BookingService.check_availability( start_date, end_date )
+            start_date = Time.zone.now if start_date < Time.zone.now
+
+            json_response({ data: []}) if end_date < start_date
+
+            rs = BookingService.get_availables( start_date, end_date )
             json_response({ data: rs })
           else
             total = ReportService.get_booked(start_date, end_date).count
