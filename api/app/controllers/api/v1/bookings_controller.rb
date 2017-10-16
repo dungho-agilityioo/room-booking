@@ -1,9 +1,9 @@
 class Api::V1::BookingsController < ApplicationController
 
-  before_action :find_booking, only: [:show, :destroy]
+  before_action :find_booking, only: [:show, :destroy, :update]
   before_action :find_room, only: [:create, :update]
-  swagger_controller :bookings, "Bookings Management"
   skip_before_action :authenticate_request, only: [:show]
+  swagger_controller :bookings, "Bookings Management"
 
   # GET /bookings
   # :nocov:
@@ -11,31 +11,25 @@ class Api::V1::BookingsController < ApplicationController
     summary "Fetches all Room Bookings of Current User"
     param :query, :limit, :integer, :optional, "Limit"
     param :query, :offset, :integer, :optional, "Offset"
-    param :path, :room_id, :integer, :required, "Room ID"
     response :ok, "Success", :Room
     response :unauthorized
   end
   # :nocov:
   def index
     authorize Booking
-    param! :page, Integer
+    param! :limit, Integer
+    param! :offset, Integer
     limit = params[:limit].to_i > 0 && params[:limit].to_i  || 10
     offset = params[:offset].to_i > 0 && params[:offset].to_i  || 0
-    room_id = params[:room_id]
 
-    if current_user.admin?
-      total = Booking.by_room(room_id).count
-      bookings = Booking.by_room(room_id)
-                  .includes(:room, :user)
-                  .limit(limit)
-                  .offset(offset)
+    bookings = Booking.includes(:room, :user)
+                .limit(limit)
+                .offset(offset)
+    if current_user.staff?
+      total = Booking.where(user_id: current_user.id).count
+      bookings = bookings.where(user_id: current_user.id)
     else
-      total = current_user.bookings.where(bookable_id: room_id).count
-      bookings = current_user.bookings
-                    .where(bookable_id: room_id)
-                    .includes(:room, :user)
-                    .limit(limit)
-                    .offset(offset)
+      total = Booking.count
     end
 
     respone_collection_serializer(bookings, limit, offset, total)
@@ -60,10 +54,7 @@ class Api::V1::BookingsController < ApplicationController
   swagger_api :create do |api|
     summary "Creates a new Room Booking"
     Api::V1::BookingsController::add_common_params(api)
-    param :form, :title, :string, :required, "Title"
-    param :form, :description, :string, :optional, "Description"
-    param :form, :daily, :boolean, :optional, "Daily"
-    response :created, "Created", :RoomBooking
+    response :created, "Created", :Booking
     response :unauthorized
     response :unprocessable_entity
   end
@@ -77,14 +68,35 @@ class Api::V1::BookingsController < ApplicationController
     respone_record_serializer(booking, BookingSerializer, :created)
   end
 
+  # PUT /bookings/:id
+  # :nocov:
+  swagger_api :update do |api|
+    summary "Update a Room Booking"
+    param :path, :id, :integer, :required, "Booking ID"
+    Api::V1::BookingsController::add_common_params(api)
+    param_list :form, :state, :String, :optional, "State", [:available, :conflict]
+    response :ok, "Success", :Booking
+    response :unauthorized
+    response :not_found
+    response :unprocessable_entity
+  end
+  # :nocov:
+  def update
+    authorize @booking
+    request_param
+    data = convert_param.merge(user_id: current_user.id)
+    data =  data.merge(state: params[:state]) if current_user.admin?
+    @booking.update!(data)
+
+    respone_record_serializer(@booking, BookingSerializer)
+  end
 
   # DELETE /bookings/:id
   # :nocov:
   swagger_api :destroy do
     summary "Delete a Room Booking of Current user"
-    param :path, :room_id, :integer, :required, "Room Id"
     param :path, :id, :integer, :required, "Booking Id"
-    response :no_content, "No Content", :RoomBooking
+    response :no_content, "No Content", :Booking
     response :unauthorized
     response :not_found
     response :unprocessable_entity

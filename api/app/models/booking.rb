@@ -27,9 +27,12 @@ class Booking <  ApplicationRecord
     end
 
     def overlap_query(booking)
-      self.where(room_id: booking.room_id)
+      query = self.where(room_id: booking.room_id)
       .where("end_date::TIMESTAMP >= ?", booking.start_date)
       .where("start_date::TIMESTAMP < ?", booking.end_date)
+
+      query = query.where.not(id: booking.id) unless booking.new_record?
+      query
     end
 
   end
