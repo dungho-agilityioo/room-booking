@@ -16,6 +16,7 @@ module Api
         param :query, :end_date, :DateTime, :optional, "Time End"
         response :ok, "Success", :Room
         response :unauthorized
+        response :unprocessable_entity
       end
       # :nocov:
       def index
@@ -113,7 +114,7 @@ module Api
       # :nocov:
       def destroy
         authorize @room
-        @room.destroy
+        @room.destroy!
         json_response( nil, :no_content)
       end
 

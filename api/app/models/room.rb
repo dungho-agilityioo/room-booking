@@ -14,5 +14,14 @@ class Room < ApplicationRecord
   has_many :bookings
   has_many :users, through: :bookings
 	validates_presence_of :name
+  before_destroy :check_for_booking
+
+  private
+
+  def check_for_booking
+    if bookings.any?
+      raise ActiveRecord::RecordNotDestroyed, 'cannot delete room that has already been booking'
+    end
+  end
 
 end

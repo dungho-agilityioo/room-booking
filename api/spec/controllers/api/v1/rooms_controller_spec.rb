@@ -195,6 +195,17 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
       it { should respond_with(404) }
       specify { expect(response.body).to match(/Couldn't find Room/) }
     end
+
+    context 'when room that has already been booking' do
+      before(:each) do
+        room = create(:room)
+        create(:booking_with_room, room: room)
+        delete :destroy, params: { id: room.id }
+      end
+
+      it { should respond_with(500) }
+      specify { expect(response.body).to match(/cannot delete room that has already been booking/) }
+    end
   end
 
 end
