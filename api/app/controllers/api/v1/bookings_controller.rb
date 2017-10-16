@@ -13,6 +13,7 @@ class Api::V1::BookingsController < ApplicationController
     param :query, :offset, :integer, :optional, "Offset"
     response :ok, "Success", :Room
     response :unauthorized
+    response :unprocessable_entity
   end
   # :nocov:
   def index

@@ -1,11 +1,12 @@
-class Api::V1::BackgroundsController < ApplicationController
+class Api::V1::NotificationsController < ApplicationController
   skip_before_action :authenticate_request
   before_action :auth_token
 
-  # GET /backgrounds
-  # Get all booking before 10 minutes to get started
+  # GET /notifications?time=<time>
+  # Get all booking before <time> to get started
   def index
-    time = (Time.now + 10.minute ).strftime('%Y-%m-%d %H:%M')
+    param! :time, DateTime, required: true
+    time = params[:time].to_datetime.strftime('%Y-%m-%d %H:%M')
 
     bookings = ReminderService.booked_remider(time)
     render json: {
@@ -16,11 +17,10 @@ class Api::V1::BackgroundsController < ApplicationController
         }
   end
 
-  # POST /backgrounds/push
+  # POST /notifications/push
   def send_email
     message = nil
     body = request.body.read
-    logger.info "Body >> #{body}"
     message = JSON.parse body unless body.blank?
 
     unless message.nil?
@@ -29,7 +29,7 @@ class Api::V1::BackgroundsController < ApplicationController
       UserMailer.room_booking(attributes).deliver_now
     end
 
-    json_response( {sucessed: true} )
+    json_response( {succeed: true} )
   end
 
   private

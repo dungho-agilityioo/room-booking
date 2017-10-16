@@ -22,7 +22,7 @@ module ExceptionHandler
     rescue_from ActionController::ParameterMissing, with: :bad_request
     rescue_from RailsParam::Param::InvalidParameterError, with: :bad_request
     rescue_from JWT::DecodeError, with: :unprocessable_entity
-    # rescue_from ActiveRecord::StatementInvalid, with: :internal_server
+    rescue_from ActiveRecord::RecordNotDestroyed, with: :internal_server
 
     private
 

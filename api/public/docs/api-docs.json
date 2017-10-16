@@ -9,7 +9,7 @@
     },
     {
       "path": "/docs/api/v1/rooms.{format}",
-      "description": "Room Management"
+      "description": "Rooms Management"
     },
     {
       "path": "/docs/api/v1/reports.{format}",

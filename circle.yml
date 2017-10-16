@@ -89,7 +89,7 @@ workflows:
   build-and-test:
     jobs:
       - test
-      - deploy_to_gce
+      - deploy_to_gce:
           requires:
             - test
 
