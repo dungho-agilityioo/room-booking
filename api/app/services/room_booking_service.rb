@@ -23,8 +23,8 @@ class RoomBookingService
     Booking
       .where(bookable: @room)
       .where(booker: @user)
-      .where('time_start > ?', Time.zone.now)
-      .order(:time_start)
+      .where('start_date > ?', Time.zone.now)
+      .order(:start_date)
   end
 
   def gen_next_schedule
@@ -35,33 +35,33 @@ class RoomBookingService
       next_occurrences = @room_booking
                             .bookable
                             .schedule
-                            .next_occurrences(next_number, nex_schedule.first.time_start.to_time)
+                            .next_occurrences(next_number, nex_schedule.first.start_date.to_time)
       next_occurrences.each do |occurrence|
         @user.book! @room,
             title: @room_booking.title,
-            time_start: time_start(occurrence),
-            time_end: time_end(occurrence),
+            start_date: start_date(occurrence),
+            end_date: end_date(occurrence),
             description: @room_booking.description,
             amount: 1,
-            generate_for_id: @room_booking.id
+            booking_ref_id: @room_booking.id
       end
     end
   end
 
-  def time_start(occurrence)
-    booking_time_start = @room_booking.time_start.to_datetime
-    DateTime.new(occurrence.year, occurrence.month, occurrence.day, booking_time_start.hour, booking_time_start.minute)
+  def start_date(occurrence)
+    booking_start_date = @room_booking.start_date.to_datetime
+    DateTime.new(occurrence.year, occurrence.month, occurrence.day, booking_start_date.hour, booking_start_date.minute)
   end
 
-  def time_end(occurrence)
-    booking_time_end = @room_booking.time_end.to_datetime
-    DateTime.new(occurrence.year, occurrence.month, occurrence.day, booking_time_end.hour, booking_time_end.minute)
+  def end_date(occurrence)
+    booking_end_date = @room_booking.end_date.to_datetime
+    DateTime.new(occurrence.year, occurrence.month, occurrence.day, booking_end_date.hour, booking_end_date.minute)
   end
 
   def remove_future_schedule
     Booking
-      .where(generate_for_id: @room_booking.id)
-      .where('time_start > ?', Time.zone.now)
+      .where(booking_ref_id: @room_booking.id)
+      .where('start_date > ?', Time.zone.now)
       .delete_all
   end
 end

@@ -5,7 +5,7 @@ jobs:
     environment:
       GOOGLE_PROJECT_ID: booking-182401
       GOOGLE_PROJECT_NAME: booking
-      GOOGLE_CLUSTER_NAME: booking-staging
+      GOOGLE_CLUSTER_NAME: booking-stag
       GOOGLE_COMPUTE_ZONE: asia-northeast1-a
       CLOUDSDK_CORE_DISABLE_PROMPTS: 1
     docker:
@@ -88,8 +88,8 @@ workflows:
   version: 2
   build-and-test:
     jobs:
-      # - test
+      - test
       - deploy_to_gce
-          # requires:
-          #   - test
+          requires:
+            - test
 

@@ -8,9 +8,12 @@ class ApplicationController < ActionController::Base
 
   # :nocov:
   def self.add_common_params(api)
-    api.param :path, :room_id, :integer, :required, "Room Id"
-    api.param :form, :time_start, :DateTime, :required, "Time Start"
-    api.param :form, :time_end, :DateTime, :required, "Time End"
+    api.param :form, :room_id, :integer, :required, "Room Id"
+    api.param :form, :title, :string, :required, "Title"
+    api.param :form, :description, :string, :optional, "Description"
+    api.param :form, :daily, :boolean, :optional, "Daily"
+    api.param :form, :start_date, :DateTime, :required, "Time Start"
+    api.param :form, :end_date, :DateTime, :required, "Time End"
   end
   # :nocov:
   class << self

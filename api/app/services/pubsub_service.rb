@@ -27,11 +27,12 @@ class PubsubService
       topic = get_or_create_topic ENV['PUBSUB_TOPIC_SEND_MAIL']
       subscribe_if_not_exists(topic, "#{ENV['PUBSUB_TOPIC_SEND_MAIL']}-subscription")
       topic.publish "send mail completed",
-        user_name: booking.booker&.name,
-        room_name: booking.bookable&.name,
+        user_name: booking.user&.name,
+        room_name: booking.room&.name,
         title: booking.title,
-        start_date: booking.time_start,
-        end_date: booking.time_end,
+        state: booking.state,
+        start_date: booking.start_date,
+        end_date: booking.end_date,
         daily: booking.daily
     end
 

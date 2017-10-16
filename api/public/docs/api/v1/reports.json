@@ -9,18 +9,6 @@
       "operations": [
         {
           "summary": "Fetches all Rooms Booking in the range time",
-          "responseMessages": [
-            {
-              "code": 200,
-              "responseModel": "Room",
-              "message": "Success"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
-            }
-          ],
           "parameters": [
             {
               "paramType": "query",
@@ -31,17 +19,29 @@
             },
             {
               "paramType": "query",
-              "name": "time_start",
+              "name": "start_date",
               "type": "DateTime",
               "description": "Time Start",
               "required": true
             },
             {
               "paramType": "query",
-              "name": "time_end",
+              "name": "end_date",
               "type": "DateTime",
               "description": "Time End",
               "required": true
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": "Room",
+              "message": "Success"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
             }
           ],
           "nickname": "Api::V1::Reports#index",

@@ -39,10 +39,9 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: { case_sensitive: false }
 
   after_initialize :set_default_role, :if => :new_record?
-  acts_as_booker
 
-  has_many :user_projects
-  has_many :projects, through: :user_projects
+  has_many :bookings
+  has_many :rooms, through: :bookings
 
   def set_default_role
     self.role ||= :staff
