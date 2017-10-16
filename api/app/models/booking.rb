@@ -52,11 +52,11 @@ class Booking <  ApplicationRecord
   end
 
   def generate_next_schedule
-    RoomBookingService.new(self, 7).call
+    # RoomBookingService.new(self, 7).call
   end
 
   def remove_future_schedule
-    RoomBookingService.new(self).call
+    # RoomBookingService.new(self).call
   end
 
 end
