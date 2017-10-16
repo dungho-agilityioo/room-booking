@@ -11,27 +11,13 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
 
   describe 'GET /rooms' do
     context '#getall' do
-
       let!(:rooms) { create_list(:room, 15) }
-      context '#limit, #offset is blank' do
-        before { get :index }
+      before { get :index }
 
-        it { should respond_with(200) }
-        specify { expect(json).not_to be_empty }
-        specify { expect(json.size).to eq(10) }
-        specify { expect(metadata['total']).to eq(15) }
+      it { should respond_with(200) }
+      specify { expect(json).not_to be_empty }
+      specify { expect(json.size).to eq(15) }
 
-      end
-
-      context '#limit, #offset is present' do
-        before { get :index, params: { limit: 8, offset: 8 } }
-
-        it { should respond_with(200) }
-        specify { expect(json).not_to be_empty }
-        specify { expect(json.size).to eq(7) }
-        specify { expect(metadata['total']).to eq(15) }
-
-      end
     end
 
     context '#filter' do

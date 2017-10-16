@@ -22,15 +22,15 @@ module Api
       def index
         authorize Room
         param! :filter, String, required: false
-        limit = params[:limit].to_i > 0 && params[:limit].to_i  || 10
-        offset = params[:offset].to_i > 0 && params[:offset].to_i  || 0
 
         if params[:filter].blank?
 
-          total = Room.count
-          rooms = Room.limit(limit).offset(offset)
-
-          respone_collection_serializer(rooms, limit, offset, total, RoomSerializer)
+          render json: {
+            data:
+              ActiveModel::Serializer::CollectionSerializer.new(
+                Room.all, each_serializer: BookingSerializer
+              ).as_json
+          }
         else
           param! :start_date, DateTime, required: true
           param! :end_date, DateTime, required: true
@@ -47,6 +47,9 @@ module Api
             json_response({ data: rs })
           # get the room had booked
           else
+            limit = params[:limit].to_i > 0 && params[:limit].to_i  || 10
+            offset = params[:offset].to_i > 0 && params[:offset].to_i  || 0
+
             total = ReportService.get_booked(start_date, end_date).count
             room_bookings = ReportService.get_booked(start_date, end_date).limit(limit).offset(offset)
             respone_collection_serializer(room_bookings, limit, offset, total)
