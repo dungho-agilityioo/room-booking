@@ -41,8 +41,7 @@ class AuthorizeApiRequest
 
   # decode authentication token
   def decoded_auth_token
-    secret = Rails.application.secrets.secret_key_base
-    @decoded_auth_token ||= JsonWebToken.decode(http_auth_header, secret)
+    @decoded_auth_token ||= JsonWebToken.decode(http_auth_header)
   end
 
   # check for token in `Authorization` header
