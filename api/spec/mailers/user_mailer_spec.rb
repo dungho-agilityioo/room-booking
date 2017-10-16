@@ -2,16 +2,16 @@ require 'rails_helper'
 
 RSpec.describe UserMailer do
   let(:user) { create(:user) }
-  let(:room_booing) {  create(:booked_with_user, booker: user) }
+  let(:booking) {  create(:booking_with_user, user: user) }
 
   describe '#send email' do
     let(:mail) { described_class.room_booking(
-      { user_name: room_booing.booker&.name,
-        room_name: room_booing.bookable&.name,
-        title: room_booing.title,
-        start_date: room_booing.time_start,
-        end_date: room_booing.time_end,
-        daily: room_booing.daily
+      { user_name: booking.user&.name,
+        room_name: booking.room&.name,
+        title: booking.title,
+        start_date: booking.start_date,
+        end_date: booking.end_date,
+        daily: booking.daily
       }.as_json).deliver_now }
 
     it 'renders the subject' do
@@ -29,22 +29,22 @@ RSpec.describe UserMailer do
 
     it 'assign the title' do
       expect(mail.body)
-        .to match(/- Title: #{room_booing.title}/)
+        .to match(/- Title: #{booking.title}/)
     end
 
     it 'assign the room name' do
       expect(mail.body)
-        .to match(/- Room: #{room_booing.bookable.name}/)
+        .to match(/- Room: #{booking.room.name}/)
     end
 
     it 'assign the start date' do
       expect(mail.body)
-        .to match(/- Start date: #{room_booing.time_start.strftime('%m-%d-%Y %H-%M')}/)
+        .to match(/- Start date: #{booking.start_date.strftime('%m-%d-%Y %H-%M')}/)
     end
 
     it 'assign the end date' do
       expect(mail.body)
-        .to match(/- End date: #{room_booing.time_end.strftime('%m-%d-%Y %H-%M')}/)
+        .to match(/- End date: #{booking.end_date.strftime('%m-%d-%Y %H-%M')}/)
     end
   end
 

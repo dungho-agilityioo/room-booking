@@ -7,6 +7,7 @@ module ExceptionHandler
   class MissingToken < StandardError; end
   class InvalidToken < StandardError; end
   class ExpiredSignature < StandardError; end
+  class BookingDuplicate < StandardError; end
 
   included do
 
@@ -15,12 +16,13 @@ module ExceptionHandler
     rescue_from ExceptionHandler::AuthenticationError, with: :unauthorized_request
     rescue_from ExceptionHandler::MissingToken, with: :unprocessable_entity
     rescue_from ExceptionHandler::InvalidToken, with: :unprocessable_entity
+    rescue_from ExceptionHandler::BookingDuplicate, with: :unprocessable_entity
     rescue_from ::Pundit::NotAuthorizedError, with: :pundit_not_authorized
     rescue_from ActiveRecord::RecordNotFound, with: :not_found
     rescue_from ActionController::ParameterMissing, with: :bad_request
     rescue_from RailsParam::Param::InvalidParameterError, with: :bad_request
-    rescue_from ActsAsBookable::AvailabilityError, with: :bad_request
     rescue_from JWT::DecodeError, with: :unprocessable_entity
+    # rescue_from ActiveRecord::StatementInvalid, with: :internal_server
 
     private
 
@@ -52,6 +54,11 @@ module ExceptionHandler
 
     def bad_request(e)
       exception_message(e.message, :bad_request)
+    end
+
+    # JSON response with message; Status code 500 - Internal Server Error
+    def internal_server(e)
+      exception_message(e.message, 500)
     end
   end
 end

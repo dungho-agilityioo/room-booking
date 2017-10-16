@@ -8,8 +8,8 @@ module Api
       swagger_api :index do
         summary "Fetches all Rooms Booking in the range time"
         param :query, :room_id, :integer, :optional, "Room Id"
-        param :query, :time_start, :DateTime, :required, "Time Start"
-        param :query, :time_end, :DateTime, :required, "Time End"
+        param :query, :start_date, :DateTime, :required, "Time Start"
+        param :query, :end_date, :DateTime, :required, "Time End"
         response :ok, "Success", :Room
         response :unauthorized
       end
@@ -19,8 +19,8 @@ module Api
 
         param! :page, Integer
         param! :room_id, Integer, required: false
-        param! :time_start, DateTime, required: true
-        param! :time_end, DateTime, required: true
+        param! :start_date, DateTime, required: true
+        param! :end_date, DateTime, required: true
 
         room_bookings = ReportService.range_date(params)
 

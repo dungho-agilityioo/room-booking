@@ -17,13 +17,8 @@ Rails.application.routes.draw do
 
     resources :backgrounds, only: [:index]
 
-    resources :projects do
-      put :assign, on: :member, action: :assign_user
-    end
-
-    resources :rooms do
-      resources :bookings, except: [:update]
-    end
+    resources :bookings
+    resources :rooms
     resources :reports, only: [:index]
   end
 

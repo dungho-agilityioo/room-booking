@@ -5,22 +5,10 @@
   "resourcePath": "bookings",
   "apis": [
     {
-      "path": "/api/v1/rooms/{room_id}/bookings",
+      "path": "/api/v1/bookings",
       "operations": [
         {
           "summary": "Fetches all Room Bookings of Current User",
-          "responseMessages": [
-            {
-              "code": 200,
-              "responseModel": "Room",
-              "message": "Success"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
-            }
-          ],
           "parameters": [
             {
               "paramType": "query",
@@ -35,13 +23,18 @@
               "type": "integer",
               "description": "Offset",
               "required": false
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": "Room",
+              "message": "Success"
             },
             {
-              "paramType": "path",
-              "name": "room_id",
-              "type": "integer",
-              "description": "Room ID",
-              "required": true
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
             }
           ],
           "nickname": "Api::V1::Bookings#index",
@@ -50,47 +43,16 @@
       ]
     },
     {
-      "path": "/api/v1/rooms/{room_id}/bookings",
+      "path": "/api/v1/bookings",
       "operations": [
         {
           "summary": "Creates a new Room Booking",
-          "responseMessages": [
-            {
-              "code": 201,
-              "responseModel": "RoomBooking",
-              "message": "Created"
-            },
-            {
-              "code": 401,
-              "responseModel": null,
-              "message": "Unauthorized"
-            },
-            {
-              "code": 422,
-              "responseModel": null,
-              "message": "Unprocessable Entity"
-            }
-          ],
           "parameters": [
             {
-              "paramType": "path",
+              "paramType": "form",
               "name": "room_id",
               "type": "integer",
               "description": "Room Id",
-              "required": true
-            },
-            {
-              "paramType": "form",
-              "name": "time_start",
-              "type": "DateTime",
-              "description": "Time Start",
-              "required": true
-            },
-            {
-              "paramType": "form",
-              "name": "time_end",
-              "type": "DateTime",
-              "description": "Time End",
               "required": true
             },
             {
@@ -113,6 +75,37 @@
               "type": "boolean",
               "description": "Daily",
               "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "start_date",
+              "type": "DateTime",
+              "description": "Time Start",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "end_date",
+              "type": "DateTime",
+              "description": "Time End",
+              "required": true
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": 201,
+              "responseModel": "Booking",
+              "message": "Created"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            },
+            {
+              "code": 422,
+              "responseModel": null,
+              "message": "Unprocessable Entity"
             }
           ],
           "nickname": "Api::V1::Bookings#create",
@@ -121,10 +114,19 @@
       ]
     },
     {
-      "path": "/api/v1/rooms/{room_id}/bookings/{id}",
+      "path": "/api/v1/bookings/{id}",
       "operations": [
         {
-          "summary": "Fetches a single Room Booking item of Current User",
+          "summary": "Fetches a single Booking",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Room Booking Id",
+              "required": true
+            }
+          ],
           "responseMessages": [
             {
               "code": 200,
@@ -137,37 +139,86 @@
               "message": "Not Found"
             }
           ],
-          "parameters": [
-            {
-              "paramType": "path",
-              "name": "room_id",
-              "type": "integer",
-              "description": "Room ID",
-              "required": true
-            },
-            {
-              "paramType": "path",
-              "name": "id",
-              "type": "integer",
-              "description": "Room Booking Id",
-              "required": true
-            }
-          ],
           "nickname": "Api::V1::Bookings#show",
           "method": "get"
         }
       ]
     },
     {
-      "path": "/api/v1/rooms/{room_id}/bookings/{id}",
+      "path": "/api/v1/bookings/{id}",
       "operations": [
         {
-          "summary": "Delete a Room Booking of Current user",
+          "summary": "Update a Room Booking",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Booking ID",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "room_id",
+              "type": "integer",
+              "description": "Room Id",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "title",
+              "type": "string",
+              "description": "Title",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "description",
+              "type": "string",
+              "description": "Description",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "daily",
+              "type": "boolean",
+              "description": "Daily",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "start_date",
+              "type": "DateTime",
+              "description": "Time Start",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "end_date",
+              "type": "DateTime",
+              "description": "Time End",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "state",
+              "type": "String",
+              "description": "State",
+              "required": false,
+              "allowableValues": {
+                "valueType": "LIST",
+                "values": [
+                  "available",
+                  "conflict"
+                ]
+              }
+            }
+          ],
           "responseMessages": [
             {
-              "code": 204,
-              "responseModel": "RoomBooking",
-              "message": "No Content"
+              "code": 200,
+              "responseModel": "Booking",
+              "message": "Success"
             },
             {
               "code": 401,
@@ -185,20 +236,45 @@
               "message": "Unprocessable Entity"
             }
           ],
+          "nickname": "Api::V1::Bookings#update",
+          "method": "patch"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/bookings/{id}",
+      "operations": [
+        {
+          "summary": "Delete a Room Booking of Current user",
           "parameters": [
-            {
-              "paramType": "path",
-              "name": "room_id",
-              "type": "integer",
-              "description": "Room Id",
-              "required": true
-            },
             {
               "paramType": "path",
               "name": "id",
               "type": "integer",
               "description": "Booking Id",
               "required": true
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": 204,
+              "responseModel": "Booking",
+              "message": "No Content"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            },
+            {
+              "code": 404,
+              "responseModel": null,
+              "message": "Not Found"
+            },
+            {
+              "code": 422,
+              "responseModel": null,
+              "message": "Unprocessable Entity"
             }
           ],
           "nickname": "Api::V1::Bookings#destroy",

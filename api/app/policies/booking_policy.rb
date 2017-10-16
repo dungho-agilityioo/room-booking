@@ -12,8 +12,8 @@ class BookingPolicy < ApplicationPolicy
     login?
   end
 
-  def search?
-    login?
+  def update?
+    @current_user.admin? || (@current_user.staff? && (@current_user.id == @record.user_id))
   end
 
   def room_booked?
