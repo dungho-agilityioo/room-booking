@@ -30,6 +30,7 @@ class PubsubService
         user_name: booking.user&.name,
         room_name: booking.room&.name,
         title: booking.title,
+        state: booking.state,
         start_date: booking.start_date,
         end_date: booking.end_date,
         daily: booking.daily
