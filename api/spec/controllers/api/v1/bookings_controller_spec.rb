@@ -73,7 +73,7 @@ RSpec.describe Api::V1::BookingsController, type: :controller do
       before do
         user2 = create(:user)
         request.headers["Authorization"] = token_generator(user2.id)
-        params = FactoryGirl.attributes_for(:booking).merge(room_id: room.id).merge(user_id: user2.id)
+        params = FactoryGirl.attributes_for(:booking).merge(room_id: room.id)
         post :create, params: params
       end
 
@@ -84,7 +84,7 @@ RSpec.describe Api::V1::BookingsController, type: :controller do
     end
 
     context 'when the room is overlaps in the same user' do
-      before { post :create, params: FactoryGirl.attributes_for(:booking).merge(room_id: room.id).merge(user_id: user.id) }
+      before { post :create, params: FactoryGirl.attributes_for(:booking).merge(room_id: room.id) }
 
       it { should respond_with(422) }
       specify { expect(response.body).to match(/Booking is overlapping/) }

@@ -11,8 +11,7 @@ class Booking <  ApplicationRecord
   after_create :generate_next_schedule, if: :daily?
   after_create :send_email unless Rails.env.test?
   after_destroy :remove_future_schedule, if: :daily?
-  before_save :check_duplicate
-  before_create :set_state
+  before_save :set_state, :check_duplicate
 
   class << self
     # Check if a given interval overlaps this interval
