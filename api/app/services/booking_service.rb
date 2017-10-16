@@ -4,7 +4,7 @@ class BookingService
     def get_availables(start_date, end_date)
       available_slots = []
 
-      booked = ReportService.get_booked(start_date, end_date)
+      booked = get_booked(start_date, end_date)
 
       rooms = Room.all
       filter_time = [ start_date, end_date ]
@@ -23,6 +23,18 @@ class BookingService
       available_slots
     end
 
+    def get_booked(start_date, end_date)
+      Booking
+        .includes(:room, :user)
+        .where(state: :available)
+        .where( :start_date => start_date..end_date)
+        .or(
+            Booking
+              .includes(:room, :user)
+              .where( :end_date => start_date..end_date)
+          )
+        .order(:start_date, :room_id)
+    end
 
     # private
 

@@ -40,34 +40,16 @@ RSpec.describe Api::V1::BookingsController, type: :controller do
 
         context 'when the request valid' do
 
-          context '#limit, #offset is blank' do
-            before {
-              get :index, params: {
-                filter: 'booked',
-                start_date: Date.today.next_week + 3.hours,
-                end_date: Date.today.next_week + 7.hours
-              }
+          before {
+            get :index, params: {
+              filter: 'booked',
+              start_date: Date.today.next_week + 3.hours,
+              end_date: Date.today.next_week + 7.hours
             }
-            it { should respond_with(200) }
-            specify { expect(json.size).to eq(5) }
-            specify { expect(metadata['total']).to eq(5) }
-          end
+          }
+          it { should respond_with(200) }
+          specify { expect(json.size).to eq(5) }
 
-          context '#limit, #offset is present' do
-            before {
-              get :index, params: {
-                filter: 'booked',
-                start_date: Date.today.next_week + 3.hours,
-                end_date: Date.today.next_week + 15.hours,
-                limit: 7,
-                offset: 4
-              }
-            }
-
-            it { should respond_with(200) }
-            specify { expect(json.size).to eq(7) }
-            specify { expect(metadata['total']).to eq(12) }
-          end
         end
 
         context 'when the request invalid' do
@@ -78,6 +60,7 @@ RSpec.describe Api::V1::BookingsController, type: :controller do
           specify { expect(response.body).to match(/Parameter start_date is required/) }
         end
       end
+
 
       context '#available' do
         context 'when the request valid' do

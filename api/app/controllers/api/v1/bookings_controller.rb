@@ -24,11 +24,11 @@ class Api::V1::BookingsController < ApplicationController
     param! :limit, Integer
     param! :offset, Integer
     param! :filter, String, required: false
-    limit = params[:limit].to_i > 0 && params[:limit].to_i  || 10
-    offset = params[:offset].to_i > 0 && params[:offset].to_i  || 0
 
     # if only get list
     if params[:filter].blank?
+      limit = params[:limit].to_i > 0 && params[:limit].to_i  || 10
+      offset = params[:offset].to_i > 0 && params[:offset].to_i  || 0
       bookings = Booking.includes(:room, :user)
                   .limit(limit)
                   .offset(offset)
@@ -59,9 +59,13 @@ class Api::V1::BookingsController < ApplicationController
         json_response({ data: rs })
       # Get the rooms booked on time range
       else
-        total = ReportService.get_booked(start_date, end_date).count
-        room_bookings = ReportService.get_booked(start_date, end_date).limit(limit).offset(offset)
-        respone_collection_serializer(room_bookings, limit, offset, total)
+        room_bookings = BookingService.get_booked(params[:start_date], params[:end_date])
+        render json: {
+          data:
+            ActiveModel::Serializer::CollectionSerializer.new(
+              room_bookings, each_serializer: BookingSerializer
+            ).as_json
+        }
       end
     end
   end

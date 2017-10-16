@@ -19,7 +19,6 @@ Rails.application.routes.draw do
 
     resources :bookings
     resources :rooms
-    resources :reports, only: [:index]
   end
 
   post "_ah/push-handlers/push/:token", to: "api/v1/notifications#send_email"
