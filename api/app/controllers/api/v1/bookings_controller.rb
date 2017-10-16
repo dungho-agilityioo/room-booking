@@ -11,6 +11,9 @@ class Api::V1::BookingsController < ApplicationController
     summary "Fetches all Room Bookings of Current User"
     param :query, :limit, :integer, :optional, "Limit"
     param :query, :offset, :integer, :optional, "Offset"
+    param_list :query, :filter, :String, :optional, "Filter For", ['', :available, :booked]
+    param :query, :start_date, :DateTime, :optional, "Time Start"
+    param :query, :end_date, :DateTime, :optional, "Time End"
     response :ok, "Success", :Room
     response :unauthorized
     response :unprocessable_entity
@@ -20,20 +23,47 @@ class Api::V1::BookingsController < ApplicationController
     authorize Booking
     param! :limit, Integer
     param! :offset, Integer
+    param! :filter, String, required: false
     limit = params[:limit].to_i > 0 && params[:limit].to_i  || 10
     offset = params[:offset].to_i > 0 && params[:offset].to_i  || 0
 
-    bookings = Booking.includes(:room, :user)
-                .limit(limit)
-                .offset(offset)
-    if current_user.staff?
-      total = Booking.where(user_id: current_user.id).count
-      bookings = bookings.where(user_id: current_user.id)
-    else
-      total = Booking.count
-    end
+    # if only get list
+    if params[:filter].blank?
+      bookings = Booking.includes(:room, :user)
+                  .limit(limit)
+                  .offset(offset)
 
-    respone_collection_serializer(bookings, limit, offset, total)
+      if current_user.staff?
+        total = Booking.where(user_id: current_user.id).count
+        bookings = bookings.where(user_id: current_user.id)
+      else
+        total = Booking.count
+      end
+
+      respone_collection_serializer(bookings, limit, offset, total)
+    # if is filter
+    else
+      param! :start_date, DateTime, required: true
+      param! :end_date, DateTime, required: true
+
+      start_date = params[:start_date].to_datetime
+      end_date = params[:end_date].to_datetime
+
+      # Get the rooms available on time range
+      if params[:filter] == 'available'
+        start_date = Time.zone.now if start_date < Time.zone.now
+
+        json_response({ data: []}) if end_date < start_date
+
+        rs = BookingService.get_availables( start_date, end_date )
+        json_response({ data: rs })
+      # Get the rooms booked on time range
+      else
+        total = ReportService.get_booked(start_date, end_date).count
+        room_bookings = ReportService.get_booked(start_date, end_date).limit(limit).offset(offset)
+        respone_collection_serializer(room_bookings, limit, offset, total)
+      end
+    end
   end
 
   # GET /bookings/:id
