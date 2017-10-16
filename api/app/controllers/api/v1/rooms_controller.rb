@@ -2,7 +2,7 @@ module Api
   module V1
     class RoomsController < ApplicationController
     	before_action :find_room, only: [:show, :update, :destroy]
-      swagger_controller :room, "Room Management"
+      swagger_controller :room, "Rooms Management"
       skip_before_action :authenticate_request, only: [:show]
 
       # GET /rooms

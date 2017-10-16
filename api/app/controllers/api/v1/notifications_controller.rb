@@ -5,6 +5,7 @@ class Api::V1::NotificationsController < ApplicationController
   # GET /notifications?time=<time>
   # Get all booking before <time> to get started
   def index
+    param! :time, DateTime, required: true
     time = params[:time].to_datetime.strftime('%Y-%m-%d %H:%M')
 
     bookings = ReminderService.booked_remider(time)
@@ -20,7 +21,6 @@ class Api::V1::NotificationsController < ApplicationController
   def send_email
     message = nil
     body = request.body.read
-    logger.info "Body >> #{body}"
     message = JSON.parse body unless body.blank?
 
     unless message.nil?
