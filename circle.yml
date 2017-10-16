@@ -90,6 +90,6 @@ workflows:
     jobs:
       - test
       - deploy_to_gce:
-        requires:
-          - test
+          requires:
+            - test
 
