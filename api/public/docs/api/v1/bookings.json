@@ -23,6 +23,35 @@
               "type": "integer",
               "description": "Offset",
               "required": false
+            },
+            {
+              "paramType": "query",
+              "name": "filter",
+              "type": "String",
+              "description": "Filter For",
+              "required": false,
+              "allowableValues": {
+                "valueType": "LIST",
+                "values": [
+                  "",
+                  "available",
+                  "booked"
+                ]
+              }
+            },
+            {
+              "paramType": "query",
+              "name": "start_date",
+              "type": "DateTime",
+              "description": "Time Start",
+              "required": false
+            },
+            {
+              "paramType": "query",
+              "name": "end_date",
+              "type": "DateTime",
+              "description": "Time End",
+              "required": false
             }
           ],
           "responseMessages": [

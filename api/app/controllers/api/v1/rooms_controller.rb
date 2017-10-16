@@ -9,11 +9,6 @@ module Api
       # :nocov:
       swagger_api :index do
         summary "Fetches all Rooms"
-        param :query, :limit, :integer, :optional, "Limit"
-        param :query, :offset, :integer, :optional, "Offset"
-        param_list :query, :filter, :String, :optional, "Filter For", ['', :available, :booked]
-        param :query, :start_date, :DateTime, :optional, "Time Start"
-        param :query, :end_date, :DateTime, :optional, "Time End"
         response :ok, "Success", :Room
         response :unauthorized
         response :unprocessable_entity
@@ -21,40 +16,13 @@ module Api
       # :nocov:
       def index
         authorize Room
-        param! :filter, String, required: false
 
-        if params[:filter].blank?
-
-          render json: {
-            data:
-              ActiveModel::Serializer::CollectionSerializer.new(
-                Room.all, each_serializer: BookingSerializer
-              ).as_json
-          }
-        else
-          param! :start_date, DateTime, required: true
-          param! :end_date, DateTime, required: true
-
-          start_date = params[:start_date].to_datetime
-          end_date = params[:end_date].to_datetime
-
-          if params[:filter] == 'available'
-            start_date = Time.zone.now if start_date < Time.zone.now
-
-            json_response({ data: []}) if end_date < start_date
-
-            rs = BookingService.get_availables( start_date, end_date )
-            json_response({ data: rs })
-          # get the room had booked
-          else
-            limit = params[:limit].to_i > 0 && params[:limit].to_i  || 10
-            offset = params[:offset].to_i > 0 && params[:offset].to_i  || 0
-
-            total = ReportService.get_booked(start_date, end_date).count
-            room_bookings = ReportService.get_booked(start_date, end_date).limit(limit).offset(offset)
-            respone_collection_serializer(room_bookings, limit, offset, total)
-          end
-        end
+        render json: {
+          data:
+            ActiveModel::Serializer::CollectionSerializer.new(
+              Room.all, each_serializer: BookingSerializer
+            ).as_json
+        }
       end
 
       # GET /rooms/:id
