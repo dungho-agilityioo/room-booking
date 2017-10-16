@@ -22,10 +22,10 @@ RSpec.describe UserMailer do
       expect(mail.to).to eq([ENV['ADMIN_EMAIL']])
     end
 
-    it 'renders the user name' do
-      expect(mail.body)
-        .to match(/#{user.name} makes request to booked room with the info below:/)
-    end
+    # it 'renders the user name' do
+    #   expect(mail.body)
+    #     .to match(/#{user.name} makes request to booked room with the info below:/)
+    # end
 
     it 'assign the title' do
       expect(mail.body)

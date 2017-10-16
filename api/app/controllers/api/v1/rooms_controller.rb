@@ -45,6 +45,7 @@ module Api
 
             rs = BookingService.get_availables( start_date, end_date )
             json_response({ data: rs })
+          # get the room had booked
           else
             total = ReportService.get_booked(start_date, end_date).count
             room_bookings = ReportService.get_booked(start_date, end_date).limit(limit).offset(offset)

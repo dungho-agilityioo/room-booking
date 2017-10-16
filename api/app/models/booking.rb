@@ -13,38 +13,15 @@ class Booking <  ApplicationRecord
   after_destroy :remove_future_schedule, if: :daily?
   before_save :set_state, :check_duplicate
 
-  class << self
-    # Check if a given interval overlaps this interval
-    def overlaps?(booking)
-      overlap_query(booking).count() > 0
-    end
-
-    # Check duplicate booking of user
-    def duplicate?(booking)
-      overlap_query(booking)
-      .where(user_id: booking.user_id).count() > 0
-    end
-
-    def overlap_query(booking)
-      query = self.where(room_id: booking.room_id)
-      .where("end_date::TIMESTAMP >= ?", booking.start_date)
-      .where("start_date::TIMESTAMP < ?", booking.end_date)
-
-      query = query.where.not(id: booking.id) unless booking.new_record?
-      query
-    end
-
-  end
-
   private
   def check_duplicate
-    if Booking.duplicate?(self)
+    if duplicated?
       raise ExceptionHandler::BookingDuplicate.new('Booking is overlapping')
     end
   end
 
   def set_state
-    self.state = Booking.overlaps?(self) ? :conflict : :available
+    self.state = overlaps? ? :conflict : :available
   end
 
   def send_email
@@ -59,4 +36,23 @@ class Booking <  ApplicationRecord
     # RoomBookingService.new(self).call
   end
 
+  # Check if a given interval overlaps this interval
+  def overlaps?
+    overlap_query.count() > 0
+  end
+
+  # Check duplicate booking of user
+  def duplicated?
+    overlap_query
+    .where(user_id: user_id).count() > 0
+  end
+
+  def overlap_query
+    query = Booking.where(room_id: room_id)
+      .where("end_date::TIMESTAMP >= ?", start_date)
+      .where("start_date::TIMESTAMP < ?", end_date)
+
+    query = query.where.not(id: id) unless new_record?
+    query
+  end
 end
