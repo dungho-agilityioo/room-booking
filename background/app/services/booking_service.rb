@@ -4,8 +4,9 @@ class BookingService
   include HTTParty
   base_uri ENV['BASE_API_PATH']
 
-  def get_reminder_books
-    self.class.get("/reminders", headers: headers)
+  def get_reminder_booked
+    time = (Time.now + 10.minute )
+    self.class.get("/notifications?time=#{time}", headers: headers)
   end
 
   private
