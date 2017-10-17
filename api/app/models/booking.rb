@@ -8,9 +8,9 @@ class Booking <  ApplicationRecord
   validates_datetime :start_date, :on => :create, :on_or_after => lambda { Time.zone.now }
   validates_presence_of :title, :room_id, :user_id, :start_date, :end_date
 
-  after_create :generate_next_schedule, if: :daily?
+  after_create :generate_next_booking, if: :daily?
   after_create :send_email unless Rails.env.test?
-  after_destroy :remove_future_schedule, if: :daily?
+  after_destroy :remove_future_booking, if: :daily?
   before_save :set_state, :check_duplicate
 
   private
@@ -28,12 +28,14 @@ class Booking <  ApplicationRecord
     PubsubService.new.publish_books_message(self)
   end
 
-  def generate_next_schedule
-    # RoomBookingService.new(self, 7).call
+  # Booking before 7 days if booking is daily
+  def generate_next_booking
+    BookingService.create_next_booking(self, 7)
   end
 
-  def remove_future_schedule
-    # RoomBookingService.new(self).call
+  # Remove all future booking if delete a daily booking
+  def remove_future_booking
+    BookingService.remove_future_booking(self)
   end
 
   # Check if a given interval overlaps this interval
