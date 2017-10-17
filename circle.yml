@@ -84,6 +84,10 @@ jobs:
           command: cd api && bundle exec rspec spec && cd ..
           environment:
             RAILS_ENV: test
+      - store_artifacts:
+          path: ./api/coverage
+      - store_test_results:
+          path: ./api/coverage
 workflows:
   version: 2
   build-and-test:
