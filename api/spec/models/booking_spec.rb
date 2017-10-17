@@ -9,8 +9,8 @@ RSpec.describe Booking, type: :model do
     it { is_expected.to validate_presence_of(:start_date) }
     it { is_expected.to validate_presence_of(:end_date) }
 
-    it { is_expected.to callback(:generate_next_schedule).after(:create).if(:daily?) }
-    it { is_expected.to callback(:remove_future_schedule).after(:destroy).if(:daily?) }
+    it { is_expected.to callback(:generate_next_booking).after(:create).if(:daily?) }
+    it { is_expected.to callback(:remove_future_booking).after(:destroy).if(:daily?) }
     it { is_expected.to callback(:check_duplicate).before(:save) }
     it { is_expected.to callback(:set_state).before(:save) }
 
