@@ -87,23 +87,21 @@ RSpec.describe Api::V1::BookingsController, type: :controller do
   end
 
 
-
   describe 'GET /books/:id' do
-    let!(:room) { create(:room) }
-    let!(:booking) { create(:booking, room: room, user: user ) }
-    let(:booking_id) { booking.id }
-    before { get :show, params: { id: booking_id } }
+    let!(:booking) { create(:booking_all) }
 
     context 'when the record exists' do
+      before { get :show, params: { id: booking.id } }
+
       it { should respond_with(200) }
 
       it 'return the record' do
-        expect(json['id'].to_i).to eq(booking_id)
+        expect(json['id'].to_i).to eq(booking.id)
       end
     end
 
     context 'when the record do not exists' do
-      let(:booking_id) { 1000 }
+      before { get :show, params: { id: 1000 } }
 
       it { should respond_with(404) }
 
@@ -200,11 +198,9 @@ RSpec.describe Api::V1::BookingsController, type: :controller do
   end
 
   describe 'DELETE /books/:id' do
-    let!(:room) { create(:room) }
-    let!(:booking) { create(:booking, room: room, user: user ) }
-    let(:booking_id) { booking.id }
+    let!(:booking) { create(:booking_all) }
     context 'when Booking is exists' do
-      before { delete :destroy, params: { id: booking_id } }
+      before { delete :destroy, params: { id: booking.id } }
 
       it { should respond_with(204) }
     end
@@ -212,6 +208,7 @@ RSpec.describe Api::V1::BookingsController, type: :controller do
     context 'when Booking do not exists' do
       before { delete :destroy, params: { id: 1000 } }
 
+      it { should respond_with(404) }
       specify { expect(response.body).to match(/Couldn't find Booking/) }
     end
   end
