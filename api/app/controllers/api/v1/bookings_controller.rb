@@ -64,7 +64,7 @@ class Api::V1::BookingsController < ApplicationController
           data:
             ActiveModel::Serializer::CollectionSerializer.new(
               room_bookings, each_serializer: BookingSerializer
-            ).as_json
+            )
         }
       end
     end

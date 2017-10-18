@@ -20,7 +20,7 @@ module Api
         render json: {
           data:
             ActiveModel::Serializer::CollectionSerializer.new(
-              Room.all, each_serializer: BookingSerializer
+              Room.all, each_serializer: RoomSerializer
             ).as_json
         }
       end

@@ -6,18 +6,11 @@
 #  name       :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  schedule   :text
-#  capacity   :integer
 #
 
 class BookingSerializer < ActiveModel::Serializer
-  attributes :id, :title, :description, :start_date, :end_date, :state, :user, :room
+  attributes :id, :title, :description, :start_date, :end_date, :state
 
-  def user
-    object.user.slice(:id, :email, :name, :first_name, :last_name)
-  end
-
-  def room
-    object.room.slice(:id, :name)
-  end
+  belongs_to :user
+  belongs_to :room
 end
