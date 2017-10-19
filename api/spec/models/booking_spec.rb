@@ -12,7 +12,7 @@ RSpec.describe Booking, type: :model do
     it { is_expected.to callback(:generate_next_booking).after(:create).if(:daily?) }
     it { is_expected.to callback(:remove_future_booking).after(:destroy).if(:daily?) }
     it { is_expected.to callback(:check_duplicate).before(:save) }
-    it { is_expected.to callback(:set_state).before(:save) }
+    it { is_expected.to callback(:set_state).before(:create) }
 
     it {
       is_expected.to define_enum_for(:state)

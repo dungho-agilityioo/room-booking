@@ -11,12 +11,19 @@ class Booking <  ApplicationRecord
   after_create :generate_next_booking, if: :daily?
   after_create :send_email unless Rails.env.test?
   after_destroy :remove_future_booking, if: :daily?
-  before_save :set_state, :check_duplicate
+  before_save :check_duplicate
+  before_create :set_state
+
+  # Check if a given interval overlaps this interval
+  def overlaps?
+    overlap_query.count() > 0
+  end
+
 
   private
   def check_duplicate
     if duplicated?
-      raise ExceptionHandler::BookingDuplicate.new('Booking is overlapping')
+      raise ExceptionHandler::BookingDuplicate.new(I18n.t('errors.messages.booking_overlap'))
     end
   end
 
@@ -38,11 +45,6 @@ class Booking <  ApplicationRecord
     BookingService.remove_future_booking(self)
   end
 
-  # Check if a given interval overlaps this interval
-  def overlaps?
-    overlap_query.count() > 0
-  end
-
   # Check duplicate booking of user
   def duplicated?
     overlap_query
@@ -54,7 +56,6 @@ class Booking <  ApplicationRecord
       .where("end_date::TIMESTAMP >= ?", start_date)
       .where("start_date::TIMESTAMP < ?", end_date)
 
-    query = query.where.not(id: id) unless new_record?
-    query
+    new_record? && query || query.where.not(id: id)
   end
 end

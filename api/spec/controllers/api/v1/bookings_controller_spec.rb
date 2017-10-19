@@ -9,7 +9,7 @@ RSpec.describe Api::V1::BookingsController, type: :controller do
 
   before(:each) { request.headers["Authorization"] = headers["Authorization"] }
 
-  describe 'GET /books' do
+  describe 'GET /bookings' do
 
     context '#getall' do
       let!(:room) { create(:room) }
@@ -87,7 +87,7 @@ RSpec.describe Api::V1::BookingsController, type: :controller do
   end
 
 
-  describe 'GET /books/:id' do
+  describe 'GET /bookings/:id' do
     let!(:booking) { create(:booking_all) }
 
     context 'when the record exists' do
@@ -112,7 +112,7 @@ RSpec.describe Api::V1::BookingsController, type: :controller do
 
   end
 
-  describe 'POST /books' do
+  describe 'POST /bookings' do
     let!(:room) { create(:room) }
     let!(:booking) { create(:booking, room: room, user: user ) }
     let(:valid_attributes) do
@@ -154,7 +154,7 @@ RSpec.describe Api::V1::BookingsController, type: :controller do
       before { post :create, params: FactoryGirl.attributes_for(:booking).merge(room_id: room.id) }
 
       it { should respond_with(422) }
-      specify { expect(response.body).to match(/Booking is overlapping/) }
+      specify { expect(response.body).to match(/#{I18n.t('errors.messages.booking_overlap')}/) }
     end
 
     context 'when the request is missing the title' do
@@ -197,7 +197,49 @@ RSpec.describe Api::V1::BookingsController, type: :controller do
 
   end
 
-  describe 'DELETE /books/:id' do
+  describe 'PUT /bookings/:id' do
+    let!(:room) { create(:room) }
+    let!(:user2) { create(:user) }
+    let!(:booking) { create(:booking, room: room, user: user ) }
+    let!(:booking2) { create(:booking, room: room, user: user2 ) }
+    let(:valid_attributes) { FactoryGirl.attributes_for(:booking).merge( room_id: room.id ) }
+
+    context 'when the request is valid' do
+      before {
+        put :update, params: valid_attributes
+                                  .merge(title: "Booking for scrum")
+                                  .merge(id: booking.id)
+      }
+
+      it { should respond_with(200) }
+      specify { expect(json["title"]).to eq('Booking for scrum') }
+    end
+
+    context 'update #state' do
+
+      context 'should not update if user is staff' do
+        before do
+          request.headers["Authorization"] = token_generator(user2.id)
+          put :update, params: valid_attributes.merge(state: :available).merge(id: booking2.id)
+        end
+
+        specify { expect(json['state']).to eq('conflict') }
+      end
+
+      context 'should update if user is admin' do
+        before do
+          user3 = create(:user_admin)
+          request.headers["Authorization"] = token_generator(user3.id)
+          put :update, params: valid_attributes.merge(state: :available).merge(id: booking2.id)
+        end
+
+        specify { expect(json['state']).to eq('available') }
+      end
+    end
+
+  end
+
+  describe 'DELETE /bookings/:id' do
     let!(:booking) { create(:booking_all) }
     context 'when Booking is exists' do
       before { delete :destroy, params: { id: booking.id } }

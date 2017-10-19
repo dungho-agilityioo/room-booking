@@ -120,7 +120,9 @@ class Api::V1::BookingsController < ApplicationController
     authorize @booking
     request_param
     data = convert_param.merge(user_id: current_user.id)
-    data =  data.merge(state: params[:state]) if current_user.admin?
+    if current_user.staff?
+      data["state"] = @booking.overlaps? ? :conflict : :available
+    end
     @booking.update!(data)
 
     respone_record_serializer(@booking, BookingSerializer)
@@ -149,7 +151,7 @@ class Api::V1::BookingsController < ApplicationController
 
   def book_params
     # whitelist params
-    params.permit(:title, :description, :start_date, :end_date, :room_id, :daily)
+    params.permit(:title, :description, :start_date, :end_date, :room_id, :daily, :state)
   end
 
   def convert_param
