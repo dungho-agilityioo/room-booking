@@ -28,3 +28,4 @@ en:
       missing_token: 'Missing token'
       unauthorized: 'Not Authorized'
       expired_token: 'Signature has expired'
+      booking_overlap: 'Booking is overlapping'

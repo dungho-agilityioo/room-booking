@@ -154,7 +154,7 @@ RSpec.describe Api::V1::BookingsController, type: :controller do
       before { post :create, params: FactoryGirl.attributes_for(:booking).merge(room_id: room.id) }
 
       it { should respond_with(422) }
-      specify { expect(response.body).to match(/Booking is overlapping/) }
+      specify { expect(response.body).to match(/#{I18n.t('errors.messages.booking_overlap')}/) }
     end
 
     context 'when the request is missing the title' do

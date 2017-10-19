@@ -23,7 +23,7 @@ class Booking <  ApplicationRecord
   private
   def check_duplicate
     if duplicated?
-      raise ExceptionHandler::BookingDuplicate.new('Booking is overlapping')
+      raise ExceptionHandler::BookingDuplicate.new(I18n.t('errors.messages.booking_overlap'))
     end
   end
 
