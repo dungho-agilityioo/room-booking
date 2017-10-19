@@ -32,7 +32,7 @@ class Booking <  ApplicationRecord
   end
 
   def send_email
-    PubsubService.new.publish_books_message(self)
+    # PubsubService.new.publish_books_message(self)
   end
 
   # Booking before 7 days if booking is daily
