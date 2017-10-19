@@ -21,3 +21,10 @@
 
 en:
   hello: "Hello world"
+  errors:
+    messages:
+      not_found: "Couldn't find %{model}"
+      invalid_token: 'Invalid token'
+      missing_token: 'Missing token'
+      unauthorized: 'Not Authorized'
+      expired_token: 'Signature has expired'
