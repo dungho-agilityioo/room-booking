@@ -36,7 +36,7 @@ class Api::V1::NotificationsController < ApplicationController
 
     def auth_token
       token = params[:token] || request.headers["Authorization"]
-      return json_response({ message: Message.invalid_token }, 401) if token != ENV['PUBSUB_VERIFICATION_TOKEN'] && token != ENV['AUTHORIZATION_APIKEY']
+      return json_response({ message: I18n.t('errors.messages.invalid_token') }, 401) if token != ENV['PUBSUB_VERIFICATION_TOKEN'] && token != ENV['AUTHORIZATION_APIKEY']
     end
 
 end

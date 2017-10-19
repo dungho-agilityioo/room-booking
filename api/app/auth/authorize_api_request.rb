@@ -35,7 +35,7 @@ class AuthorizeApiRequest
     # raise custom error
     raise(
       ExceptionHandler::InvalidToken,
-      ("#{Message.invalid_token} #{e.message}")
+      ("#{I18n.t('errors.messages.invalid_token')} #{e.message}")
     )
   end
 
@@ -50,7 +50,7 @@ class AuthorizeApiRequest
       return headers['Authorization'].scan(/Bearer (.*)$/).flatten.last
     end
 
-    raise(ExceptionHandler::MissingToken, Message.missing_token)
+    raise(ExceptionHandler::MissingToken, I18n.t('errors.messages.missing_token') )
   end
 
   def auth_present?

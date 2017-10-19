@@ -44,7 +44,7 @@ module ExceptionHandler
 
     # JSON response with message; Status code 401 - Unauthorized
     def pundit_not_authorized(e)
-      exception_message(Message.unauthorized)
+      exception_message(I18n.t('errors.messages.unauthorized'))
     end
 
     # JSON response with message; Status code 401 - Unauthorized
