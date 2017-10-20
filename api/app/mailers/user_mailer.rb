@@ -1,8 +1,9 @@
 class UserMailer < ApplicationMailer
 
-  def room_booking(object = {})
-    @user_name = object["user_name"]
-    @room_name = object["room_name"]
+  def room_booking(object)
+    object = JSON.parse(object)
+    @user_name = object["user"]["name"]
+    @room_name = object["room"]["name"]
     @title = object["title"]
     @state = object["state"]
     @start_date = object["start_date"].to_datetime.strftime('%m-%d-%Y %H-%M')
