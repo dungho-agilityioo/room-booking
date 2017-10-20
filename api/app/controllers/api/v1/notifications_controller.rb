@@ -17,26 +17,11 @@ class Api::V1::NotificationsController < ApplicationController
         }
   end
 
-  # POST /notifications/push
-  def send_email
-    message = nil
-    body = request.body.read
-    message = JSON.parse body unless body.blank?
-
-    unless message.nil?
-      attributes = message["message"]["attributes"]
-
-      UserMailer.room_booking(attributes).deliver_now
-    end
-
-    json_response( {succeed: true} )
-  end
-
   private
 
     def auth_token
       token = params[:token] || request.headers["Authorization"]
-      return json_response({ message: I18n.t('errors.messages.invalid_token') }, 401) if token != ENV['PUBSUB_VERIFICATION_TOKEN'] && token != ENV['AUTHORIZATION_APIKEY']
+      return json_response({ message: I18n.t('errors.messages.invalid_token') }, 401) if token != ENV['AUTHORIZATION_APIKEY']
     end
 
 end
