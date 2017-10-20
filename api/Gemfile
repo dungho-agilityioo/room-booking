@@ -56,15 +56,12 @@ gem 'kaminari'
 # counter_culture provides turbo-charged counter caches
 gem 'counter_culture', '~> 1.7'
 
-# A reservation plugin for Rails applications that allows resources to be bookable.
-# gem 'acts_as_bookable'
-
 gem 'rails_param'
 
 gem "activejob-google_cloud_pubsub", "~> 0.5.0"
 gem 'google-protobuf', '3.2.0'
 gem "bunny", ">= 2.7.0"
-
+gem 'mailgun-ruby', '~>1.1.6'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
