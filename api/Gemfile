@@ -63,6 +63,7 @@ gem 'rails_param'
 
 gem "activejob-google_cloud_pubsub", "~> 0.5.0"
 gem 'google-protobuf', '3.2.0'
+gem "bunny", ">= 2.7.0"
 
 
 group :development, :test do
