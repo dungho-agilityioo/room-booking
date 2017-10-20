@@ -19,7 +19,6 @@ class Booking <  ApplicationRecord
     overlap_query.count() > 0
   end
 
-
   private
   def check_duplicate
     if duplicated?
@@ -32,7 +31,7 @@ class Booking <  ApplicationRecord
   end
 
   def send_email
-    PubsubService.new.publish_books_message(self)
+    MessagingService.instance.publish(BookingSerializer.new(self).to_json)
   end
 
   # Booking before 7 days if booking is daily

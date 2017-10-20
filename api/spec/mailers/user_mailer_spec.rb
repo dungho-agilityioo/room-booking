@@ -5,14 +5,11 @@ RSpec.describe UserMailer do
   let(:booking) {  create(:booking_with_user, user: user) }
 
   describe '#send email' do
-    let(:mail) { described_class.room_booking(
-      { user_name: booking.user&.name,
-        room_name: booking.room&.name,
-        title: booking.title,
-        start_date: booking.start_date,
-        end_date: booking.end_date,
-        daily: booking.daily
-      }.as_json).deliver_now }
+    let(:mail) {
+      described_class.room_booking(
+          BookingSerializer.new(booking).to_json
+        ).deliver_now
+    }
 
     it 'renders the subject' do
       expect(mail.subject).to match(/\[Room Booking\] Submit Room Booking/)
