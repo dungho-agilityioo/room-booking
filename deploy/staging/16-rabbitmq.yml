@@ -1,0 +1,53 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  namespace: rb-staging
+  name: rabbitmq
+  labels:
+    name: rabbitmq
+    project: rooms-booking
+    environment: staging
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: rabbitmq
+      labels:
+        name: rabbitmq
+        project: rooms-booking
+        tier: cache
+        environment: staging
+    spec:
+      containers:
+      - name: rabbitmq
+        image: rabbitmq:3-management-alpine
+        ports:
+          - containerPort: 15672
+          - containerPort: 5672
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: rb-staging
+  name: amqp
+  labels:
+    name: rabbitmq
+    project: rooms-booking
+    tier: cache
+    environment: staging
+spec:
+  selector:
+    name: rabbitmq
+    project: rooms-booking
+    tier: cache
+    environment: staging
+  clusterIP: None
+  ports:
+    - name: port1
+      port: 15672
+      protocol: TCP
+      targetPort: 15672
+    - name: port2
+      port: 5672
+      protocol: TCP
+      targetPort: 5672
