@@ -1,7 +1,12 @@
-unless Rails.env.test?
-  $rabbitmq_connection = Bunny.new
-  $rabbitmq_connection.start
+# unless Rails.env.test?
 
-  $rabbitmq_channel = $rabbitmq_connection.create_channel
-  MessagingService.instance.receive
-end
+#   begin
+#     $rabbitmq_connection = Bunny.new
+#     $rabbitmq_connection.start
+#   rescue Bunny::TCPConnectionFailed => e
+#     puts "@@Error connecting: #{e.inspect}"
+#     retry
+#   end
+
+#   $rabbitmq_channel = $rabbitmq_connection.create_channel
+# end
