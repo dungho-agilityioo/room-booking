@@ -111,7 +111,8 @@ DEPENDENCIES
   dotenv-rails
   httparty (~> 0.13.6)
   mailgun-ruby (~> 1.1.6)
+  rake
   sneakers
 
 BUNDLED WITH
-   1.14.6
+   1.15.4
