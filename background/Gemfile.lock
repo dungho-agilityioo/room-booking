@@ -1,12 +1,6 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    actionmailer (5.1.4)
-      actionpack (= 5.1.4)
-      actionview (= 5.1.4)
-      activejob (= 5.1.4)
-      mail (~> 2.5, >= 2.5.4)
-      rails-dom-testing (~> 2.0)
     actionpack (5.1.4)
       actionview (= 5.1.4)
       activesupport (= 5.1.4)
@@ -20,9 +14,6 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.3)
-    activejob (5.1.4)
-      activesupport (= 5.1.4)
-      globalid (>= 0.3.6)
     activesupport (5.1.4)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (~> 0.7)
@@ -41,8 +32,6 @@ GEM
       dotenv (= 2.2.1)
       railties (>= 3.2, < 5.2)
     erubi (1.6.1)
-    globalid (0.4.0)
-      activesupport (>= 4.2.0)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     httparty (0.13.7)
@@ -52,8 +41,6 @@ GEM
     json (1.8.6)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
-    mail (2.6.6)
-      mime-types (>= 1.16, < 4)
     mailgun-ruby (1.1.8)
       rest-client (~> 2.0)
     method_source (0.8.2)
@@ -105,7 +92,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  actionmailer (~> 5.0, >= 5.0.0.1)
   bunny
   byebug
   dotenv-rails

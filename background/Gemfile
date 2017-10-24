@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 
-gem 'actionmailer', '~> 5.0', '>= 5.0.0.1'
 gem 'dotenv-rails'
 gem 'byebug'
 gem 'httparty', '~> 0.13.6'
