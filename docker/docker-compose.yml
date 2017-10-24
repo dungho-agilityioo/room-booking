@@ -1,7 +1,7 @@
 version: '2'
 services:
   rabbitmq:
-    image: rabbitmq:3-management-alpine
+    build: rabbitmq
     container_name: rabbitmq
     ports:
       - 15672:15672
@@ -17,7 +17,6 @@ services:
       - ./../api/db-data:/var/lib/postgresql/data
   api:
     build: ./../api
-    # image: docker_api
     container_name: api
     env_file:
       - ./../api/.env
@@ -35,7 +34,7 @@ services:
     container_name: job
     env_file:
       - ./../background/.env
-    command: sneakers work ReminderJob --require app/jobs/reminder_job.rb
+    command: rake sneakers:run --require /home/app/app/jobs/jobs.rb
     volumes:
       - ./../background:/home/app
     stdin_open: true
