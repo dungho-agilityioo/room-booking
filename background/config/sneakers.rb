@@ -1,9 +1,4 @@
 require 'dotenv/load'
 
-begin
-  bunny = Bunny.new
-  Sneakers.configure bunny
-rescue Bunny::TCPConnectionFailed => e
-  puts "@@Error connecting: #{e.inspect}"
-  retry
-end
+Sneakers.configure  amqp: ENV['RABBITMQ_URL'],
+                    log: "log/sneakers.log"
