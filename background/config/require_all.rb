@@ -1,10 +1,10 @@
 require 'dotenv/load'
 require 'date'
 require 'byebug'
-require "google/cloud/pubsub"
-require 'action_mailer'
-require 'sidekiq'
 require "httparty"
+require "bunny"
+require "sneakers"
+require 'mailgun'
 
 Dir.glob(File.join(File.dirname(__FILE__), "../config/*.rb")) do |c|
   require(c)

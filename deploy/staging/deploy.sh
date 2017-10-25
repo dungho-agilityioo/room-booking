@@ -3,8 +3,9 @@
 # Exit on any error
 set -e
 
-export IMAGE=asia.gcr.io/$GOOGLE_PROJECT_ID/${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1
-echo "Deploying $IMAGE"
+export API_IMAGE=asia.gcr.io/$GOOGLE_PROJECT_ID/${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1
+export JOB_IMAGE=asia.gcr.io/$GOOGLE_PROJECT_ID/${GOOGLE_PROJECT_NAME}-job:$CIRCLE_SHA1
+echo "Deploying $API_IMAGE"
 
 # Clean any old deploy-tasks jobs
 kubectl delete job api-migration-job -n rb-staging 2> /dev/null || true
@@ -38,7 +39,11 @@ while true; do
 done
 
 # Deployment
-kubectl patch -f deploy/staging/09-api.yml -p '{"spec":{"template":{"spec":{"containers":[{"name":"api","image":"'"$IMAGE"'"}]}}}}'
+kubectl patch -f deploy/staging/09-api.yml -p '{"spec":{"template":{"spec":{"containers":[{"name":"api","image":"'"$API_IMAGE"'"}]}}}}'
+
+echo "Deploying $JOB_IMAGE"
+
+kubectl patch -f deploy/staging/11-background-job.yml -p '{"spec":{"template":{"spec":{"containers":[{"name":"api","image":"'"$JOB_IMAGE"'"}]}}}}'
 kubectl describe deployment api -n rb-staging
 kubectl delete job api-migration-job  -n rb-staging || true
 kubectl rollout status deployment/api -n rb-staging

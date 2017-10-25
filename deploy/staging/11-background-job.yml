@@ -23,14 +23,14 @@ spec:
         - name: docker-registry-secret
       containers:
       - name: background-job
-        image: asia.gcr.io/rooms-booking-177603/rooms-booking-job:1.0.1
+        image: asia.gcr.io/booking-182401/booking-job:latest
         imagePullPolicy: Always
         command: ["/bin/sh", -c]
-        args: ["bundle exec sidekiq -r ./config/all_jobs.rb"]
+        args: ["rake sneakers:run --require /home/app/app/jobs/jobs.rb"]
         volumeMounts:
         - mountPath: "/home/app/.env"
           name: env
-          subPath: background-job
+          subPath: api
       volumes:
         - name: env
           configMap:

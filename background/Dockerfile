@@ -6,6 +6,7 @@ FROM ruby:2.3.3
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
         build-essential \
         nodejs \
+        curl \
     && rm -rf /var/lib/apt/lists/*
 
 ENV HOME_PATH /home/app
@@ -18,8 +19,13 @@ RUN bundle config build.nokogiri --use-system-libraries
 
 ADD Gemfile* $HOME_PATH/
 
+RUN gem install bundler --pre
+
 RUN bundle install
 
 ADD . $HOME_PATH
 
-#RUN bundle exec sidekiq -r ./config/all_jobs.rb
+COPY entrypoint.sh /entrypoint.sh
+RUN sed -i 's/\r//' /entrypoint.sh && chmod +x /entrypoint.sh
+
+ENTRYPOINT ["./entrypoint.sh"]

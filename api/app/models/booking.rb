@@ -31,7 +31,10 @@ class Booking <  ApplicationRecord
   end
 
   def send_email
-    MessagingService.instance.publish(BookingSerializer.new(self).to_json)
+    message_service = MessagingService.instance
+    booking_json = BookingSerializer.new(self).to_json
+    message_service.publish(booking_json)
+    message_service.publish_delayed(booking_json) if available?
   end
 
   # Booking before 7 days if booking is daily
