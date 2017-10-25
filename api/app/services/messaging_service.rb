@@ -1,8 +1,5 @@
 class MessagingService
   include Singleton
-  DELAYED_REMINDER_QUEUE = 'amqp.bookings.reminder.later'
-  DESTINATION_REMINDER_QUEUE = 'amqp.bookings.reminder.now'
-  DESTINATION_BOOKING_QUEUE = 'amqp.bookings.after'
 
   def initialize
     @connection = Bunny.new
@@ -21,7 +18,7 @@ class MessagingService
 
   def publish_delayed(data)
     booking = JSON.parse(data)
-    queue_name = "#{DELAYED_REMINDER_QUEUE}.#{booking['id']}"
+    queue_name = "#{ENV['DELAYED_REMINDER_QUEUE']}.#{booking['id']}"
     expires_time = get_expires_time(booking["start_date"])
 
     delayed_queue(queue_name, expires_time)
@@ -31,7 +28,7 @@ class MessagingService
 
   # delete queue name if booking change available to conflict
   def delete_delayed_queue(booking_id)
-    queue_name =  "#{DELAYED_REMINDER_QUEUE}.#{booking_id}"
+    queue_name =  "#{ENV['DELAYED_REMINDER_QUEUE']}.#{booking_id}"
     if connection.queue_exists?(queue_name)
       channel.queue_delete(queue_name)
     end
@@ -56,7 +53,7 @@ class MessagingService
   end
 
   def queue
-    @queue ||= channel.queue(DESTINATION_BOOKING_QUEUE, :durable => true)
+    @queue ||= channel.queue(ENV['DESTINATION_BOOKING_QUEUE'], :durable => true)
   end
 
   def delayed_queue(queue_name, expires_time)
@@ -66,7 +63,7 @@ class MessagingService
       # set the dead-letter exchange to the default queue
       'x-dead-letter-exchange' => '',
       # when the message expires, set change the routing key into the destination queue name
-      'x-dead-letter-routing-key' => DESTINATION_REMINDER_QUEUE,
+      'x-dead-letter-routing-key' => ENV['DESTINATION_REMINDER_QUEUE'],
       # the time in milliseconds to keep the message in the queue
       'x-message-ttl' => expires_time
     }, auto_delete: true )
