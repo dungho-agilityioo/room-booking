@@ -43,7 +43,7 @@ kubectl patch -f deploy/staging/09-api.yml -p '{"spec":{"template":{"spec":{"con
 
 echo "Deploying $JOB_IMAGE"
 
-kubectl patch -f deploy/staging/11-background-job.yml -p '{"spec":{"template":{"spec":{"containers":[{"name":"api","image":"'"$JOB_IMAGE"'"}]}}}}'
+kubectl patch -f deploy/staging/11-background-job.yml -p '{"spec":{"template":{"spec":{"containers":[{"name":"background-job","image":"'"$JOB_IMAGE"'"}]}}}}'
 kubectl describe deployment api -n rb-staging
 kubectl delete job api-migration-job  -n rb-staging || true
 kubectl rollout status deployment/api -n rb-staging
