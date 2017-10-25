@@ -46,6 +46,14 @@ jobs:
               gcloud docker -- push asia.gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1
             fi
       - run:
+          name: Build and push the job image
+          command: |
+            docker build -f ./background/Dockerfile.circle.staging --rm=false -t ${GOOGLE_PROJECT_NAME}-job:$CIRCLE_SHA1 .
+            if [ "${CIRCLE_BRANCH}" == "develop" ] || ["${CIRCLE_BRANCH}" == "master"]; then
+              docker tag ${GOOGLE_PROJECT_NAME}-job:$CIRCLE_SHA1 asia.gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_PROJECT_NAME}-job:$CIRCLE_SHA1
+              gcloud docker -- push asia.gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_PROJECT_NAME}-job:$CIRCLE_SHA1
+            fi
+      - run:
           name: Deploy to google cloud
           command: |
             if [ "${CIRCLE_BRANCH}" == "develop" ]; then
