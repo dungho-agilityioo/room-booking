@@ -18,7 +18,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: api
-          image: $IMAGE
+          image: $API_IMAGE
           command: ["/bin/sh", "-c"]
           args: ["bundle exec rake db:migrate"]
           volumeMounts:
