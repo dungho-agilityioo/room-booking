@@ -4,7 +4,7 @@
 set -e
 
 export API_IMAGE=asia.gcr.io/$GOOGLE_PROJECT_ID/${GOOGLE_PROJECT_NAME}-api:$CIRCLE_SHA1
-export JOB_IMAGE=asia.gcr.io/$GOOGLE_PROJECT_ID/${GOOGLE_PROJECT_NAME}-job:$CIRCLE_SHA1
+JOB_IMAGE=asia.gcr.io/$GOOGLE_PROJECT_ID/${GOOGLE_PROJECT_NAME}-job:$CIRCLE_SHA1
 echo "Deploying $API_IMAGE"
 
 # Clean any old deploy-tasks jobs
@@ -47,3 +47,5 @@ kubectl patch -f deploy/staging/11-background-job.yml -p '{"spec":{"template":{"
 kubectl describe deployment api -n rb-staging
 kubectl delete job api-migration-job  -n rb-staging || true
 kubectl rollout status deployment/api -n rb-staging
+kubectl rollout status deployment/background-job -n rb-staging
+
