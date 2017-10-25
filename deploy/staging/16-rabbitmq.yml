@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: rabbitmq
-        image: rabbitmq:3-management-alpine
+        image: asia.gcr.io/booking-182401/booking-rabbit:latest
         ports:
           - containerPort: 15672
           - containerPort: 5672
