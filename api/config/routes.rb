@@ -15,12 +15,9 @@ Rails.application.routes.draw do
       # delete :logout, to: :destroy, controller: :omniauth_callbacks
     end
 
-    resources :notifications, only: [:index]
-
     resources :bookings
     resources :rooms
   end
 
-  post "_ah/push-handlers/push/:token", to: "api/v1/notifications#send_email"
 
 end

@@ -11,7 +11,7 @@ class MessagingService
   end
 
   def channel
-    @channel ||= connection.create_channel
+    @channel = connection.create_channel
   end
 
   def connection
@@ -26,36 +26,41 @@ class MessagingService
     @queue ||= channel.queue(DESTINATION_BOOKING_QUEUE, :durable => true)
   end
 
-  def delayed_squeue(expires_time)
+  def delayed_queue(queue_name, expires_time)
 
     # declare a queue with the DELAYED_REMINDER_QUEUE name
-    channel.queue(DELAYED_REMINDER_QUEUE, arguments: {
+    channel.queue(queue_name, arguments: {
       # set the dead-letter exchange to the default queue
       'x-dead-letter-exchange' => '',
       # when the message expires, set change the routing key into the destination queue name
       'x-dead-letter-routing-key' => DESTINATION_REMINDER_QUEUE,
       # the time in milliseconds to keep the message in the queue
       'x-message-ttl' => expires_time
-    })
+    }, auto_delete: true )
   end
 
   def publish(data)
     exchange.publish(data, routing_key: queue.name)
+    channel.close
   end
 
   def publish_delayed(data)
-    expires_time = get_expires_time(data)
+    booking = JSON.parse(data)
+    queue_name = "#{DELAYED_REMINDER_QUEUE}.#{booking['id']}"
+    expires_time = get_expires_time(booking["start_date"])
 
-    delayed_squeue(expires_time)
-    exchange.publish(data, routing_key: DELAYED_REMINDER_QUEUE)
+    delayed_queue(queue_name, expires_time)
+    exchange.publish(data, routing_key: queue_name)
+    channel.close
   end
 
   private
 
-  def get_expires_time(data)
-    booking = JSON.parse(data)
-    start_date = booking["start_date"].to_time - 10.minutes
+  def get_expires_time(start_date)
 
-    (((start_date - Time.now) / 1.minutes).ceil) * 1000
+    reminder_before_minutes = ENV['REMINDER_BEFORE_MINUTES'].to_i
+    start_date = start_date.to_time - reminder_before_minutes.minutes
+
+    (((start_date - Time.now) / 1.minutes).ceil) * 1000 * 60
   end
 end

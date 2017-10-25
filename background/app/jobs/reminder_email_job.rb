@@ -8,7 +8,7 @@ class ReminderEmailJob
   def work(booking)
     puts "Sending reminder email on Sneakers..."
     booking_params = JSON.parse(booking)
-    MailerService.reminder(booking_params, 10)
+    MailerService.reminder(booking_params)
     ack!
   end
 end

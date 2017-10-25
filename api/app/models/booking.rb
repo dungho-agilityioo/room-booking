@@ -9,7 +9,7 @@ class Booking <  ApplicationRecord
   validates_presence_of :title, :room_id, :user_id, :start_date, :end_date
 
   after_create :generate_next_booking, if: :daily?
-  after_create :send_booking_email, :send_reminder_email unless Rails.env.test?
+  after_create :send_email unless Rails.env.test?
   after_destroy :remove_future_booking, if: :daily?
   before_save :check_duplicate
   before_create :set_state
@@ -30,12 +30,11 @@ class Booking <  ApplicationRecord
     self.state = overlaps? ? :conflict : :available
   end
 
-  def send_booking_email
-    MessagingService.instance.publish(BookingSerializer.new(self).to_json)
-  end
-
-  def send_reminder_email
-    MessagingService.instance.publish_delayed(BookingSerializer.new(self).to_json) if available?
+  def send_email
+    message_service = MessagingService.instance
+    booking_json = BookingSerializer.new(self).to_json
+    message_service.publish(booking_json)
+    message_service.publish_delayed(booking_json) if available?
   end
 
   # Booking before 7 days if booking is daily

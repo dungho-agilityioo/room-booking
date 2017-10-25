@@ -1,11 +1,12 @@
 require File.join(File.dirname(__FILE__), "../../config/require_all.rb")
+require 'date'
 
 class MailerService
 
   class << self
     def room_booking(object)
-      start_date = object["start_date"]
-      end_date = object["end_date"]
+      start_date = DateTime.parse(object["start_date"]).strftime('%m-%d-%Y %H:%M:%S')
+      end_date = DateTime.parse(object["end_date"]).strftime('%m-%d-%Y %H:%M:%S')
 
       content = "
         <p>#{object["user"]["name"] } makes request to booked room with the info below:</p>
@@ -22,13 +23,14 @@ class MailerService
       send_message(ENV['ADMIN_EMAIL'], subject, content)
     end
 
-    def reminder(object = {}, minutes)
+    def reminder(object = {})
+      reminder_before_minutes = ENV['REMINDER_BEFORE_MINUTES'].to_i
       title = object["title"]
-      start_date =object["start_date"]
-      end_date = object["end_date"]
+      start_date = DateTime.parse(object["start_date"]).strftime('%m-%d-%Y %H:%M:%S')
+      end_date = DateTime.parse(object["end_date"]).strftime('%m-%d-%Y %H:%M:%S')
 
       content = "
-        <p>#{title} will start in 10 minutes:</p>
+        <p> - Title: #{title}</p>
         <p> - State: #{object["state"]}</p>
         <p> - Room: #{object["room"]["name"]}</p>
         <p> - Description: #{object["description"]}</p>
@@ -38,7 +40,7 @@ class MailerService
 
       user_email = object["user"]["email"]
 
-      subject = "[Room Booking] Reminder - #{title} will start in #{minutes} minutes"
+      subject = "[Room Booking] Reminder - #{title} will start in #{reminder_before_minutes} minutes"
 
       send_message(user_email, subject, content)
     end
@@ -48,10 +50,12 @@ class MailerService
     def send_message(to, subject, content)
       # First, instantiate the Mailgun Client with your API key
       mg_client = Mailgun::Client.new ENV['MAILGUN_API_KEY']
+      from = ENV['BOOKING_EMAIL'] || ENV['ADMIN_EMAIL']
+      from = "Room Booking <#{from}>"
 
       # Define your message parameters
       message_params =  {
-                          from: ENV['BOOKING_EMAIL'] || ENV['ADMIN_EMAIL'],
+                          from: from,
                           to:   to,
                           subject: subject,
                           html: content
