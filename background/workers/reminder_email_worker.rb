@@ -1,7 +1,8 @@
 
-require File.join(File.dirname(__FILE__), "../../config/require_all.rb")
+require File.join(File.dirname(__FILE__), "../lib/mailer_service.rb")
+require 'sneakers'
 
-class ReminderEmailJob
+class ReminderEmailWorker
   include Sneakers::Worker
   from_queue ENV['DESTINATION_REMINDER_QUEUE']
 

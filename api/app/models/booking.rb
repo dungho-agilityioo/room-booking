@@ -68,6 +68,11 @@ class Booking <  ApplicationRecord
     BookingService.create_next_booking(self, 7)
   end
 
+  # Add delayed message to create next schedule booking on 00:00:00
+  # def add_delayed_message
+  #   MessagingService.instance.publish_delayed_for_next_schedule(id)
+  # end
+
   # Remove all future booking if delete a daily booking
   def remove_future_booking
     BookingService.remove_future_booking(self)

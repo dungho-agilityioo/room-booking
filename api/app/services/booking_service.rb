@@ -67,6 +67,8 @@ class BookingService
           end
         end
       end
+      # add delayed message for next day
+      MessagingService.instance.publish_delayed_for_next_schedule(booking.id)
     end
 
     def remove_future_booking(booking)
@@ -82,13 +84,18 @@ class BookingService
       booking_attrs = booking.attributes.except("id")
       start_date = booking.start_date + day.days
       end_date = booking.end_date + day.days
-
-      Booking.without_callback(:create, :after, :generate_next_booking) do
-        Booking.create(booking_attrs.merge(
-              "start_date" => start_date,
-              "end_date" => end_date,
-              "booking_ref_id" => booking.id
-            ))
+      begin
+        Booking.without_callback(:create, :after, :send_email_booking) do
+          Booking.without_callback(:create, :after, :generate_next_booking) do
+            Booking.create(booking_attrs.merge(
+                  "start_date" => start_date,
+                  "end_date" => end_date,
+                  "booking_ref_id" => booking.id
+                ))
+          end
+        end
+      rescue Exception => ex
+        puts "Error generate next schedule: #{ex.message}"
       end
     end
 

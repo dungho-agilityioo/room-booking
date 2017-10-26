@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+require 'bundler/setup'
+root = File.expand_path('../workers', File.dirname(__FILE__))
+$: << root
+require 'booking_email_worker'
+require 'reminder_email_worker'
+require 'generate_next_schedule_worker'
+require 'dotenv/load'
+require "sneakers"
+require 'sneakers/runner'
+
+Sneakers.configure  amqp: ENV['RABBITMQ_URL'],
+                    log: "log/sneakers.log"
+
+r = Sneakers::Runner.new([ BookingEmailWorker, ReminderEmailWorker, GenerateNextScheduleWorker ])
+r.run
