@@ -18,11 +18,22 @@ class MessagingService
 
   def publish_delayed(data)
     booking = JSON.parse(data)
-    queue_name = "#{ENV['DELAYED_REMINDER_QUEUE']}.#{booking['id']}"
+    delayed_queue_name = "#{ENV['DELAYED_REMINDER_QUEUE']}.#{booking['id']}"
     expires_time = get_expires_time(booking["start_date"])
+    delayed_queue(delayed_queue_name, ENV['DESTINATION_REMINDER_QUEUE'], expires_time)
+    exchange.publish(data, routing_key: delayed_queue_name)
+    channel.close
+  end
 
-    delayed_queue(queue_name, expires_time)
-    exchange.publish(data, routing_key: queue_name)
+  def publish_delayed_for_next_schedule(booking_id)
+
+    data = { id: booking_id }.to_json
+
+    # should next 7 days
+    expires_time = ((((Time.now + 7.days).beginning_of_day - Time.now) / 1.minutes).ceil) * 1000 * 60
+    delayed_queue_name = "#{ENV['DELAYED_SCHEDULE_QUEUE']}.#{booking_id}"
+    delayed_queue(delayed_queue_name, ENV['DESTINATION_SCHEDULE_QUEUE'], expires_time)
+    exchange.publish(data, routing_key: delayed_queue_name)
     channel.close
   end
 
@@ -56,14 +67,14 @@ class MessagingService
     @queue ||= channel.queue(ENV['DESTINATION_BOOKING_QUEUE'], :durable => true)
   end
 
-  def delayed_queue(queue_name, expires_time)
+  def delayed_queue(delayed_queue_name, distination_queue, expires_time)
 
     # declare a queue with the DELAYED_REMINDER_QUEUE name
-    channel.queue(queue_name, arguments: {
+    channel.queue(delayed_queue_name, arguments: {
       # set the dead-letter exchange to the default queue
       'x-dead-letter-exchange' => '',
       # when the message expires, set change the routing key into the destination queue name
-      'x-dead-letter-routing-key' => ENV['DESTINATION_REMINDER_QUEUE'],
+      'x-dead-letter-routing-key' => distination_queue,
       # the time in milliseconds to keep the message in the queue
       'x-message-ttl' => expires_time
     }, auto_delete: true )
