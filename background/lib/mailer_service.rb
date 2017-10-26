@@ -1,5 +1,6 @@
-require File.join(File.dirname(__FILE__), "../../config/require_all.rb")
 require 'date'
+require 'mailgun'
+require 'dotenv/load'
 
 class MailerService
 
