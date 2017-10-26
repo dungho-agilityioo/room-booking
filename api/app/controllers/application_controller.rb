@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   include ExceptionHandler
   include Pundit
 
-  before_action :authenticate_request
+  before_action :authenticate_request, unless: :auth_with_api_key?
   attr_reader :current_user
 
   # :nocov:
@@ -16,6 +16,16 @@ class ApplicationController < ActionController::Base
     api.param :form, :end_date, :DateTime, :required, "Time End"
   end
   # :nocov:
+
+  def auth_with_api_key?
+    request.headers["HTTP_API_KEY"].present?
+  end
+
+  def auth_api_key
+    token = request.headers["HTTP_API_KEY"]
+    return json_response({ message: I18n.t('errors.messages.invalid_token') }, 401) if token != ENV['AUTHORIZATION_APIKEY']
+  end
+
   class << self
     Swagger::Docs::Generator::set_real_methods
   end

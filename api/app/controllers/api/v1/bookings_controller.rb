@@ -1,7 +1,8 @@
 class Api::V1::BookingsController < ApplicationController
 
   before_action :find_booking, only: [:show, :destroy, :update]
-  before_action :find_room, only: [:create, :update]
+  before_action :find_booking, only: [:create], if: :auth_with_api_key?
+  before_action :find_room, only: [:create, :update], unless: :auth_with_api_key?
   skip_before_action :authenticate_request, only: [:show]
   swagger_controller :bookings, "Bookings Management"
 
@@ -95,12 +96,22 @@ class Api::V1::BookingsController < ApplicationController
   end
   # :nocov:
   def create
-    request_param
+    if auth_with_api_key?
+      next_booking
+    else
+      request_param
 
-    authorize Booking
-    booking = Booking.new(convert_param.merge(user_id: current_user.id))
-    booking.save!
-    respone_record_serializer(booking, BookingSerializer, :created)
+      authorize Booking
+      booking = Booking.new(convert_param.merge(user_id: current_user.id))
+      booking.save!
+      respone_record_serializer(booking, BookingSerializer, :created)
+    end
+  end
+
+  def next_booking
+    auth_api_key
+    BookingService.create_next_booking(@booking, 7)
+    json_response( { successed: 'ok' })
   end
 
   # PUT /bookings/:id
@@ -163,7 +174,9 @@ class Api::V1::BookingsController < ApplicationController
   end
 
   def find_booking
-    @booking = Booking.includes(:user, :room).find(params[:id])
+    id = params[:id]
+    id = request.body.string.split('=').at(1).to_i if auth_with_api_key?
+    @booking = Booking.includes(:user, :room).find(id)
   end
 
   def request_param
