@@ -3,7 +3,7 @@ require File.join(File.dirname(__FILE__), "../../config/require_all.rb")
 
 class ReminderEmailJob
   include Sneakers::Worker
-  from_queue "amqp.bookings.reminder.now"
+  from_queue ENV['DESTINATION_REMINDER_QUEUE']
 
   def work(booking)
     puts "Sending reminder email on Sneakers..."
@@ -12,4 +12,3 @@ class ReminderEmailJob
     ack!
   end
 end
-

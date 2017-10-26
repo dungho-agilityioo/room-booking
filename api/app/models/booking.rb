@@ -1,4 +1,6 @@
 class Booking <  ApplicationRecord
+  include ActiveModel::Dirty
+
   enum state: [:available, :conflict]
 
   belongs_to :user
@@ -9,10 +11,12 @@ class Booking <  ApplicationRecord
   validates_presence_of :title, :room_id, :user_id, :start_date, :end_date
 
   after_create :generate_next_booking, if: :daily?
-  after_create :send_email unless Rails.env.test?
+  after_create :send_email_booking, :send_mail_reminder unless Rails.env.test?
   after_destroy :remove_future_booking, if: :daily?
   before_save :check_duplicate
   before_create :set_state
+  after_update :change_state, if: :state_changed?
+  after_update :send_mail_reminder, if: :state_changed?
 
   # Check if a given interval overlaps this interval
   def overlaps?
@@ -30,11 +34,33 @@ class Booking <  ApplicationRecord
     self.state = overlaps? ? :conflict : :available
   end
 
-  def send_email
-    message_service = MessagingService.instance
-    booking_json = BookingSerializer.new(self).to_json
-    message_service.publish(booking_json)
-    message_service.publish_delayed(booking_json) if available?
+  def send_email_booking
+    # publish message to send email after booking
+    MessagingService.instance.publish(BookingSerializer.new(self).to_json)
+  end
+
+  def send_mail_reminder
+    if available?
+      message_service = MessagingService.instance
+      # message_service.delete_delayed_queue(id)
+      # publish message to send email reminder
+      message_service.publish_delayed(BookingSerializer.new(self).to_json)
+    end
+  end
+
+  def change_state
+    # ensure state change to conflict to available
+    return if conflict?
+
+    # message_service = MessagingService.instance
+    overlaps = overlap_query
+
+    if overlaps.present?
+      overlaps.each do |booking|
+        booking.update_column("state", :conflict)
+        # message_service.delete_delayed_queue(booking.id)
+      end
+    end
   end
 
   # Booking before 7 days if booking is daily

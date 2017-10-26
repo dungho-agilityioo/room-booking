@@ -2,7 +2,7 @@ require File.join(File.dirname(__FILE__), "../../config/require_all.rb")
 
 class BookingEmailJob
   include Sneakers::Worker
-  from_queue "amqp.bookings.after"
+  from_queue ENV['DESTINATION_BOOKING_QUEUE']
 
   def work(booking)
     puts "Sending email on Sneakers..."
