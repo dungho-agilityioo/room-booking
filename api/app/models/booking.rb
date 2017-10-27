@@ -10,8 +10,8 @@ class Booking <  ApplicationRecord
   validates_datetime :start_date, :on => :create, :on_or_after => lambda { Time.zone.now }
   validates_presence_of :title, :room_id, :user_id, :start_date, :end_date
 
-  after_create :generate_next_booking, if: :daily?
-  after_create :send_email_booking, :send_mail_reminder unless Rails.env.test?
+  after_create :generate_next_booking, if: Proc.new { |booking| booking.daily? && booking.booking_ref_id.nil? }
+  after_create :send_email_booking, :send_mail_reminder, if: Proc.new { |booking| booking.booking_ref_id.nil? && !Rails.env.test? }
   after_destroy :remove_future_booking, if: :daily?
   before_save :check_duplicate
   before_create :set_state
@@ -24,6 +24,7 @@ class Booking <  ApplicationRecord
   end
 
   private
+
   def check_duplicate
     if duplicated?
       raise ExceptionHandler::BookingDuplicate.new(I18n.t('errors.messages.booking_overlap'))
