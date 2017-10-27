@@ -1,7 +1,6 @@
 class Api::V1::BookingsController < ApplicationController
 
   before_action :find_booking, only: [:show, :destroy, :update]
-  before_action :find_booking, only: [:create], if: :auth_with_api_key?
   before_action :find_room, only: [:create, :update], unless: :auth_with_api_key?
   skip_before_action :authenticate_request, only: [:show]
   swagger_controller :bookings, "Bookings Management"
@@ -110,6 +109,7 @@ class Api::V1::BookingsController < ApplicationController
 
   def next_booking
     auth_api_key
+    find_booking
     BookingService.create_next_booking(@booking, 7)
     json_response( { successed: 'ok' })
   end
