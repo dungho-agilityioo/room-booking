@@ -42,8 +42,7 @@ class BookingService
     def create_next_booking(booking, days)
       # it is 1 because it was just created
       total_pending_booking = total_future_booking(booking.id)
-      total_pending_booking = total_pending_booking > 0 && total_pending_booking || 1
-      # number days need booking before
+
       total_days = days - total_pending_booking
 
       if total_days > 0
@@ -79,6 +78,19 @@ class BookingService
         .delete_all
     end
 
+    # add message to queue for remider before 10 minute
+    # with next booking
+    def messagge_reminder_next_booking(booking)
+
+      next_booking = Booking
+                          .where(booking_ref_id: booking&.id)
+                          .where('start_date > ?', ENV['REMINDER_BEFORE_MINUTES'].to_i.minutes.from_now)
+                          .first
+
+      MessagingService.new(200)
+        .publish_delayed(BookingSerializer.new(next_booking).to_json) if next_booking.present?
+    end
+
     private
 
     def create_booking_with_params(booking, day)
@@ -86,6 +98,7 @@ class BookingService
       booking_attrs = booking.attributes.except("id")
       start_date = booking.start_date + day.days
       end_date = booking.end_date + day.days
+
       begin
         Booking.create(booking_attrs.merge(
               "start_date" => start_date,
@@ -100,9 +113,14 @@ class BookingService
 
     # get total of booking in the future
     def total_future_booking(booking_id)
+      time_now = Time.zone.now
       Booking
-        .where('start_date > ?', Time.zone.now)
-        .where(booking_ref_id: booking_id).count
+        .where('start_date > ?', time_now)
+        .where(booking_ref_id: booking_id)
+        .or(
+            Booking.where(id: booking_id)
+              .where('end_date > ?', time_now)
+          ).count
     end
 
     def room_available(booked, available_slots, filter_time, room_name)
