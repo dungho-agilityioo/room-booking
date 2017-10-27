@@ -27,7 +27,9 @@ class Booking <  ApplicationRecord
 
   def check_duplicate
     if duplicated?
-      raise ExceptionHandler::BookingDuplicate.new(I18n.t('errors.messages.booking_overlap'))
+      raise ExceptionHandler::BookingDuplicate.new(
+          I18n.t('errors.messages.booking_overlap')
+        )
     end
   end
 
@@ -37,7 +39,8 @@ class Booking <  ApplicationRecord
 
   def send_email_booking
     # publish message to send email after booking - channel name is 100
-    MessagingService.new(100).publish(BookingSerializer.new(self).to_json)
+    MessagingService.new(100)
+      .publish(BookingSerializer.new(self).to_json)
   end
 
   # publish message delay to send mail reminder before 10 minutes

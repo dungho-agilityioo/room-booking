@@ -8,9 +8,13 @@ require 'generate_next_schedule_worker'
 require 'dotenv/load'
 require "sneakers"
 require 'sneakers/runner'
+require 'sneakers/metrics/logging_metrics'
+require 'logger'
 
 Sneakers.configure  amqp: ENV['RABBITMQ_URL'],
-                    log: "log/sneakers.log"
+                    log: "log/sneakers.log",
+                    metrics: Sneakers::Metrics::LoggingMetrics.new
+Sneakers.logger.level = Logger::INFO
 
 r = Sneakers::Runner.new([ BookingEmailWorker, ReminderEmailWorker, GenerateNextScheduleWorker ])
 r.run
