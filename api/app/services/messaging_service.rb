@@ -15,8 +15,11 @@ class MessagingService
   def publish_delayed(data)
     booking = JSON.parse(data)
     delayed_queue_name = "#{ENV['EMAIL_REMINDER_10_MINTUTES_DELAYED_QUEUE']}.#{booking['id']}"
+
     expires_time = get_expires_time(booking["start_date"])
+
     delayed_queue(delayed_queue_name, ENV['EMAIL_REMINDER_10_MINTUTES_DESTINATION_QUEUE'], expires_time)
+
     exchange.publish(data, routing_key: delayed_queue_name)
     connection.close
   end
@@ -27,17 +30,20 @@ class MessagingService
 
     # should next 7 days
     expires_time = ((((Time.now + 7.days).beginning_of_day - Time.now) / 1.minutes).ceil) * 1000 * 60
-    # expires_time = 5000
+
     delayed_queue_name = "#{ENV['NEXT_BOOKING_CREATE_DELAYED_QUEUE']}.#{booking_id}"
+
     delayed_queue(delayed_queue_name, ENV['NEXT_BOOKING_CREATE_DESTINATION_QUEUE'], expires_time)
+
     exchange.publish(data, routing_key: delayed_queue_name)
+
     connection.close
   end
 
   # delete queue name if booking change available to conflict
   def delete_delayed_queue(booking_id)
     queue_name =  "#{ENV['EMAIL_REMINDER_10_MINTUTES_DELAYED_QUEUE']}.#{booking_id}"
-    puts "@in delete queue - #{connection.queue_exists?(queue_name)}"
+
     if connection.queue_exists?(queue_name)
       channel.queue_delete(queue_name)
     end

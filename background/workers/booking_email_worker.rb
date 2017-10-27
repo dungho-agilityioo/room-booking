@@ -1,5 +1,6 @@
-require File.join(File.dirname(__FILE__), "../lib/mailer_service.rb")
 require 'sneakers'
+require 'json'
+require File.join(File.dirname(__FILE__), "../lib/mailer_service.rb")
 
 class BookingEmailWorker
   include Sneakers::Worker

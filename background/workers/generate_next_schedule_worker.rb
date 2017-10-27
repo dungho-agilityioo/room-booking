@@ -1,7 +1,7 @@
 require 'sneakers'
+require 'json'
 require File.join(File.dirname(__FILE__), "../lib/mailer_service.rb")
 require File.join(File.dirname(__FILE__), "../lib/schedule_service.rb")
-
 
 class GenerateNextScheduleWorker
   include Sneakers::Worker
@@ -10,7 +10,7 @@ class GenerateNextScheduleWorker
   def work(booking)
     puts "Create Next Schedule Booking..."
     params = JSON.parse(booking)
-    ScheduleService.new.create_next_booking(params)
+    ScheduleService.new.add_messagge_create_next_booking(params)
     ack!
   end
 end
