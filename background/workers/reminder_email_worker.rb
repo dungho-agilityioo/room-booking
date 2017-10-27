@@ -4,7 +4,7 @@ require 'sneakers'
 
 class ReminderEmailWorker
   include Sneakers::Worker
-  from_queue ENV['DESTINATION_REMINDER_QUEUE']
+  from_queue ENV['EMAIL_REMINDER_10_MINTUTES_DESTINATION_QUEUE']
 
   def work(booking)
     puts "Sending reminder email on Sneakers..."
