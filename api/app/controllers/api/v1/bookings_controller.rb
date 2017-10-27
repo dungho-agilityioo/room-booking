@@ -1,7 +1,6 @@
 class Api::V1::BookingsController < ApplicationController
 
   before_action :find_booking, only: [:show, :destroy, :update]
-  before_action :find_booking, only: [:create], if: :auth_with_api_key?
   before_action :find_room, only: [:create, :update], unless: :auth_with_api_key?
   skip_before_action :authenticate_request, only: [:show]
   swagger_controller :bookings, "Bookings Management"
@@ -82,7 +81,11 @@ class Api::V1::BookingsController < ApplicationController
   end
   # :nocov:
   def show
-    respone_record_serializer(@booking)
+    if auth_with_api_key?
+      add_messagge_reminder_next_booking
+    else
+      respone_record_serializer(@booking)
+    end
   end
 
   # POST /bookings
@@ -106,12 +109,6 @@ class Api::V1::BookingsController < ApplicationController
       booking.save!
       respone_record_serializer(booking, BookingSerializer, :created)
     end
-  end
-
-  def next_booking
-    auth_api_key
-    BookingService.create_next_booking(@booking, 7)
-    json_response( { successed: 'ok' })
   end
 
   # PUT /bookings/:id
@@ -175,7 +172,7 @@ class Api::V1::BookingsController < ApplicationController
 
   def find_booking
     id = params[:id]
-    id = request.body.string.split('=').at(1).to_i if auth_with_api_key?
+    id = request.body.string.split('=').at(1).to_i if id.nil? && auth_with_api_key?
     @booking = Booking.includes(:user, :room).find(id)
   end
 
@@ -185,6 +182,19 @@ class Api::V1::BookingsController < ApplicationController
     param! :start_date, DateTime, required: true
     param! :end_date, DateTime, required: true
     param! :daily, :boolean
+  end
+
+  def next_booking
+    auth_api_key
+    find_booking
+    BookingService.create_next_booking(@booking, 7)
+    json_response( { successed: 'ok' })
+  end
+
+  def add_messagge_reminder_next_booking
+    auth_api_key
+    BookingService.messagge_reminder_next_booking(@booking)
+    json_response( { successed: 'ok' })
   end
 
 end

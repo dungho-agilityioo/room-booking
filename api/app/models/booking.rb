@@ -10,13 +10,13 @@ class Booking <  ApplicationRecord
   validates_datetime :start_date, :on => :create, :on_or_after => lambda { Time.zone.now }
   validates_presence_of :title, :room_id, :user_id, :start_date, :end_date
 
-  after_create :generate_next_booking, if: :daily?
-  after_create :send_email_booking, :send_mail_reminder unless Rails.env.test?
+  after_create :generate_next_booking, if: Proc.new { |booking| booking.daily? && booking.booking_ref_id.nil? }
+  after_create :send_email_booking, :send_mail_reminder, if: Proc.new { |booking| booking.booking_ref_id.nil? && !Rails.env.test? }
   after_destroy :remove_future_booking, if: :daily?
   before_save :check_duplicate
   before_create :set_state
   after_update :change_state, if: :state_changed?
-  after_update :send_mail_reminder, if: :state_changed?
+  after_update :send_mail_reminder#, if: :state_changed?
 
   # Check if a given interval overlaps this interval
   def overlaps?
@@ -24,9 +24,12 @@ class Booking <  ApplicationRecord
   end
 
   private
+
   def check_duplicate
     if duplicated?
-      raise ExceptionHandler::BookingDuplicate.new(I18n.t('errors.messages.booking_overlap'))
+      raise ExceptionHandler::BookingDuplicate.new(
+          I18n.t('errors.messages.booking_overlap')
+        )
     end
   end
 
@@ -35,14 +38,17 @@ class Booking <  ApplicationRecord
   end
 
   def send_email_booking
-    # publish message to send email after booking
-    MessagingService.instance.publish(BookingSerializer.new(self).to_json)
+    # publish message to send email after booking - channel name is 100
+    MessagingService.new(100)
+      .publish(BookingSerializer.new(self).to_json)
   end
 
+  # publish message delay to send mail reminder before 10 minutes
   def send_mail_reminder
     if available?
-      message_service = MessagingService.instance
-      # message_service.delete_delayed_queue(id)
+      # channel name is 200
+      message_service = MessagingService.new(200)
+      message_service.delete_delayed_queue(id)
       # publish message to send email reminder
       message_service.publish_delayed(BookingSerializer.new(self).to_json)
     end
@@ -52,13 +58,14 @@ class Booking <  ApplicationRecord
     # ensure state change to conflict to available
     return if conflict?
 
-    # message_service = MessagingService.instance
+    # channel name is 200
+    message_service = MessagingService.new(200)
     overlaps = overlap_query
 
     if overlaps.present?
       overlaps.each do |booking|
         booking.update_column("state", :conflict)
-        # message_service.delete_delayed_queue(booking.id)
+        message_service.delete_delayed_queue(booking.id)
       end
     end
   end
@@ -67,11 +74,6 @@ class Booking <  ApplicationRecord
   def generate_next_booking
     BookingService.create_next_booking(self, 7)
   end
-
-  # Add delayed message to create next schedule booking on 00:00:00
-  # def add_delayed_message
-  #   MessagingService.instance.publish_delayed_for_next_schedule(id)
-  # end
 
   # Remove all future booking if delete a daily booking
   def remove_future_booking

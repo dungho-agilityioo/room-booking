@@ -9,7 +9,7 @@
 #
 
 class BookingSerializer < ActiveModel::Serializer
-  attributes :id, :title, :description, :start_date, :end_date, :state
+  attributes :id, :title, :description, :start_date, :end_date, :state, :daily
 
   belongs_to :user
   belongs_to :room
