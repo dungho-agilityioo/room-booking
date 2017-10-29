@@ -73,7 +73,7 @@ jobs:
       - image: circleci/postgres:9.6-alpine
         environment:
           POSTGRES_USER: ubuntu
-      - image: rabbitmq-server
+      - image: matigda/rabbitmq-delayed-message-exchange
         environment:
           RABBITMQ_URL: amqp://localhost:5672
     steps:
