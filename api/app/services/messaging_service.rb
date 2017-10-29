@@ -18,6 +18,8 @@ class MessagingService
 
     expires_time = get_expires_time(booking["start_date"])
 
+    return if expires_time < 0
+
     delayed_queue(delayed_queue_name, ENV['EMAIL_REMINDER_10_MINTUTES_DESTINATION_QUEUE'], expires_time)
 
     exchange.publish(data, routing_key: delayed_queue_name)
@@ -41,19 +43,28 @@ class MessagingService
   end
 
   # delete queue name if booking change available to conflict
-  def delete_delayed_queue(booking_id)
-    queue_name =  "#{ENV['EMAIL_REMINDER_10_MINTUTES_DELAYED_QUEUE']}.#{booking_id}"
-
+  def delete_delayed_queue(queue_name)
     if connection.queue_exists?(queue_name)
       channel.queue_delete(queue_name)
     end
   end
 
-  private
-
   def connection
     @connection
   end
+
+  def delete_delay_queue_next_booking(id)
+    delayed_queue_name = "#{ENV['NEXT_BOOKING_CREATE_DELAYED_QUEUE']}.#{id}"
+    delete_delayed_queue(delayed_queue_name)
+  end
+
+  def delete_delay_queue_reminder_10_minutes(id)
+    # remove message in queue to waiting send email reminder before 10 minutes
+    queue_name =  "#{ENV['EMAIL_REMINDER_10_MINTUTES_DELAYED_QUEUE']}.#{id}"
+    delete_delayed_queue(queue_name)
+  end
+
+  private
 
   def get_expires_time(start_date)
 

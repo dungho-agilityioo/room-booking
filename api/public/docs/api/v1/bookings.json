@@ -33,7 +33,6 @@
               "allowableValues": {
                 "valueType": "LIST",
                 "values": [
-                  "",
                   "available",
                   "booked"
                 ]
@@ -200,6 +199,21 @@
             },
             {
               "paramType": "form",
+              "name": "type",
+              "type": "String",
+              "description": "Update type",
+              "required": false,
+              "allowableValues": {
+                "valueType": "LIST",
+                "values": [
+                  "update",
+                  "activate",
+                  "reopen"
+                ]
+              }
+            },
+            {
+              "paramType": "form",
               "name": "title",
               "type": "string",
               "description": "Title",
@@ -232,20 +246,6 @@
               "type": "DateTime",
               "description": "Time End",
               "required": true
-            },
-            {
-              "paramType": "form",
-              "name": "state",
-              "type": "String",
-              "description": "State",
-              "required": false,
-              "allowableValues": {
-                "valueType": "LIST",
-                "values": [
-                  "available",
-                  "conflict"
-                ]
-              }
             }
           ],
           "responseMessages": [
