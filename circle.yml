@@ -66,6 +66,14 @@ jobs:
       ADMIN_EMAIL: dung.hoduy@asnet.com.vn
       ADMIN_NAME: Dung Ho
       DATABASE_URL_TEST: postgres://ubuntu:@127.0.0.1:5432/room_booking_test
+      REMINDER_BEFORE_MINUTES: 10
+      EMAIL_AFTER_BOOKING_DESTINATION_QUEUE: email.after.booking
+      EMAIL_REMINDER_10_MINTUTES_DELAYED_QUEUE: email.reminder.10.minutes.later
+      EMAIL_REMINDER_10_MINTUTES_DESTINATION_QUEUE: email.reminder.10.minutes.now
+      NEXT_BOOKING_CREATE_DESTINATION_QUEUE: next.booking.create.now
+      NEXT_BOOKING_CREATE_DELAYED_QUEUE: next.booking.create.later
+      MAILGUN_API_KEY: key-eccea46c1f6ec7babe1cce3aa1dcf51b
+      MAILGUN_DOMAIN: sandboxcb5be83380ee4a2ea79b523907b2893b.mailgun.org
     docker:
       - image: circleci/ruby:2.3
         environment:
