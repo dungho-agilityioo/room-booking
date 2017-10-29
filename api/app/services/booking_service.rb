@@ -68,30 +68,36 @@ class BookingService
       end
 
       # add delayed message for next day - channel name is 300
-      MessagingService.new(300).publish_delayed_for_next_schedule(booking.id)
+      message_service = MessagingService.new(300)
+      message_service.delete_delay_queue_next_booking(booking.id)
+      message_service.publish_delayed_for_next_schedule(booking.id)
     end
 
     def remove_future_booking(booking)
        Booking
         .where(booking_ref_id: booking.id)
         .where('start_date > ?', Time.zone.now)
-        .delete_all
+        .destroy_all
     end
 
     # add message to queue for remider before 10 minute
     # with next booking
     def messagge_reminder_next_booking(booking)
 
-      next_booking = Booking
-                          .where(booking_ref_id: booking&.id)
-                          .where('start_date > ?', ENV['REMINDER_BEFORE_MINUTES'].to_i.minutes.from_now)
-                          .first
+      next_booking = first_active_of_daily_booking(booking)
 
       MessagingService.new(200)
         .publish_delayed(BookingSerializer.new(next_booking).to_json) if next_booking.present?
     end
 
     private
+
+    def first_active_of_daily_booking(booking)
+      Booking
+          .where(booking_ref_id: booking&.id)
+          .where('start_date > ?', ENV['REMINDER_BEFORE_MINUTES'].to_i.minutes.from_now)
+          .first
+    end
 
     def create_booking_with_params(booking, day)
 

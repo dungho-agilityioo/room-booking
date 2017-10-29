@@ -140,13 +140,17 @@ RSpec.describe Api::V1::BookingsController, type: :controller do
       before do
         user2 = create(:user)
         request.headers["Authorization"] = token_generator(user2.id)
-        params = FactoryGirl.attributes_for(:booking).merge(room_id: room.id)
+        params = FactoryGirl.attributes_for(:booking)
+                  .merge(room_id: room.id, daily: true)
         post :create, params: params
       end
 
       it { should respond_with(201) }
       it 'should be state is conflict' do
         expect(json['state']).to eq('conflict')
+      end
+      it 'should not generate next booking' do
+        expect(Booking.where(booking_ref_id: json['id']).count).to eq(0)
       end
     end
 
@@ -199,12 +203,10 @@ RSpec.describe Api::V1::BookingsController, type: :controller do
 
   describe 'PUT /bookings/:id' do
     let!(:room) { create(:room) }
-    let!(:user2) { create(:user) }
     let!(:booking) { create(:booking, room: room, user: user ) }
-    let!(:booking2) { create(:booking, room: room, user: user2 ) }
-    let(:valid_attributes) { FactoryGirl.attributes_for(:booking).merge( room_id: room.id ) }
+    let(:valid_attributes) { FactoryGirl.attributes_for(:booking).merge( room_id: room.id, type: :update ) }
 
-    context 'when the request is valid' do
+    context '#update' do
       before {
         put :update, params: valid_attributes
                                   .merge(title: "Booking for scrum")
@@ -215,25 +217,45 @@ RSpec.describe Api::V1::BookingsController, type: :controller do
       specify { expect(json["title"]).to eq('Booking for scrum') }
     end
 
-    context 'update #state' do
+    context '#activate' do
+      let!(:user2) { create(:user) }
+      let!(:booking2) { create(:booking, room: room, user: user2 ) }
 
-      context 'should not update if user is staff' do
-        before do
-          request.headers["Authorization"] = token_generator(user2.id)
-          put :update, params: valid_attributes.merge(state: :available).merge(id: booking2.id)
-        end
-
-        specify { expect(json['state']).to eq('conflict') }
+      context 'before activate' do
+        specify { expect(booking.state).to eq('available') }
+        specify { expect(booking2.state).to eq('conflict') }
       end
 
-      context 'should update if user is admin' do
-        before do
-          user3 = create(:user_admin)
-          request.headers["Authorization"] = token_generator(user3.id)
-          put :update, params: valid_attributes.merge(state: :available).merge(id: booking2.id)
+      context 'after activate' do
+        before {
+          request.headers["Authorization"] = token_generator(user2.id)
+          put :update, params: { id: booking2.id, room_id: room.id, type: :activate }
+        }
+
+        it 'should be change state booking2 to available' do
+          booking2.reload
+          expect(booking2.state).to eq("available")
         end
 
-        specify { expect(json['state']).to eq('available') }
+        it 'should be change state booking to conflict' do
+          booking.reload
+          expect(booking.state).to eq("conflict")
+        end
+      end
+    end
+
+    context '#reopen' do
+      let!(:booking2) { create(:booking_all_now, daily: true, user: user ) }
+      before { booking2.remove }
+
+      context 'before reopen' do
+        specify { expect(Booking.where(booking_ref_id: booking2.id).count).to eq(0) }
+      end
+
+      context 'after reopen' do
+        before { put :update, params: { id: booking2.id, room_id: room.id, type: :reopen } }
+        specify { expect(booking.state).to eq('available') }
+        specify { expect(Booking.where(booking_ref_id: booking2.id).count).to eq(6) }
       end
     end
 

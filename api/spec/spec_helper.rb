@@ -18,6 +18,7 @@ require 'devise'
 require 'pundit/matchers'
 require 'action_mailer'
 require "email_spec"
+require 'bunny-mock'
 
 # save to CircleCI's artifacts directory if we're on CircleCI
 if ENV['CIRCLE_ARTIFACTS']
@@ -30,10 +31,11 @@ SimpleCov.start do
   add_filter '/config/'
 end
 
-
-
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
+  # config.before(:each) do
+  #   AMQFactory.connection = BunnyMock.new.start
+  # end
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.

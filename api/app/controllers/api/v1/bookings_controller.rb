@@ -11,7 +11,7 @@ class Api::V1::BookingsController < ApplicationController
     summary "Fetches all Room Bookings of Current User"
     param :query, :limit, :integer, :optional, "Limit"
     param :query, :offset, :integer, :optional, "Offset"
-    param_list :query, :filter, :String, :optional, "Filter For", ['', :available, :booked]
+    param_list :query, :filter, :String, :optional, "Filter For", [:available, :booked]
     param :query, :start_date, :DateTime, :optional, "Time Start"
     param :query, :end_date, :DateTime, :optional, "Time End"
     response :ok, "Success", :Room
@@ -116,6 +116,7 @@ class Api::V1::BookingsController < ApplicationController
   swagger_api :update do |api|
     summary "Update a Room Booking"
     param :path, :id, :integer, :required, "Booking ID"
+    param_list :form, :type, :String, :optional, "Update type", [:update, :activate, :reopen]
     Api::V1::BookingsController::add_common_params(api)
     param_list :form, :state, :String, :optional, "State", [:available, :conflict]
     response :ok, "Success", :Booking
@@ -125,13 +126,17 @@ class Api::V1::BookingsController < ApplicationController
   end
   # :nocov:
   def update
+    param! :type, String, required: true
     authorize @booking
-    request_param
-    data = convert_param.merge(user_id: current_user.id)
-    if current_user.staff?
-      data["state"] = @booking.overlaps? ? :conflict : :available
+    if params[:type] == "activate"
+      @booking.activate
+    elsif params[:type] == 'reopen'
+      @booking.reopen
+    else
+      request_param
+      data = convert_param.merge(user_id: current_user.id)
+      @booking.update!(data)
     end
-    @booking.update!(data)
 
     respone_record_serializer(@booking, BookingSerializer)
   end
@@ -150,7 +155,7 @@ class Api::V1::BookingsController < ApplicationController
   def destroy
     authorize @booking || Booking
 
-    @booking.destroy!
+    @booking.remove
     json_response( nil, :no_content)
   end
 
