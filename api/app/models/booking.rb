@@ -1,8 +1,6 @@
 class Booking <  ApplicationRecord
   include ActiveModel::Dirty
 
-  enum state: [:available, :conflict]
-
   belongs_to :user
   belongs_to :room
 
@@ -10,13 +8,35 @@ class Booking <  ApplicationRecord
   validates_datetime :start_date, :on => :create, :on_or_after => lambda { Time.zone.now }
   validates_presence_of :title, :room_id, :user_id, :start_date, :end_date
 
-  after_create :generate_next_booking, if: Proc.new { |booking| booking.daily? && booking.booking_ref_id.nil? }
+  after_create :generate_next_booking, if: Proc.new { |booking| booking.daily? && booking.available? && booking.booking_ref_id.nil? }
   after_create :send_email_booking, :send_mail_reminder, if: Proc.new { |booking| booking.booking_ref_id.nil? && !Rails.env.test? }
-  after_destroy :remove_future_booking, if: :daily?
   before_save :check_duplicate
   before_create :set_state
-  after_update :change_state, if: :state_changed?
+  before_destroy :delete_queue
   after_update :send_mail_reminder#, if: :state_changed?
+  scope :active, -> { where(state: [:available, :conflict]) }
+
+  state_machine :state, initial: :available do
+    state :available
+    state :conflict
+    state :closed
+
+    after_transition on: :remove, do: :after_closed
+    after_transition on: :reopen, do: :after_reopen
+    after_transition on: :activate, do: :change_state
+
+    event :remove do
+      transition :available => :closed
+    end
+
+    event :activate do
+      transition :conflict => :available
+    end
+
+    event :reopen do
+      transition :closed => :available
+    end
+  end
 
   # Check if a given interval overlaps this interval
   def overlaps?
@@ -24,6 +44,29 @@ class Booking <  ApplicationRecord
   end
 
   private
+
+  def after_reopen
+    generate_next_booking if available? && daily?
+    send_email_booking
+    send_mail_reminder
+  end
+
+  def after_closed
+    if daily?
+      # delete message in queue to waiting for create next booking
+      MessagingService.new(300).delete_delay_queue_next_booking(id)
+
+      # remove pending booking
+      remove_future_booking
+    end
+
+    delete_queue
+  end
+
+  def delete_queue
+    MessagingService.new(200).delete_delay_queue_reminder_10_minutes(id)
+  end
+
 
   def check_duplicate
     if duplicated?
@@ -38,6 +81,8 @@ class Booking <  ApplicationRecord
   end
 
   def send_email_booking
+    # for reopen
+    # if end_date < Time.now
     # publish message to send email after booking - channel name is 100
     MessagingService.new(100)
       .publish(BookingSerializer.new(self).to_json)
@@ -48,16 +93,14 @@ class Booking <  ApplicationRecord
     if available?
       # channel name is 200
       message_service = MessagingService.new(200)
-      message_service.delete_delayed_queue(id)
+      message_service.delete_delay_queue_reminder_10_minutes(id)
+
       # publish message to send email reminder
       message_service.publish_delayed(BookingSerializer.new(self).to_json)
     end
   end
 
   def change_state
-    # ensure state change to conflict to available
-    return if conflict?
-
     # channel name is 200
     message_service = MessagingService.new(200)
     overlaps = overlap_query
@@ -65,7 +108,7 @@ class Booking <  ApplicationRecord
     if overlaps.present?
       overlaps.each do |booking|
         booking.update_column("state", :conflict)
-        message_service.delete_delayed_queue(booking.id)
+        message_service.delete_delay_queue_reminder_10_minutes(id)
       end
     end
   end

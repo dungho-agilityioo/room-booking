@@ -23,6 +23,7 @@ module ExceptionHandler
     rescue_from RailsParam::Param::InvalidParameterError, with: :bad_request
     rescue_from JWT::DecodeError, with: :unprocessable_entity
     rescue_from ActiveRecord::RecordNotDestroyed, with: :internal_server
+    rescue_from NoMethodError, with: :internal_server
 
     private
 
