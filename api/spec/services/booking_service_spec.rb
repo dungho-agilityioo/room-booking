@@ -33,8 +33,8 @@ RSpec.describe BookingService do
 
     it 'delete all room booking' do
       expect(Booking.count).to eq(7)
-      booking.destroy
-      expect(Booking.count).to eq(0)
+      booking.remove
+      expect(Booking.active.count).to eq(0)
     end
   end
 

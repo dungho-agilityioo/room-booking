@@ -18,4 +18,11 @@ FactoryGirl.define do
     room { create(:room) }
     user { create(:user) }
   end
+
+  factory :booking_all_now, class: Booking, parent: :booking do
+    start_date { Time.now + 10.minutes }
+    end_date { Time.now + 1.hours }
+    room { create(:room) }
+    user { create(:user) }
+  end
 end
