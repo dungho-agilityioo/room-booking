@@ -13,7 +13,7 @@ class Booking <  ApplicationRecord
   before_save :check_duplicate
   before_create :set_state
   before_destroy :delete_queue
-  after_update :send_mail_reminder#, if: :state_changed?
+  after_update :send_mail_reminder
   scope :active, -> { where(state: [:available, :conflict]) }
 
   state_machine :state, initial: :available do
@@ -22,6 +22,7 @@ class Booking <  ApplicationRecord
     state :closed
 
     after_transition on: :remove, do: :after_closed
+    before_transition on: :reopen, do: :before_reopen
     after_transition on: :reopen, do: :after_reopen
     after_transition on: :activate, do: :change_state
 
@@ -45,10 +46,18 @@ class Booking <  ApplicationRecord
 
   private
 
+  def before_reopen
+    check_duplicate
+    set_state
+  end
+
   def after_reopen
-    generate_next_booking if available? && daily?
-    send_email_booking
-    send_mail_reminder
+    if available?
+      generate_next_booking if daily?
+      booking = BookingService.first_active_of_daily_booking(id)
+      send_email_booking(booking)
+      send_mail_reminder(booking)
+    end
   end
 
   def after_closed
@@ -80,20 +89,19 @@ class Booking <  ApplicationRecord
     self.state = overlaps? ? :conflict : :available
   end
 
-  def send_email_booking
-    # for reopen
-    # if end_date < Time.now
+  def send_email_booking(booking = nil)
     # publish message to send email after booking - channel name is 100
     MessagingService.new(100)
-      .publish(BookingSerializer.new(self).to_json)
+      .publish(BookingSerializer.new(booking ||= self).to_json)
   end
 
   # publish message delay to send mail reminder before 10 minutes
-  def send_mail_reminder
-    if available?
+  def send_mail_reminder(booking = nil)
+    booking ||= self
+    if booking.available?
       # channel name is 200
       message_service = MessagingService.new(200)
-      message_service.delete_delay_queue_reminder_10_minutes(id)
+      message_service.delete_delay_queue_reminder_10_minutes(booking.id)
 
       # publish message to send email reminder
       message_service.publish_delayed(BookingSerializer.new(self).to_json)

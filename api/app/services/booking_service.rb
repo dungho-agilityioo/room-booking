@@ -84,21 +84,21 @@ class BookingService
     # with next booking
     def messagge_reminder_next_booking(booking)
 
-      next_booking = first_active_of_daily_booking(booking)
+      next_booking = first_active_of_daily_booking(booking&.id)
 
       MessagingService.new(200)
         .publish_delayed(BookingSerializer.new(next_booking).to_json) if next_booking.present?
     end
 
-    private
-
-    def first_active_of_daily_booking(booking)
+    def first_active_of_daily_booking(booking_id)
       Booking
-          .where(booking_ref_id: booking&.id)
+          .where("booking_ref_id = ? OR id = ?", booking_id, booking_id)
           .where('start_date > ?', ENV['REMINDER_BEFORE_MINUTES'].to_i.minutes.from_now)
+          .where(daily: true)
           .first
     end
 
+    private
     def create_booking_with_params(booking, day)
 
       booking_attrs = booking.attributes.except("id")

@@ -178,7 +178,11 @@ class Api::V1::BookingsController < ApplicationController
   def find_booking
     id = params[:id]
     id = request.body.string.split('=').at(1).to_i if id.nil? && auth_with_api_key?
-    @booking = Booking.includes(:user, :room).find(id)
+    @booking = if params.has_key?(:type) && params[:type] == 'reopen'
+        Booking.includes(:user, :room).find(id)
+      else
+        Booking.includes(:user, :room).active.find(id)
+      end
   end
 
   def request_param

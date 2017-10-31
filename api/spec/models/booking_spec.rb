@@ -9,7 +9,6 @@ RSpec.describe Booking, type: :model do
     it { is_expected.to validate_presence_of(:start_date) }
     it { is_expected.to validate_presence_of(:end_date) }
 
-    # it { is_expected.to callback(:generate_next_booking).after(:create).if(Proc.new { |booking| booking.daily? && booking.booking_ref_id.nil? }) }
     it { is_expected.to callback(:check_duplicate).before(:save) }
     it { is_expected.to callback(:set_state).before(:create) }
 
@@ -72,11 +71,6 @@ RSpec.describe Booking, type: :model do
         expect(@booking.state).to eq("conflict")
       end
 
-      # it '' do
-      #   connection = BunnyMock.new.start
-      #   queue_name =  "#{ENV['EMAIL_REMINDER_10_MINTUTES_DELAYED_QUEUE']}.#{@booking1.id}"
-      #   expect(connection.queue_exists?(queue_name)).to eq(true)
-      # end
     end
   end
 
@@ -92,6 +86,7 @@ RSpec.describe Booking, type: :model do
     end
     context 'after reopen' do
       before { booking.reopen }
+
       specify { expect(booking.state).to eq('available') }
       it 'should generate next booking' do
         count = Booking.where(booking_ref_id: booking.id)
